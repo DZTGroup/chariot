@@ -6,11 +6,11 @@
         <h1>所有文档</h1>
     </hgroup>
 </header>
-<ul>
+<ul class="document_list">
 	@for(d <- documents) {
   		<li>
   			<a href="">
-  				<img src="" />
+  				<img src="@routes.Assets.at("images/word.png")" />
   				@d.name
   			</a>
   		</li>
