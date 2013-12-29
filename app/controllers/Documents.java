@@ -6,15 +6,20 @@ import play.data.*;
 import static play.data.Form.*;
 import models.*;
 import views.html.*;
-import views.html.documents.index;
+import views.html.documents.*;
+
+import javax.print.Doc;
 
 @Security.Authenticated(Secured.class)
 public class Documents extends Controller {
   
-	 /**
-     * Remove a project member.
-     */
     public static Result index() {
-        return ok(index.render(Document.getAllDocuments(), User.find.byId(request().username())));
+        return ok(index.render(Document.getAllDocuments()));
+
+    }
+
+    public static Result detail(Long id){
+        return ok(detail.render(Document.getById(id)));
+
     }
 }

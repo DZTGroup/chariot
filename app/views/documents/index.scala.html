@@ -1,4 +1,4 @@
-@(documents: List[Document],user:User)
+@(documents: List[Document])
 
 
 <header>
@@ -9,7 +9,7 @@
 <ul class="document_list">
 	@for(d <- documents) {
   		<li>
-  			<a href="">
+  			<a href="#/document/@d.id">
   				<img src="@routes.Assets.at("images/word.png")" />
   				@d.name
   			</a>

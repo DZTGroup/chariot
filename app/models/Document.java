@@ -34,6 +34,10 @@ public class Document extends Model {
     public static List<Document> getAllDocuments(){
     	return find.findList();
     }
-    
+
+    public static Document getById(long id){
+        return find.byId(id);
+
+    }
 }
 

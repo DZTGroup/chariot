@@ -84,11 +84,14 @@
 
     AppRouter.prototype.routes = {
       "/documents": "documents",
-      "/projects/:project/tasks": "tasks"
+      "/document/:id": "document"
     };
 
     AppRouter.prototype.documents = function() {
       return $("#main").load("/documents");
+    };
+    AppRouter.prototype.document = function(id) {
+      return $("#main").load("/document/"+id);
     };
 
     return AppRouter;
