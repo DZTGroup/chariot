@@ -22,8 +22,6 @@ public class Projects extends Controller {
     public static Result index() {
         return ok(
             dashboard.render(
-                Project.findInvolving(request().username()),
-                Task.findTodoInvolving(request().username()),
                 User.find.byId(request().username())
             )
         );

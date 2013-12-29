@@ -4,12 +4,16 @@ name := "chariot"
 
 version := "1.0"
 
-libraryDependencies ++= Seq(javaJdbc, javaEbean)  
+libraryDependencies ++= Seq(
+	javaJdbc, 
+	javaEbean,
+	cache,
+	 "mysql" % "mysql-connector-java" % "5.1.18"
+)
 
-libraryDependencies +="mysql" % "mysql-connector-java" % "5.1.18"
- 
 libraryDependencies += "commons-io" % "commons-io" % "2.0.1"
 
-libraryDependencies +="commons-codec" % "commons-codec" % "1.7"  
+libraryDependencies +="commons-codec" % "commons-codec" % "1.7"
 
 playJavaSettings
+

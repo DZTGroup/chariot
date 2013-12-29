@@ -45,7 +45,7 @@ public class Application extends Controller {
         } else {
             session("email", loginForm.get().email);
             return redirect(
-                routes.Projects.index()
+                routes.Application.index()
             );
         }
     }
@@ -89,6 +89,10 @@ public class Application extends Controller {
                 
             )
         );
+    }
+
+    public static Result index(){
+        return ok(dashboard.render(User.find.byId(session("email"))));
     }
 
 }
