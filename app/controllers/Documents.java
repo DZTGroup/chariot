@@ -8,6 +8,7 @@ import models.*;
 import views.html.*;
 import views.html.documents.index;
 
+@Security.Authenticated(Secured.class)
 public class Documents extends Controller {
   
 	 /**
