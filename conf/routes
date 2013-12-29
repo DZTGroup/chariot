@@ -5,7 +5,9 @@
 
 
 # The home page
-GET     /                                   controllers.Application.index()
+GET     /                                   controllers.Application.login()
+
+GET 	/main								controllers.Application.index()
 
 #Documents
 GET     /documents                         controllers.Documents.index()
