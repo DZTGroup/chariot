@@ -84,7 +84,7 @@
 
     AppRouter.prototype.routes = {
       "/documents": "documents",
-      "/fileUpload":"fileUpload"
+      "/fileUpload":"fileUpload",
       "/document/:id": "document"
     };
 
