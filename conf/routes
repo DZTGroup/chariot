@@ -9,6 +9,7 @@ GET     /                                   controllers.Application.index()
 
 #Documents
 GET     /documents                         controllers.Documents.index()
+GET     /document/:id                      controllers.Documents.detail(id:Long)
 
 # Authentication
 GET     /login                              controllers.Application.login()

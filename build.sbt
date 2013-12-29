@@ -8,7 +8,8 @@ libraryDependencies ++= Seq(
 	javaJdbc, 
 	javaEbean,
 	cache,
-	 "mysql" % "mysql-connector-java" % "5.1.18"
+	 "mysql" % "mysql-connector-java" % "5.1.18",
+  "com.google.code.gson" % "gson" % "1.7.1"
 )
 
 libraryDependencies += "commons-io" % "commons-io" % "2.0.1"
