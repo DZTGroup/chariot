@@ -91,10 +91,14 @@
       return $("#main").load("/documents");
     };
 
-
     return AppRouter;
 
   })(Backbone.Router);
+
+  //document list
+  (function(){
+
+  })();
 
 
   $(function() {
