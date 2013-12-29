@@ -5,13 +5,11 @@ import javax.persistence.*;
 
 import play.db.ebean.*;
 
-import com.avaje.ebean.*;
-
 /**
  * Project entity managed by Ebean
  */
 @Entity 
-public class Document extends Model {
+public class Module extends Model {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,25 +17,27 @@ public class Document extends Model {
     public Long id;
     
     public String name;
+
+    public String type;
     
     public String path;
     
-    public Document(String name, String path) {
+    public Module(String name, String type, String path) {
         this.name = name;
+        this.type = type;
         this.path = path;
     }
     
     // -- Queries
     
-    public static Model.Finder<Long,Document> find = new Model.Finder<Long,Document>(Long.class, Document.class);
+    public static Model.Finder<Long, Module> find = new Model.Finder<Long, Module>(Long.class, Module.class);
     
-    public static List<Document> getAllDocuments(){
-    	return find.findList();
+    public static List<Module> getDocuments(){
+    	return find.where().eq("type","doc").findList();
     }
 
-    public static Document getById(long id){
+    public static Module getById(long id){
         return find.byId(id);
-
     }
 }
 
