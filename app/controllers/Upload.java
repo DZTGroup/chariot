@@ -1,15 +1,18 @@
 package controllers;
 
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import play.Logger;
+import play.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
-
 import views.html.*;
+import views.html.upload.*;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,15 +21,15 @@ import java.io.IOException;
 
 
 public class Upload extends Controller {
-
- /*   public static Result index() {
-        return ok(index.render("hehe"));
+	
+	public static Result index() {
+        return ok(view.render("welcome"));
     }
-*/
 
     public static Result uploadDocument(String fileName) {
         File file = request().body().asRaw().asFile();
-        File newFile = new File(fileName);
+        String myUploadPath = Play.application().configuration().getString("uploadFilePath");
+        File newFile = new File(myUploadPath,fileName);
         Logger.info("File name:" + fileName + ", Raw size:" + request().body().asRaw().size());
 
         try {
@@ -72,7 +75,7 @@ public class Upload extends Controller {
             return redirect(routes.Upload.renderUpload());
         } else {
             flash("error", "Missing file");
-            return redirect(routes.Projects.index());
+            return redirect(routes.Upload.index());
         }
     }
 

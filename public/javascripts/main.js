@@ -84,12 +84,17 @@
 
     AppRouter.prototype.routes = {
       "/documents": "documents",
-      "/projects/:project/tasks": "tasks"
+      "/projects/:project/tasks": "tasks",
+      "/fileUpload":"fileUpload"
     };
 
     AppRouter.prototype.documents = function() {
       return $("#main").load("/documents");
     };
+    
+    AppRouter.prototype.fileUpload = function() {
+        return $("#main").load("/fileUpload");
+      };
 
     return AppRouter;
 
