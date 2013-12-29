@@ -85,7 +85,13 @@ public class Application extends Controller {
                 controllers.routes.javascript.Tasks.index(),
                 controllers.routes.javascript.Tasks.add(), 
                 controllers.routes.javascript.Tasks.update(), 
-                controllers.routes.javascript.Tasks.delete()
+                controllers.routes.javascript.Tasks.delete(),
+
+                //Routes for Documents
+
+                controllers.routes.javascript.Documents.index()
+
+
                 
             )
         );
