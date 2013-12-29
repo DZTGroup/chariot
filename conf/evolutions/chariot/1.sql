@@ -3,6 +3,13 @@
 
 # --- !Ups
 
+create table document (
+  id                        bigint auto_increment not null,
+  name                      varchar(255),
+  path                      varchar(255),
+  constraint pk_document primary key (id))
+;
+
 create table project (
   id                        bigint auto_increment not null,
   name                      varchar(255),
@@ -48,6 +55,8 @@ alter table project_account add constraint fk_project_account_account_02 foreign
 # --- !Downs
 
 SET FOREIGN_KEY_CHECKS=0;
+
+drop table document;
 
 drop table project;
 

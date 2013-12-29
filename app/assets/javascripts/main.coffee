@@ -94,30 +94,17 @@ class Drawer extends Backbone.View
 class Group extends Backbone.View
     events:
         "click    .toggle"          : "toggle"
-        "click    .newProject"      : "newProject"
+        "click    .newDocument"      : "newProject"
         "click    .deleteGroup"     : "deleteGroup"
     initialize: ->
         @id = @el.attr("data-group")
         @name = $(".groupName", @el).editInPlace
             context: this
             onChange: @renameGroup
-    newProject: (e) ->
+    newDocument: (e) ->
         e.preventDefault()
         @el.removeClass("closed")
-        r = jsRoutes.controllers.Projects.add()
-        $.ajax
-            url: r.url
-            type: r.type
-            context: this
-            data:
-                group: @el.attr("data-group")
-            success: (tpl) ->
-                _list = $("ul",@el)
-                _view = new Project
-                    el: $(tpl).appendTo(_list)
-                _view.el.find(".name").editInPlace("edit")
-            error: (err) ->
-                $.error("Error: " + err)
+        
     deleteGroup: (e) ->
         e.preventDefault()
         false if (!confirm "Remove group and projects inside?")
