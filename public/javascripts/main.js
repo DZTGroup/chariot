@@ -84,18 +84,18 @@
 
     AppRouter.prototype.routes = {
       "/documents": "documents",
-      "/fileUpload":"fileUpload"
+      "/fileUpload":"fileUpload",
       "/document/:id": "document"
     };
 
     AppRouter.prototype.documents = function() {
       return $("#main").load("/documents");
     };
-    
+
     AppRouter.prototype.fileUpload = function() {
         return $("#main").load("/fileUpload");
       };
-      
+
     AppRouter.prototype.document = function(id) {
       return $("#main").load("/document/"+id);
     };
@@ -117,5 +117,6 @@
       pushHistory: true
     });
   });
+
 
 }).call(this);
