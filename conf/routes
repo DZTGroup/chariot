@@ -3,7 +3,13 @@
 # ~~~~
 
 # The home page
-GET     /                                   controllers.Projects.index()
+GET     /xxxxx                              controllers.Projects.index()
+
+# The home page
+GET     /                                   controllers.Application.index()
+
+#Documents
+GET     /documents                         controllers.Documents.index()
 
 # Authentication
 GET     /login                              controllers.Application.login()

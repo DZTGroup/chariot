@@ -1,0 +1,19 @@
+@(documents: List[Document],user:User)
+
+
+<header>
+    <hgroup>
+        <h1>所有文档</h1>
+    </hgroup>
+</header>
+<ul>
+	@for(d <- documents) {
+  		<li>
+  			<a href="">
+  				<img src="" />
+  				@d.name
+  			</a>
+  		</li>
+	}
+</ul>
+

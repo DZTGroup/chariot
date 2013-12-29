@@ -1,4 +1,4 @@
-@(projects: List[Project], user: User)(body: Html)
+@( user: User)(body: Html)
 
 <html>
     <head>
@@ -14,7 +14,7 @@
     </head>
     <body>
         <header>
-            <a href="@routes.Projects.index" id="logo"><span>law</span>bingo</a>
+            <a href="@routes.Application.index" id="logo"><span>law</span>bingo</a>
             <dl id="user">
                 <dt>@user.name <span>(@user.email)</span></dt>
                 <dd>
@@ -23,13 +23,27 @@
             </dl>
         </header>
         <nav>
-            <h4 class="dashboard"><a href="#/">Dashboard</a></h4>
+            <h4 class="dashboard"><a href="#/">Home</a></h4>
             <ul id="projects">
-                @projects.groupBy(_.folder).map {
-                    case (group, projects) => {
-                        @views.html.projects.group(group, projects)
-                    }
-                }
+                <li>
+                    <span class="toggle"></span>
+                    <h4 class="groupName">文档</h4>
+                    <span class="loader">Loading</span>
+                    <dl class="options">
+                        <dt>Options</dt>
+                        <dd>
+                            <button class="newProject">New project</button>
+                            <button class="deleteGroup">Remove group</button>
+                        </dd>
+                    </dl>
+                    <ul>
+                        <li>
+                            <a class="name" href="#@routes.Documents.index()">文档列表</a>
+                            <span class="loader">Loading</span>
+                        </li>
+                    </ul>
+                </li>
+
             </ul>
             <button id="newGroup">New group</button>
         </nav>
