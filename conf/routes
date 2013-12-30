@@ -40,3 +40,6 @@ GET /service/download/:filename		controllers.Upload.fetchDocument(filename: Stri
 #Questions
 GET     /question/:id               controllers.Questions.question(id:Long)
 
+#Test stub
+GET		/parse						controllers.Application.parse()
+
