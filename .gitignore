@@ -18,4 +18,3 @@ template/.DS_Store
 /.target
 template/module/*
 template/debug/*
-file_uploaded/*
