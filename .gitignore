@@ -16,3 +16,6 @@ template/.DS_Store
 /RUNNING_PID
 /.settings
 /.target
+template/module/*
+template/debug/*
+file_uploaded/*
