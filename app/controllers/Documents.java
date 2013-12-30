@@ -2,8 +2,10 @@ package controllers;
 
 import models.mock.*;
 import play.mvc.*;
+import views.html.dashboard;
 import views.html.documents.*;
 import models.Module;
+import models.User;
 
 @Security.Authenticated(Secured.class)
 public class Documents extends Controller {
@@ -20,4 +22,9 @@ public class Documents extends Controller {
         return ok(detail.render(mockDocument));
 
     }
+    
+    public static Result view(){
+        return ok(dashboard.render(User.find.byId(session("email"))));
+    }
+
 }
