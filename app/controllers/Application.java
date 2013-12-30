@@ -79,10 +79,8 @@ public class Application extends Controller {
 
 	// test stub by mao
 	public static Result parse() throws Docx4JException {
-		String path = System.getProperty("user.dir")
-				+ "/template/upload/sample.docx";
-		String outputPath = System.getProperty("user.dir")
-				+ "/template/upload/mod.docx";
+		String path = settings.Constant.DEBUG_PATH + "sample.docx";
+		String outputPath = settings.Constant.DEBUG_PATH + "mod.docx";
 
 		Docx doc = new Docx(path);
 		new DocxTreeStructure(doc).parseAs("sample");
