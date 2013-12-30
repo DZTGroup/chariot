@@ -1,10 +1,9 @@
 package controllers;
 
-import models.mock.*;
+import models.template.*;
 import play.mvc.*;
 import views.html.dashboard;
 import views.html.documents.*;
-import models.Module;
 import models.User;
 
 @Security.Authenticated(Secured.class)
@@ -16,7 +15,7 @@ public class Documents extends Controller {
     }
 
     public static Result detail(Long id){
-        models.mock.Module mockDocument = Data.generate();
+        models.template.Module mockDocument = Data.generate();
 
         return ok(detail.render(mockDocument));
 

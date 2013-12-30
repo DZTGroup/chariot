@@ -1,4 +1,4 @@
-package models.mock;
+package models.template;
 
 /**
  * Created by mangix on 13-12-29.
@@ -27,7 +27,7 @@ public class Module {
         if(this.lists!=null){
             for(Object o:this.lists){
                 if(o instanceof Question){
-                    list.add((models.mock.Question)o);
+                    list.add((models.template.Question)o);
                 }
             }
         }

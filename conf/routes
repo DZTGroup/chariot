@@ -39,3 +39,6 @@ GET /service/download/:filename		controllers.Upload.fetchDocument(filename: Stri
 GET     /question/:id               controllers.Questions.question(id:String)
 POST    /questionsave               controllers.Questions.saveQuestion
 
+#Test stub
+GET		/parse						controllers.Application.parse()
+GET		/all/*name					controllers.Application.all(name:String)

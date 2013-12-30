@@ -1,4 +1,4 @@
-package models.mock;
+package models.template;
 
 /**
  * Created by mangix on 13-12-29.

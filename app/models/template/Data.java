@@ -1,7 +1,8 @@
-package models.mock;
+package models.template;
 
 import java.util.*;
-import models.mock.Module;
+
+import models.template.Module;
 
 
 /**

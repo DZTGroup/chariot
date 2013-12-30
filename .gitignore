@@ -8,9 +8,14 @@ dist
 /.idea
 /*.iml
 /out
+.DS_Store
+file_uploaded/*
+template/.DS_Store
 /.idea_modules
 /.classpath
 /.project
 /RUNNING_PID
 /.settings
 /.target
+template/module/*
+template/debug/*
