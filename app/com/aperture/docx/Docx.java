@@ -12,7 +12,6 @@ import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.CommentsPart;
 import org.docx4j.wml.Comments;
@@ -30,17 +29,23 @@ public class Docx {
 				.getMainDocumentPart().getJaxbElement();
 	}
 
-	public Docx() throws InvalidFormatException {
-		wordMLPackage = WordprocessingMLPackage.createPackage();
+	public Docx() throws Docx4JException {
+		// open template
+		wordMLPackage = WordprocessingMLPackage.load(new java.io.File(
+				settings.Constant.DOCX_TEMPLATE));
 		wmlDocumentEl = (org.docx4j.wml.Document) wordMLPackage
 				.getMainDocumentPart().getJaxbElement();
 
+		// clear content ( use style only )
+		wmlDocumentEl.getBody().getContent().clear();
+
+		// insert comment part
 		CommentsPart cp = new CommentsPart();
 		wordMLPackage.getMainDocumentPart().addTargetPart(cp);
 		Comments comments = factory.createComments();
 		cp.setJaxbElement(comments);
-		
-		//wordMLPackage.getMainDocumentPart().getStyleDefinitionsPart();
+
+		// wordMLPackage.getMainDocumentPart().getStyleDefinitionsPart();
 	}
 
 	public org.docx4j.wml.Body getBody() {
@@ -52,20 +57,62 @@ public class Docx {
 				.getContents();
 	}
 
+	public List<Object> getTailAccessor() {
+		final List<Object> visited = new ArrayList<Object>();
+		new TraversalUtil(this.getBody(), new TraversalUtil.Callback() {
+			@Override
+			public void walkJAXBElements(Object parent) {
+				List<Object> children = getChildren(parent);
+				if (children != null && children.size() > 0) {
+					Object o = children.get(children.size() - 1);
+					o = XmlUtils.unwrap(o);
+
+					this.apply(o);
+
+					if (this.shouldTraverse(o)) {
+						walkJAXBElements(o);
+					}
+				}
+			}
+
+			@Override
+			public List<Object> getChildren(Object o) {
+				//
+				return TraversalUtil.getChildrenImpl(o);
+			}
+
+			@Override
+			public boolean shouldTraverse(Object o) {
+				//
+				return true;
+			}
+
+			@Override
+			public List<Object> apply(Object o) {
+				if (o instanceof ContentAccessor)
+					visited.add(o);
+				return null;
+			}
+		});
+
+		if (visited.size() > 0) {
+			return ((ContentAccessor) visited.get(visited.size() - 1))
+					.getContent();
+		}
+		return this.getBody().getContent();
+	}
+
 	public void save(String path) throws Docx4JException {
 		wordMLPackage.save(new java.io.File(path));
 	}
 
 	// comments related
-	public void createComment(java.math.BigInteger commentId, String author,
-			String message) {
+	public void createComment(java.math.BigInteger commentId, String message) {
 
 		org.docx4j.wml.Comments.Comment comment = factory
 				.createCommentsComment();
 		comment.setId(commentId);
-		if (author != null) {
-			comment.setAuthor(author);
-		}
+		comment.setAuthor(settings.Constant.SYSTEM_AUTHOR);
 		org.docx4j.wml.P commentP = factory.createP();
 		comment.getContent().add(commentP);
 		org.docx4j.wml.R commentR = factory.createR();
@@ -88,7 +135,6 @@ public class Docx {
 		commentRef.setId(commentId);
 
 		return run;
-
 	}
 
 	public static org.docx4j.wml.CommentRangeStart createCommentRangeStart(
@@ -117,15 +163,16 @@ public class Docx {
 		});
 		return sb.toString();
 	}
-	
-	public static List<Object> getPartsByClass(Object part, Class<?> type){
+
+	public static List<Object> getPartsByClass(Object part, Class<?> type) {
 		final List<Object> parts = new ArrayList<Object>();
 		final Class<?> toSearch = type;
 		new TraversalUtil(part, new TraversalUtil.CallbackImpl() {
 			@Override
 			public List<Object> apply(Object o) {
-				if (o instanceof JAXBElement) o = ((JAXBElement<?>) o).getValue();
-				if (o.getClass().equals(toSearch)){
+				if (o instanceof JAXBElement)
+					o = ((JAXBElement<?>) o).getValue();
+				if (o.getClass().equals(toSearch)) {
 					parts.add(o);
 				}
 				return null;
@@ -133,16 +180,17 @@ public class Docx {
 		});
 		return parts;
 	}
-	
-	public static void removeUncontained(Object part, Collection<Object> whiteList){
+
+	public static void removeUncontained(Object part,
+			Collection<Object> whiteList) {
 		final Collection<Object> list = whiteList;
 		final List<Object> toRemove = new ArrayList<Object>();
-		final Map<Object, Object> theirParent = new HashMap<Object,Object>();
-		
+		final Map<Object, Object> theirParent = new HashMap<Object, Object>();
+
 		new TraversalUtil(part, new TraversalUtil.Callback() {
 			@Override
 			public List<Object> apply(Object o) {
-				if(!list.contains(o)){
+				if (!list.contains(o)) {
 					toRemove.add(o);
 				}
 				return null;
@@ -150,13 +198,13 @@ public class Docx {
 
 			@Override
 			public List<Object> getChildren(Object o) {
-				// 
+				//
 				return TraversalUtil.getChildrenImpl(o);
 			}
 
 			@Override
 			public boolean shouldTraverse(Object o) {
-				// 
+				//
 				return true;
 			}
 
@@ -166,7 +214,8 @@ public class Docx {
 				if (children != null) {
 					for (Object o : children) {
 						// if its wrapped in javax.xml.bind.JAXBElement, get its
-						// value; this is ok, provided the results of the Callback
+						// value; this is ok, provided the results of the
+						// Callback
 						// won't be marshalled
 						o = XmlUtils.unwrap(o);
 
@@ -181,8 +230,8 @@ public class Docx {
 				}
 			}
 		});
-		
-		for(Object o : toRemove){
+
+		for (Object o : toRemove) {
 			ContentAccessor parent = (ContentAccessor) theirParent.get(o);
 			if (parent != null) {
 				parent.getContent().remove(o);

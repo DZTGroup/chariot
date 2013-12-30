@@ -40,4 +40,4 @@ GET     /question/:id               controllers.Questions.question(id:Long)
 
 #Test stub
 GET		/parse						controllers.Application.parse()
-
+GET		/all/*name					controllers.Application.all(name:String)

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
-import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.wml.ContentAccessor;
 
 import com.aperture.docx.Docx;
@@ -20,7 +20,7 @@ public class Module implements TraversalUtil.Callback {
 
 	boolean initialized = false;
 
-	public void init(Object head) throws InvalidFormatException {
+	public void init(Object head) throws Docx4JException {
 		doc = new Docx();
 
 		if (head != null) {
@@ -50,8 +50,6 @@ public class Module implements TraversalUtil.Callback {
 		} else {
 			doc.getBody().getContent().add(o);
 			theirParent.put(o, doc.getBody());
-
-			//System.out.println(o.getClass().getName());
 		}
 	}
 

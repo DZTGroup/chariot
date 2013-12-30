@@ -12,7 +12,6 @@ import java.util.Stack;
 import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.wml.CommentRangeEnd;
 import org.docx4j.wml.CommentRangeStart;
 import org.docx4j.wml.Comments.Comment;
@@ -41,6 +40,10 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 	Module currentPop = null;
 	List<Module> extractedModules = new ArrayList<Module>();
 
+	// comment
+	BigInteger maxCommentId = BigInteger.ZERO;
+
+	// traversal facility
 	Stack<Object> currentPath = new Stack<Object>();
 
 	public DocxTreeStructure(Docx d) {
@@ -126,25 +129,46 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 			}
 			try {
 				m.init(head);
-			} catch (InvalidFormatException e) {
+				// CommentRangeStart is just a child
+				Object commentRangeStarter = XmlUtils.deepCopy(o);
+				m.tail(commentRangeStarter,
+						theirParent.get(o) != null ? theirParent.get(o)
+								.getClass() : null);
+			} catch (Docx4JException e) {
 				//
+				e.printStackTrace();
 				errors.add(e);
 			}
 			moduleStack.push(m);
 
 		} else if (o instanceof CommentRangeEnd) {
 			currentPop = moduleStack.pop();
+			// CommentRangeStart is just a child
+			Object commentRangeEnder = XmlUtils.deepCopy(o);
+			currentPop.tail(commentRangeEnder,
+					theirParent.get(o) != null ? theirParent.get(o).getClass()
+							: null);
 		} else if (o instanceof CommentReference) {
 			CommentReference cr = (CommentReference) o;
 			BigInteger id = cr.getId();
+			// update
+			if (maxCommentId.compareTo(id) < 0)
+				maxCommentId = id;
 
 			for (Comment c : doc.getComment().getComment()) {
 				if (id.equals(c.getId())) {
 					// System.out.println(Docx.extractText(c));
 					if (currentPop != null) {
 						currentPop.id = Docx.extractText(c);
+						currentPop.doc.createComment(id, currentPop.id);
+						Object ref = Docx.createRunCommentReference(id);
+
+						currentPop.tail(ref,
+								theirParent.get(o) != null ? theirParent.get(o)
+										.getClass() : null);
 
 						extractedModules.add(currentPop);
+
 						currentPop = null;
 					}
 				}
@@ -184,7 +208,7 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 		return null;
 	}
 
-	public void parse() throws Docx4JException {
+	public void parseAs(String name) throws Docx4JException {
 		new TraversalUtil(doc.getBody(), this);
 
 		for (Object o : removeList) {
@@ -199,9 +223,27 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 				((ContentAccessor) moveMapping.get(o)).getContent().add(o);
 		}
 
-		for (Module m : extractedModules) {
-			m.doc.save(System.getProperty("user.dir") + "/../m" + m.id
-					+ ".docx");
+		// check error
+		if (errors.size() == 0) {
+			// done, save
+			for (Module m : extractedModules) {
+				m.doc.save(settings.Constant.MODULE_PATH + m.id + ".docx");
+			}
+			// also save itself as a module
+			List<Object> docFlow = doc.getBody().getContent();
+			BigInteger commentId = maxCommentId.add(BigInteger.ONE);
+			
+			doc.createComment(commentId, name);
+			Object start = Docx.createCommentRangeStart(commentId);
+			Object end = Docx.createCommentRangeEnd(commentId);
+			Object ref = Docx.createRunCommentReference(commentId);
+			
+			docFlow.add(0, start);
+			List<Object> tail = doc.getTailAccessor();
+			tail.add(end);
+			tail.add(ref);
+			
+			doc.save(settings.Constant.MODULE_PATH + name + ".docx");
 		}
 	}
 }
