@@ -3,7 +3,6 @@ package models;
 import java.util.*;
 import javax.persistence.*;
 
-import models.mock.Question;
 import play.db.ebean.*;
 
 /**
