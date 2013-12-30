@@ -3,6 +3,8 @@ package controllers;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+
 import play.Logger;
 import play.Play;
 import play.mvc.Controller;
@@ -26,9 +28,9 @@ public class Upload extends Controller {
         return ok(view.render("welcome"));
     }
 
-    public static Result uploadDocument(String fileName) {
+    public static Result uploadDocument(String fileName) throws Docx4JException {
         File file = request().body().asRaw().asFile();
-        String myUploadPath = Play.application().configuration().getString("uploadFilePath");
+        String myUploadPath = System.getProperty("user.dir")+Play.application().configuration().getString("uploadFilePath");
         File newFile = new File(myUploadPath,fileName);
         Logger.info("File name:" + fileName + ", Raw size:" + request().body().asRaw().size());
 
@@ -47,7 +49,7 @@ public class Upload extends Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        com.aperture.docx.service.DocxService.parseDocument(fileName, myUploadPath+"/"+fileName);
         return ok("{\"success\":\"true\", \"fileName\":\"" + fileName
                 + "\"}");
     }

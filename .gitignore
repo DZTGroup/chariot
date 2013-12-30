@@ -8,6 +8,9 @@ dist
 /.idea
 /*.iml
 /out
+.DS_Store
+file_uploaded/*
+template/.DS_Store
 /.idea_modules
 /.classpath
 /.project
