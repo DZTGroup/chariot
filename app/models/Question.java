@@ -22,6 +22,8 @@ public class Question extends Model {
     public String type;
 
     public Question(String description, String type) {
+        //description is json
+        //description.content is question content
         this.description = description;
         this.type = type;
     }

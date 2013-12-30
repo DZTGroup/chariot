@@ -36,3 +36,7 @@ POST    /doUpload                   controllers.Upload.uploadForm()
 POST    /service/upload/            controllers.Upload.uploadDocument(qqfile: String)
 GET /service/download/:filename		controllers.Upload.fetchDocument(filename: String)
 
+
+#Questions
+GET     /question/:id               controllers.Questions.question(id:Long)
+

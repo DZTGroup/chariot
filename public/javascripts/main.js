@@ -104,11 +104,92 @@
 
   })(Backbone.Router);
 
-  //document list
-  (function(){
+
+  //Modal box
+  var Modal = (function(){
+      var tpl = '<div class="modal hide fade modal-overflow in" tabindex="-1" data-width="760"  aria-hidden="false">'+
+                        '<div class="modal-header">'+
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'+
+                            '<h3>Responsive</h3>'+
+                        '</div>'+
+                        '<div class="modal-body"></div>'+
+                        '<div class="modal-footer">'+
+                            '<button type="button" data-dismiss="modal" class="btn">关闭</button>'+
+                            '<button type="button" class="btn btn-primary J_save">保存</button>'+
+                        '</div>'+
+                    '</div>';
+      var M = function(contentHtml){
+          var self = this;
+          var el = this.el = $(tpl);
+          el.find('.modal-body').append(contentHtml)
+          el.modal();
+
+          el.on('hide',function(){
+              self.trigger('hide');
+          });
+
+          el.find('.J_save').click(function(){
+              self.trigger('save');
+          });
+      };
+      M.hide = function(){
+          this.el.$data('modal').hide();
+      };
+      _.extend(M.prototype,Backbone.Events);
+      return M;
 
   })();
 
+  var Question = (function(){
+      var LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYX";
+      var TYPES = {
+          blank:"填空",
+          choice:"单选",
+          multichoice:"多选"
+      };
+      var TPL = '<div class="question_editor"><table><tbody>'+
+          '<tr><td>问题类型:</td><td><select class="J_type"><%_.each(types,function(value,key){%><option value="<%=key%>"><%=value%></option><%});%></select></td></tr>'+
+          '<tr>'+
+            '<td>问题:</td><td><textarea placeholder="问题描述"></textarea></td>'+
+          '</tr>'+
+          '</tbody></table></div>';
+      var Model = Backbone.Model.extend({
+          defaults:{
+              types:TYPES
+          }
+      });
+      var View = Backbone.View.extend({
+          template:_.template(TPL),
+          render:function(){
+              var html = this.template(this.model.attributes);
+              this.modal = new Modal(html);
+              this.modal.el.find('.J_type').val(this.model.get('type'));
+          }
+      });
+
+      var Controller = function(attrs){
+          this.model = new Model(attrs);
+          this.view = new View({
+              model:this.model
+          });
+      };
+      Controller.prototype.edit = function(){
+          this.view.render();
+          this.view.modal.bind('save',function(){
+          });
+      };
+      Controller.prototype.save = function(){
+          this.model.save();
+      };
+      return Controller;
+  })();
+
+  (function(){
+      $(document).on('click','.J_question_edit',function(){
+          var q = new Question();
+          q.edit();
+      });
+  })();
 
   $(function() {
     var app, drawer;
