@@ -15,8 +15,8 @@
                     <span class="loader">Loading</span>
                 </header>
                 @if(module.getQuestionList()!=null){
-                    @for(question <- module.getQuestionList()){
                         <ul class="list">
+                            @for(question <- module.getQuestionList()){
                             <li>
                                 <!--<h4>Check 1.2.4-RC2</h4>-->
                                 <!--<time datetime="Fri Nov 18 08:00:00 CST 2011">十一月 18 2011</time>-->
@@ -27,8 +27,8 @@
                                     <dd>B.女</dd>
                                 </dl>
                             </li>
+                            }
                         </ul>
-                    }
                 }
             </div>
         }

@@ -6,7 +6,6 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-1.7.1.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-play-1.7.1.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/underscore-min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/backbone-min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/modal.js")"></script>
@@ -33,7 +32,7 @@
                     <dl class="options">
                         <dt>Options</dt>
                         <dd>
-                            <button class="newProject" onclick="location.href='#/fileUpload'">上传文件</button>
+                            <button class="newProject" onclick="location.href='#/fileUpload'">倒入文档模板</button>
                         </dd>
                     </dl>
                     <ul>
@@ -45,6 +44,7 @@
                 </li>
 
             </ul>
+            <button id="newGroup" onclick="location.href='#/fileUpload'">倒入文档模板</button>
         </nav>
         <section id="main">
             @body

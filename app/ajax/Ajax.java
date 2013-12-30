@@ -29,7 +29,7 @@ public class Ajax {
     }
 
     public String toJson(){
-        return new Gson().toJson(this);
+        return (new Gson()).toJson(this);
     }
 
 }

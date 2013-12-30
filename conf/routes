@@ -36,5 +36,6 @@ GET /service/download/:filename		controllers.Upload.fetchDocument(filename: Stri
 
 
 #Questions
-GET     /question/:id               controllers.Questions.question(id:Long)
+GET     /question/:id               controllers.Questions.question(id:String)
+POST    /questionsave               controllers.Questions.saveQuestion
 

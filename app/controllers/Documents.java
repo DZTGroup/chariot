@@ -18,7 +18,6 @@ public class Documents extends Controller {
     public static Result detail(Long id){
         models.mock.Module mockDocument = Data.generate();
 
-
         return ok(detail.render(mockDocument));
 
     }
