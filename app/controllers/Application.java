@@ -92,7 +92,7 @@ public class Application extends Controller {
 	}
 
 	public static Result all(String name) throws Docx4JException {
-		String inputfilepath = settings.Constant.UPLOAD_PATH + name + ".docx";
+		String inputfilepath = settings.Constant.DEBUG_PATH + name + ".docx";
 
 		final StringBuilder sb = new StringBuilder();
 

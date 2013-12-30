@@ -14,5 +14,5 @@ dist
 /RUNNING_PID
 /.settings
 /.target
-template/module
-template/upload
+template/module/*
+template/debug/*
