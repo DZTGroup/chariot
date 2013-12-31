@@ -18,12 +18,12 @@ public class DocxService {
 		ModuleCompiler mc = new ModuleCompiler();
 		com.aperture.docx.dom.Module m = new com.aperture.docx.dom.Module();
 		m.init(name);
-		if (!m.isInitialized()){
+		if (!m.isInitialized()) {
 			return false;
 		}
 		mc.pendModule(m);
 		mc.save(settings.Constant.USER_DIR + "/" + name + ".docx");
-		
+
 		return true;
 	}
 }
