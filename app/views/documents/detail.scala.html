@@ -2,16 +2,26 @@
 
 
 <header>
-    <hgroup>
-        <h1>@document.name</h1>
+    <hgroup id="doc">
+        <h1 style="font-size:14px">@document.name</h1>
+        <script>
+        jQuery(function(){
+        	$("#doc").append('<a style="float:right;text-decoration:underline" href="/service/download/'+'@document.name'+'">Download</a>');
+        });
+        </script>
     </hgroup>
 </header>
 <article class="tasks">
     @if(document.getModuleList!=null){
         @for(module <- document.getModuleList()){
             <div class="folder">
-                <header>
+                <header id="@module.name">
                     <h3><a href="">@module.name</a></h3>
+                    <script>
+        				jQuery(function(){
+        					$("#@module.name").append('<a style="float:right;text-decoration:underline" href="/service/download/'+'@module.name'+'">Download</a>');
+        				});
+        			</script>
                     <span class="loader">Loading</span>
                 </header>
                 @if(module.getQuestionList()!=null){

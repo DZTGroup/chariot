@@ -13,24 +13,20 @@ import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
 import views.html.*;
-import views.html.upload.*;
-
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import settings.Constant;
+
 
 public class Upload extends Controller {
-	
-	public static Result index() {
-        return ok(view.render("welcome"));
-    }
 
     public static Result uploadDocument(String fileName) throws Docx4JException {
         File file = request().body().asRaw().asFile();
-        String myUploadPath = System.getProperty("user.dir")+Play.application().configuration().getString("uploadFilePath");
+        String myUploadPath = Constant.USER_DIR;
         File newFile = new File(myUploadPath,fileName);
         Logger.info("File name:" + fileName + ", Raw size:" + request().body().asRaw().size());
 
@@ -77,7 +73,7 @@ public class Upload extends Controller {
             return redirect(routes.Upload.renderUpload());
         } else {
             flash("error", "Missing file");
-            return redirect(routes.Upload.index());
+            return redirect(routes.Documents.view());
         }
     }
 
@@ -95,7 +91,7 @@ public class Upload extends Controller {
 
         response().setHeader("Content-Disposition",
                 "attachment;filename=\"" + fileName + "\"");
-        return ok(new File(fileName));
+        return ok(new File(Constant.USER_DIR+"/"+fileName));
     }
 
     protected static String getRequestParam(String key) {

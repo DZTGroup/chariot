@@ -10,7 +10,22 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/backbone-min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/modal.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+    	<script src="@routes.Assets.at("javascripts/fileuploader.js")" type="text/javascript"></script>
         <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
+        <script>        
+    		jQuery(function(){
+        		var uploader = new qq.FileUploader({
+        		element: document.getElementById('file-uploader'),
+          				 action: '/service/upload/',
+           				 onComplete: function(id, fileName, responseJSON){
+						 alert("文件上传成功");
+						 window.location.href="#/documents"
+            			 return false;
+          				 },
+        			});           
+    			});     
+		</script> 
     </head>
     <body>
         <header>
@@ -29,12 +44,12 @@
                     <span class="toggle"></span>
                     <h4 class="groupName">文档</h4>
                     <span class="loader">Loading</span>
-                    <dl class="options">
+                    <!-- <dl class="options">
                         <dt>Options</dt>
                         <dd>
-                            <button class="newProject" onclick="location.href='#/fileUpload'">倒入文档模板</button>
+                            <button class="newProject" id="file-uploader">导入文档模板</button>
                         </dd>
-                    </dl>
+                    </dl> -->
                     <ul>
                         <li>
                             <a class="name" href="#@routes.Documents.index()">文档列表</a>
@@ -44,7 +59,7 @@
                 </li>
 
             </ul>
-            <button id="newGroup" onclick="location.href='#/fileUpload'">倒入文档模板</button>
+            <button class="newGroup" id="file-uploader">导入文档模板</button>
         </nav>
         <section id="main">
             @body
