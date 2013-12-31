@@ -271,7 +271,7 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 		if (errors.size() == 0) {
 			// done, save
 			for (Module m : extractedModules) {
-				m.doc.save(settings.Constant.MODULE_PATH + m.id + ".docx");
+				m.doc.save(settings.Constant.MODULE_PATH + "/" + m.id + ".docx");
 			}
 			// also save itself as a module
 			List<Object> docFlow = doc.getBody().getContent();
@@ -290,7 +290,7 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 			last.getContent().add(end);
 			last.getContent().add(ref);
 
-			doc.save(settings.Constant.MODULE_PATH + name + ".docx");
+			doc.save(settings.Constant.MODULE_PATH + "/" + name + ".docx");
 		}
 	}
 }

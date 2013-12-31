@@ -20,6 +20,10 @@ public class Module {
 
 	boolean initialized = false;
 
+	public boolean isInitialized() {
+		return initialized;
+	}
+
 	public void init(Object head) throws Docx4JException {
 		doc = new Docx();
 
@@ -32,7 +36,7 @@ public class Module {
 	}
 
 	public void init(String name) throws Docx4JException {
-		String path = settings.Constant.MODULE_PATH + name + ".docx";
+		String path = settings.Constant.MODULE_PATH + "/" + name + ".docx";
 		File f = new File(path);
 		if (f.isFile() && f.canRead()) {
 			doc = new Docx(path);

@@ -80,7 +80,7 @@ public class Application extends Controller {
 
 	// test stub by mao
 	public static Result parse() throws Docx4JException {
-		String path = settings.Constant.DEBUG_PATH + "sample.docx";
+		String path = settings.Constant.DEBUG_PATH + "/" + "sample.docx";
 
 		Docx doc = new Docx(path);
 		new DocxTreeStructure(doc).parseAs("sample");
@@ -90,13 +90,14 @@ public class Application extends Controller {
 		com.aperture.docx.dom.Module m = new com.aperture.docx.dom.Module();
 		m.init("sample");
 		mc.pendModule(m);
-		mc.save(settings.Constant.DEBUG_PATH + "compiled.docx");
+		mc.save(settings.Constant.DEBUG_PATH + "/" + "compiled.docx");
 
 		return ok("done!");
 	}
 
 	public static Result all(String name) throws Docx4JException {
-		String inputfilepath = settings.Constant.DEBUG_PATH + name + ".docx";
+		String inputfilepath = settings.Constant.DEBUG_PATH + "/" + name
+				+ ".docx";
 
 		final StringBuilder sb = new StringBuilder();
 
