@@ -13,8 +13,6 @@ import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
 import views.html.*;
-import views.html.upload.*;
-
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,10 +21,6 @@ import java.io.IOException;
 
 
 public class Upload extends Controller {
-	
-	public static Result index() {
-        return ok(view.render("welcome"));
-    }
 
     public static Result uploadDocument(String fileName) throws Docx4JException {
         File file = request().body().asRaw().asFile();
@@ -77,7 +71,7 @@ public class Upload extends Controller {
             return redirect(routes.Upload.renderUpload());
         } else {
             flash("error", "Missing file");
-            return redirect(routes.Upload.index());
+            return redirect(routes.Documents.view());
         }
     }
 

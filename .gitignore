@@ -9,6 +9,7 @@ dist
 /*.iml
 /out
 .DS_Store
+file_uploaded/*
 template/.DS_Store
 /.idea_modules
 /.classpath
@@ -16,5 +17,4 @@ template/.DS_Store
 /RUNNING_PID
 /.settings
 /.target
-template/module/*
-template/debug/*
+template/debug
