@@ -1,5 +1,6 @@
 package com.aperture.docx;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,10 +15,17 @@ import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.CommentsPart;
+import org.docx4j.wml.CommentRangeStart;
 import org.docx4j.wml.Comments;
 import org.docx4j.wml.ContentAccessor;
+import org.jvnet.jaxb2_commons.ppp.Child;
 
 public class Docx {
+	public boolean _debug = false;
+
+	// maintain docx structure here
+	Map<Object, Object> theirParent = new HashMap<Object, Object>();
+
 	WordprocessingMLPackage wordMLPackage;
 	org.docx4j.wml.Document wmlDocumentEl;
 
@@ -44,9 +52,33 @@ public class Docx {
 		wordMLPackage.getMainDocumentPart().addTargetPart(cp);
 		Comments comments = factory.createComments();
 		cp.setJaxbElement(comments);
-
-		// wordMLPackage.getMainDocumentPart().getStyleDefinitionsPart();
 	}
+
+	/*
+	 * private void parseStructure() { new
+	 * TraversalUtil(wmlDocumentEl.getBody(), new TraversalUtil.Callback() {
+	 * 
+	 * @Override public void walkJAXBElements(Object parent) { List<Object>
+	 * children = getChildren(parent); if (children != null) { for (Object o :
+	 * children) { // if its wrapped in javax.xml.bind.JAXBElement, // get its
+	 * // value; this is ok, provided the results of // the Callback // won't be
+	 * marshalled o = XmlUtils.unwrap(o);
+	 * 
+	 * theirParent.put(o, parent);
+	 * 
+	 * this.apply(o);
+	 * 
+	 * if (this.shouldTraverse(o)) { walkJAXBElements(o); } } } }
+	 * 
+	 * @Override public List<Object> getChildren(Object o) { return
+	 * TraversalUtil.getChildrenImpl(o); }
+	 * 
+	 * @Override public boolean shouldTraverse(Object o) { return true; }
+	 * 
+	 * @Override public List<Object> apply(Object arg0) { // TODO Auto-generated
+	 * method stub return null; } }); } public Object getParentFor(Object o) {
+	 * // parse it when needed parseStructure(); return theirParent.get(o); }
+	 */
 
 	public org.docx4j.wml.Body getBody() {
 		return wmlDocumentEl.getBody();
@@ -55,6 +87,41 @@ public class Docx {
 	public Comments getComment() {
 		return wordMLPackage.getMainDocumentPart().getCommentsPart()
 				.getContents();
+	}
+
+	public Object getCommentRangeStartById(BigInteger id) {
+		final BigInteger thisId = id;
+		final List<Object> container = new ArrayList<Object>();
+		new TraversalUtil(this.getBody(), new TraversalUtil.CallbackImpl() {
+			@Override
+			public List<Object> apply(Object o) {
+				//
+				if (o instanceof CommentRangeStart) {
+					if (((CommentRangeStart) o).getId().equals(thisId))
+						container.add(o);
+				}
+				return null;
+			}
+		});
+		return container.size() > 0 ? container.get(0) : null;
+	}
+
+	// looks cool
+	public void tail(Object o, Class<?> containerType) {
+		if (containerType == null) {
+			return;
+		}
+
+		List<Object> siblings = Docx.getNodesByClass(this.getBody(),
+				containerType);
+
+		if (siblings.size() > 0) {
+			ContentAccessor ca = (ContentAccessor) siblings
+					.get(siblings.size() - 1);
+			ca.getContent().add(o);
+		} else {
+			this.getBody().getContent().add(o);
+		}
 	}
 
 	public List<Object> getTailAccessor() {
@@ -96,6 +163,8 @@ public class Docx {
 		});
 
 		if (visited.size() > 0) {
+			System.out.println(visited.get(visited.size() - 1).getClass()
+					.getName());
 			return ((ContentAccessor) visited.get(visited.size() - 1))
 					.getContent();
 		}
@@ -136,6 +205,17 @@ public class Docx {
 
 		return run;
 	}
+	
+
+	public static org.docx4j.wml.R.CommentReference createCommentReference(
+			java.math.BigInteger commentId) {
+
+		org.docx4j.wml.R.CommentReference commentRef = factory
+				.createRCommentReference();
+		commentRef.setId(commentId);
+		return commentRef;
+
+	}
 
 	public static org.docx4j.wml.CommentRangeStart createCommentRangeStart(
 			java.math.BigInteger commentId) {
@@ -163,8 +243,14 @@ public class Docx {
 		});
 		return sb.toString();
 	}
+	
+	public Object getNextObject(Object o){
+		ContentAccessor parent = (ContentAccessor)((Child)o).getParent();
+		
+		return null;
+	}
 
-	public static List<Object> getPartsByClass(Object part, Class<?> type) {
+	public static List<Object> getNodesByClass(Object part, Class<?> type) {
 		final List<Object> parts = new ArrayList<Object>();
 		final Class<?> toSearch = type;
 		new TraversalUtil(part, new TraversalUtil.CallbackImpl() {

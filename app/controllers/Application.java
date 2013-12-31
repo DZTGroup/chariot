@@ -12,6 +12,7 @@ import org.docx4j.wml.Body;
 
 import com.aperture.docx.Docx;
 import com.aperture.docx.dom.DocxTreeStructure;
+import com.aperture.docx.dom.ModuleCompiler;
 
 import play.*;
 import play.mvc.*;
@@ -80,12 +81,17 @@ public class Application extends Controller {
 	// test stub by mao
 	public static Result parse() throws Docx4JException {
 		String path = settings.Constant.DEBUG_PATH + "sample.docx";
-		String outputPath = settings.Constant.DEBUG_PATH + "mod.docx";
 
 		Docx doc = new Docx(path);
 		new DocxTreeStructure(doc).parseAs("sample");
 
-		doc.save(outputPath);
+		// test doc gen
+		ModuleCompiler mc = new ModuleCompiler();
+		com.aperture.docx.dom.Module m = new com.aperture.docx.dom.Module();
+		m.init("sample");
+		mc.pendModule(m);
+		mc.save(settings.Constant.DEBUG_PATH + "compiled.docx");
+
 		return ok("done!");
 	}
 
