@@ -7,37 +7,32 @@
     </hgroup>
 </header>
 <article class="tasks">
-    @if(document.getModuleList!=null){
-        @for(module <- document.getModuleList()){
-            <div class="folder">
-                <header>
-                    <h3><a href="">@module.name</a></h3>
-                    <span class="loader">Loading</span>
-                </header>
-                @if(module.getQuestionList()!=null){
-                        <ul class="list">
-                            @for(question <- module.getQuestionList()){
-                            <li>
-                                <!--<h4>Check 1.2.4-RC2</h4>-->
-                                <!--<time datetime="Fri Nov 18 08:00:00 CST 2011">十一月 18 2011</time>-->
-                                <h4>@question.context <a href="javascript:;" class="J_question_edit" data-id="@question.questionId">编辑问题</a></h4>
-                                <dl class="questions">
-                                    <dt>你的性别？</dt>
-                                    <dd>A.男</dd>
-                                    <dd>B.女</dd>
-                                </dl>
-                            </li>
-                            }
-                        </ul>
+    @for(item <- document.lists){
+    <div class="folder">
+            @item match{
+                case question : template.Question =>{
+                    <ul class="list">
+                        <li>
+                            <h4>@question.context <a href="javascript:;" class="J_question_edit" data-id="@question.questionId">编辑问题</a></h4>
+                            <dl class="questions">
+                                <dt>你的性别？</dt>
+                                <dd>A.男</dd>
+                                <dd>B.女</dd>
+                            </dl>
+                        </li>
+                    </ul>
                 }
-            </div>
-        }
-    }else{
-        <h3>没有模块</h3>
-    }
+
+                case module:template.Module =>{
+                    <header>
+                        <h3><a href="">@module.name</a></h3>
+                        <span class="loader">Loading</span>
+                    </header>
+                }
+            }
 
 
 
-
-
+    </div>
+}
 </article>

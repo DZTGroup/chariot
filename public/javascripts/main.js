@@ -138,7 +138,7 @@
       var TYPES = {
           blank:"填空",
           choice:"单选",
-          multichoice:"多选"
+          mutichoice:"多选"
       };
       var getIndex = function(i){
           return LETTERS.charAt(i);
@@ -148,10 +148,10 @@
           '<tr>'+
             '<td>问题:</td><td><textarea placeholder="问题描述" class="J_content"><%=desc.content%></textarea></td>'+
           '</tr></tbody></table>'+
-          '<div class="J_option_area"><p><button type="button" class="btn J_option_add">增加一个选项</button></p>'+
-          '<ul class="J_options">'+
+          '<div class="J_option_area options_area"><p><button type="button" class="btn btn-primary J_option_add">+选项</button></p>'+
+          '<ul class="J_options options_list">'+
           '<%if(desc.options){desc.options.forEach(function(item,i){%>'+
-          '<li><%=(i+1)%>.<input type="text" value="<%=item%>"></li>'+
+          '<li><%=(i+1)%>.<input type="text" value="<%=item%>"><a onclick="$(this).parent().remove();" href="javascript:;">x</a></li>'+
           '<%})}%>'+
           '</ul></div></div>';
       var DISPLAY_TPL = '<dl class="questions"><dt><%=desc.content%></dt>'+
@@ -228,6 +228,9 @@
               el.find('.J_type').change(function(){
                   self.changeType($(this).val());
               });
+              if(self.model.get("type")==="blank"){
+                el.find(".J_option_area").hide();
+              }
           });
       };
       Controller.prototype.save = function(){
@@ -246,7 +249,8 @@
       };
       Controller.prototype.addOption = function(){
           var options = this.view.modal.el.find('.J_options');
-          options.append('<li>'+(options.find('li').length+1)+'.<input type="text" ></li>');
+          $('<li>'+(options.find('li').length+1)+'.<input type="text" ><a onclick="$(this).parent().remove();" href="javascript:;">x</a></li>')
+          .appendTo(options).hide().fadeIn();
 
       };
       Controller.prototype.changeType = function(type){
