@@ -1,7 +1,6 @@
 package controllers;
 
 import ajax.Ajax;
-
 import models.Question;
 import play.mvc.Controller;
 import play.mvc.Http;

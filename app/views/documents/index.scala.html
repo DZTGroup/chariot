@@ -1,17 +1,25 @@
-@(documents: List[Module])
+@(files: List[File],file:File)
 
 
 <header>
     <hgroup>
-        <h1>所有文档</h1>
+        <h1>@file.name</h1>
     </hgroup>
 </header>
 <ul class="document_list">
-	@for(d <- documents) {
+    @displayFileImg(t:String)={
+        @t match{
+            case "doc" => {<img src="@routes.Assets.at("images/word.png")" />}
+            case "dir" => {<img src="@routes.Assets.at("images/folder.png")" />}
+        }
+
+    }
+
+	@for(f <- files) {
   		<li>
-  			<a href="#/document/@d.id">
-  				<img src="@routes.Assets.at("images/word.png")" />
-  				@d.name
+  			<a href="#/document/@f.id">
+                @displayFileImg(f.`type`)
+  				@f.name
   			</a>
   		</li>
 	}
