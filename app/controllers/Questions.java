@@ -1,8 +1,6 @@
 package controllers;
 
 import ajax.Ajax;
-import com.google.gson.Gson;
-
 import models.Question;
 import play.mvc.Controller;
 import play.mvc.Http;

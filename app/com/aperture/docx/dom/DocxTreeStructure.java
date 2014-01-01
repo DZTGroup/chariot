@@ -58,7 +58,7 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 
 	protected Object getLastChild(Object parent) {
 		List<Object> children = getChildren(parent);
-		if (children != null) {
+		if (children != null && children.size() > 0) {
 			return children.get(children.size() - 1);
 		}
 
