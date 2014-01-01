@@ -19,11 +19,16 @@ public class Documents extends Controller {
 
         String name = models.Module.getById(id).name;
 
-        models.template.Module document = DocxService.analyzeModule(name);
+        try{
 
+            models.template.Module document = DocxService.analyzeModule(name);
+            return ok(detail.render(document));
+        }catch(Exception e){
+            return badRequest();
+        }
 //        models.template.Module mockDocument = Data.generate();
 
-        return ok(detail.render(document));
+
 
     }
 
