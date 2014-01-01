@@ -1,8 +1,5 @@
 package com.aperture.docx.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 import com.aperture.docx.Docx;
