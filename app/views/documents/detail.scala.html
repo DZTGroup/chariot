@@ -3,9 +3,9 @@
 
 <header>
     <hgroup id="doc">
-        <h1 style="font-size:14px">@document.name</h1>
-        <a style="float:right;text-decoration:underline" href="/service/download/@helper.urlEncode(document.name)">Download</a>
+        <h1 style="font-size:19px">@document.name</h1>
     </hgroup>
+    <button class="downloadLink" style="float:right" onclick='window.location.href="/service/download/@helper.urlEncode(document.name)"'>下载文档</button>
 </header>
 <article class="tasks">
     @displayQuestion(question:template.Question) = {
@@ -38,7 +38,27 @@
 
                 case module:template.Module =>{
                     <header>
-                        <h3 style="display:block;"><a href="">@module.name</a><a style="float:right;text-decoration:underline" href="/service/download/@module.name">Download</a></h3>
+                        <h3 class="module_block">
+                        	<a href="">@module.name</a>
+                        	<div style="display:inline-block">
+                        		<input type="button" class="downloadLink" align="right" onclick='window.location.href="/service/download/@helper.urlEncode(module.name)"' value="下载模块"/>                        	
+                        		<button id="file-uploader-@module.name" type="button" class="downloadLink" align="right">更新模块</button>
+                        		<script>
+                        		jQuery(function(){
+        				 var uploader = new qq.FileUploader({
+        				 element: document.getElementById('file-uploader-@module.name'),
+          				 action: '/service/upload/module',
+          				 name:"更新模块",
+           				 onComplete: function(id, fileName, responseJSON){
+           				 setTimeout(function(){$('#loading').modal('hide');},700);           				 
+						 window.location.href="#/documents"
+            			 return false;
+          				 },
+        			});           
+    			});
+                        		</script>
+                        	</div>
+                        </h3>
                         <span class="loader">Loading</span>
                     </header>
                     <ul class="list">

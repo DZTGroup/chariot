@@ -23,10 +23,11 @@ import settings.Constant;
 
 public class Upload extends Controller {
 
-    public static Result uploadDocument(String fileName) throws Docx4JException {
+    public static Result uploadDocument(String fileName, String type) throws Docx4JException {
         File file = request().body().asRaw().asFile();
         String myUploadPath = Constant.USER_DIR;
         File newFile = new File(myUploadPath,fileName);
+        Logger.info("hahahahahhahahha"+type+"**********");
         Logger.info("File name:" + fileName + ", Raw size:" + request().body().asRaw().size());
 
         try {

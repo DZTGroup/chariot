@@ -28,7 +28,7 @@ GET     /assets/*file                       controllers.Assets.at(path="/public"
 GET     /formUpload                 controllers.Upload.renderUpload()
 POST    /doUpload                   controllers.Upload.uploadForm()
 
-POST    /service/upload/            controllers.Upload.uploadDocument(qqfile: String)
+POST    /service/upload/:type           controllers.Upload.uploadDocument(qqfile: String, type:String)
 GET /service/download/:filename		controllers.Upload.fetchDocument(filename: String)
 
 

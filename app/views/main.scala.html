@@ -18,14 +18,15 @@
     		jQuery(function(){
         		var uploader = new qq.FileUploader({
         		element: document.getElementById('file-uploader'),
-          				 action: '/service/upload/',
+          				 action: '/service/upload/doc',
+          				 name:'导入文档模板',
            				 onComplete: function(id, fileName, responseJSON){
            				 setTimeout(function(){$('#loading').modal('hide');},700);           				 
 						 window.location.href="#/documents"
             			 return false;
           				 },
         			});           
-    			});     
+    			});
 		</script> 
     </head>
     <body>
