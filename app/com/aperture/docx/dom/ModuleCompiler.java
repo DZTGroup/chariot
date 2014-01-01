@@ -49,6 +49,7 @@ public class ModuleCompiler {
 		new TraversalUtil(pendingModule.doc.getBody(),
 				new TraversalUtil.CallbackImpl() {
 					BigInteger wrapperId = null;
+					boolean isInsideModule = false;
 					List<Docx4JException> errors = new ArrayList<Docx4JException>();
 
 					@Override
@@ -57,6 +58,7 @@ public class ModuleCompiler {
 							if (wrapperId == null) {
 								// this is the wrapper of this module
 								wrapperId = ((CommentRangeStart) o).getId();
+								isInsideModule = true;
 							} else {
 								// sub module
 								pend(o);
@@ -74,7 +76,11 @@ public class ModuleCompiler {
 							if (!((CommentRangeEnd) o).getId()
 									.equals(wrapperId)) {
 								pend(o);
+								// clear
+							}else{
+								isInsideModule = false;
 							}
+
 						} else if (o instanceof CommentReference) {
 							// just pend unless its module ending
 							// also, add comment to doc comment parts
@@ -101,7 +107,7 @@ public class ModuleCompiler {
 								}
 							}
 						} else {
-							if (wrapperId != null) {
+							if (wrapperId != null && isInsideModule) {
 								pend(o);
 							}
 						}
