@@ -1,27 +1,38 @@
 package controllers;
 
+import com.aperture.docx.service.DocxService;
+import models.*;
 import models.template.*;
 import play.mvc.*;
 import views.html.dashboard;
 import views.html.documents.*;
-import models.User;
 
 @Security.Authenticated(Secured.class)
 public class Documents extends Controller {
-  
+
     public static Result index() {
         return ok(index.render(models.Module.getDocuments()));
 
     }
 
-    public static Result detail(Long id){
-        models.template.Module mockDocument = Data.generate();
+    public static Result detail(Long id) {
 
-        return ok(detail.render(mockDocument));
+        String name = models.Module.getById(id).name;
+
+        try{
+
+            models.template.Module document = DocxService.analyzeModule(name);
+            return ok(detail.render(document));
+        }catch(Exception e){
+            return badRequest();
+        }
+//        models.template.Module mockDocument = Data.generate();
+
+
 
     }
-    
-    public static Result view(){
+
+    public static Result view() {
         return ok(dashboard.render(User.find.byId(session("email"))));
     }
 
