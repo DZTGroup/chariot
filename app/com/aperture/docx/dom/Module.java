@@ -96,7 +96,7 @@ public class Module {
 		public int index;
 	}
 
-	public List<Object> analyse() {
+	public models.template.Module analyse() {
 		final List<Object> searchList = new ArrayList<Object>();
 		final StringBuilder pureText = new StringBuilder();
 		new TraversalUtil(doc.getBody(), new TraversalUtil.CallbackImpl() {
@@ -128,9 +128,7 @@ public class Module {
 							e.printStackTrace();
 						}
 						if (sub.isInitialized() == true) {
-							models.template.Module m = new models.template.Module(
-									name, Docx.extractText(sub.doc.getBody()),
-									sub.analyse());
+							models.template.Module m = sub.analyse();
 							searchList.add(m);
 						}
 					}
@@ -159,6 +157,7 @@ public class Module {
 				result.add(q);
 			}
 		}
-		return result;
+		return new models.template.Module(id, Docx.extractText(doc.getBody()),
+				result);
 	}
 }
