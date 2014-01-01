@@ -109,7 +109,7 @@ public class Application extends Controller {
 
 	public static Result analyze() throws Docx4JException {
 		StringBuilder sb = new StringBuilder();
-		iter(DocxService.analyzeModule("sample"), sb, "");
+		iter(DocxService.analyzeModule("sample").list, sb, "");
 		return ok(sb.toString());
 	}
 
