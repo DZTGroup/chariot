@@ -15,10 +15,10 @@ public class Module {
 
 
 
-    public Module(String name, String text, List lists){
+    public Module(String name, String text, List<Object> list){
         this.name = name;
         this.text = text;
-        this.list = lists;
+        this.list = list;
     }
 
     public List<Question> getQuestionList(){
