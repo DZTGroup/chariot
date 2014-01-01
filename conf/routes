@@ -9,7 +9,7 @@ GET 	/								controllers.Documents.view()
 
 #Documents
 GET     /documents                         controllers.Documents.index()
-GET     /document/:id                      controllers.Documents.detail(id:Long)
+GET     /document/:id                      controllers.Documents.folder(id:Long)
 
 # Authentication
 GET     /login                              controllers.Application.login()
