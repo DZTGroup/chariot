@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.UUID;
 
 //import javax.xml.bind.JAXBElement;
 
@@ -16,6 +17,7 @@ import org.docx4j.wml.CommentRangeEnd;
 import org.docx4j.wml.CommentRangeStart;
 import org.docx4j.wml.Comments.Comment;
 import org.docx4j.wml.ContentAccessor;
+import org.docx4j.wml.R;
 import org.docx4j.wml.R.CommentReference;
 
 import com.aperture.docx.Docx;
@@ -32,12 +34,12 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 	// transformation
 	Map<Object, Object> moveMapping = new HashMap<Object, Object>();
 	List<Object> moveList = new ArrayList<Object>();
-
 	List<Object> removeList = new ArrayList<Object>();
 
 	// modules
 	Stack<Module> moduleStack = new Stack<Module>();
 	Module currentPop = null;
+	// result storage
 	List<Module> extractedModules = new ArrayList<Module>();
 
 	// comment
@@ -45,6 +47,10 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 
 	// traversal facility
 	Stack<Object> currentPath = new Stack<Object>();
+
+	// is now dealing with question?
+	boolean isDealingQuestion = false;
+	Map<Object, Long> questionLocation = new HashMap<Object, Long>();
 
 	public DocxTreeStructure(Docx d) {
 		doc = d;
@@ -62,9 +68,9 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 	// Depth first
 	@Override
 	public void walkJAXBElements(Object parent) {
-
 		List<Object> children = getChildren(parent);
 		if (children != null) {
+			// overall path
 			currentPath.push(parent);
 			Object lastRef = null;
 			for (Object o : children) {
@@ -113,14 +119,35 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 		return true;
 	}
 
+	boolean isQuestionMarker(Object start) {
+		Object next = doc.getNextObject(start);
+		if (next instanceof R) {
+			if (Docx.extractText(next).matches("^__+$")) {
+				Object end = doc.getNextObject(next);
+
+				if (end instanceof CommentRangeEnd) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	// parsing
+	// MAGIC, do not touch
 	@Override
 	public List<Object> apply(Object o) {
-		// getAllElementFromObject(o);
-		//
-		if (o instanceof CommentRangeStart) {
+		// check if question here
+		// if is question, ignore all control Comment(write them down just as
+		// normal nodes)
+		if (o instanceof CommentRangeStart && isQuestionMarker(o)) {
+			isDealingQuestion = true;
+		}
+		// pre check
+		boolean isModuleStackEmptyBefore = moduleStack.isEmpty();
+		if (o instanceof CommentRangeStart && !isDealingQuestion) {
 			Module m = new Module();
 			List<Object> path = new ArrayList<Object>(currentPath);
-
 			// ignore the first one of path, which is 'Body'
 			Object head = null;
 			if (path.size() > 1) {
@@ -131,46 +158,79 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 				m.init(head);
 				// CommentRangeStart is just a child
 				Object commentRangeStarter = XmlUtils.deepCopy(o);
-				m.tail(commentRangeStarter,
+				m.doc.tail(commentRangeStarter,
 						theirParent.get(o) != null ? theirParent.get(o)
 								.getClass() : null);
+
+				// also mark it in parent module as a ref
+				// if exist
+				if (!moduleStack.isEmpty()) {
+					removeList.add(o);
+					commentRangeStarter = XmlUtils.deepCopy(o);
+					moduleStack.peek().doc.tail(commentRangeStarter,
+							theirParent.get(o) != null ? theirParent.get(o)
+									.getClass() : null);
+				}
 			} catch (Docx4JException e) {
 				//
 				e.printStackTrace();
 				errors.add(e);
 			}
 			moduleStack.push(m);
-
-		} else if (o instanceof CommentRangeEnd) {
+		} else if (o instanceof CommentRangeEnd && !isDealingQuestion) {
 			currentPop = moduleStack.pop();
 			// CommentRangeStart is just a child
 			Object commentRangeEnder = XmlUtils.deepCopy(o);
-			currentPop.tail(commentRangeEnder,
+
+			currentPop.doc.tail(commentRangeEnder,
 					theirParent.get(o) != null ? theirParent.get(o).getClass()
 							: null);
-		} else if (o instanceof CommentReference) {
+			// also mark it in parent module as a ref
+			// if exist
+			if (!moduleStack.isEmpty()) {
+				removeList.add(o);
+				commentRangeEnder = XmlUtils.deepCopy(o);
+				moduleStack.peek().doc.tail(commentRangeEnder, theirParent
+						.get(o) != null ? theirParent.get(o).getClass() : null);
+			}
+
+		} else if (o instanceof CommentReference && !isDealingQuestion) {
 			CommentReference cr = (CommentReference) o;
 			BigInteger id = cr.getId();
+
 			// update
 			if (maxCommentId.compareTo(id) < 0)
 				maxCommentId = id;
 
 			for (Comment c : doc.getComment().getComment()) {
 				if (id.equals(c.getId())) {
-					// System.out.println(Docx.extractText(c));
 					if (currentPop != null) {
 						currentPop.id = Docx.extractText(c);
 						currentPop.doc.createComment(id, currentPop.id);
 						Object ref = Docx.createRunCommentReference(id);
 
-						currentPop.tail(ref,
-								theirParent.get(o) != null ? theirParent.get(o)
-										.getClass() : null);
+						R parentR = (R) theirParent.get(o);
+						currentPop.doc.tail(ref,
+								theirParent.get(parentR) != null ? theirParent
+										.get(parentR).getClass() : null);
+
+						// also mark it in parent module as a ref
+						// if exist
+						if (!moduleStack.isEmpty()) {
+							doc.getComment().getComment().remove(c);
+							moduleStack.peek().doc.createComment(id,
+									currentPop.id);
+							R.CommentReference refc = Docx
+									.createCommentReference(id);
+							// R already added, just add ref in this case
+							moduleStack.peek().doc.tail(refc, R.class);
+						}
 
 						extractedModules.add(currentPop);
 
 						currentPop = null;
 					}
+					break;
 				}
 			}
 		} else {
@@ -184,23 +244,51 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 				if (oc instanceof ContentAccessor)
 					((ContentAccessor) oc).getContent().clear();
 
-				m.tail(oc, theirParent.get(o) != null ? theirParent.get(o)
+				m.doc.tail(oc, theirParent.get(o) != null ? theirParent.get(o)
 						.getClass() : null);
-			} else {
-				Object parent = theirParent.get(o);
-				if (parent != null && removeList.contains(parent)) {
-					while (parent != null && removeList.contains(parent)) {
-						parent = lastSibling.get(parent);
-					}
+			}
 
-					if (parent != null) {
-						if (o instanceof org.docx4j.wml.Text)
-							System.out.println(((org.docx4j.wml.Text) o)
-									.getValue());
-						moveMapping.put(o, parent);
-						moveList.add(o);
-						// ((ContentAccessor)parent).getContent().add(o);
+			// dealing question, mode CommentRef, generate question id
+			if (o instanceof CommentReference && isDealingQuestion) {
+				isDealingQuestion = false;
+				CommentReference cr = (CommentReference) o;
+				BigInteger id = cr.getId();
+
+				// update
+				if (maxCommentId.compareTo(id) < 0)
+					maxCommentId = id;
+
+				for (Comment c : doc.getComment().getComment()) {
+					if (id.equals(c.getId())) {
+						// remove comment from main
+						doc.getComment().getComment().remove(c);
+						// generate question id
+						UUID qid = UUID.randomUUID();
+
+						// create new for module ( or main )
+						if (moduleStack.isEmpty()) {
+							doc.createComment(id, qid.toString());
+						} else {
+							moduleStack.peek().doc.createComment(id,
+									qid.toString());
+						}
+						break;
 					}
+				}
+			}
+		}
+
+		if (isModuleStackEmptyBefore || moduleStack.isEmpty()) {
+			Object parent = theirParent.get(o);
+			if (parent != null && removeList.contains(parent)) {
+				while (parent != null && removeList.contains(parent)) {
+					parent = lastSibling.get(parent);
+				}
+
+				if (parent != null) {
+					moveMapping.put(o, parent);
+					moveList.add(o);
+					// ((ContentAccessor)parent).getContent().add(o);
 				}
 			}
 		}
@@ -227,23 +315,26 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 		if (errors.size() == 0) {
 			// done, save
 			for (Module m : extractedModules) {
-				m.doc.save(settings.Constant.MODULE_PATH + m.id + ".docx");
+				m.doc.save(settings.Constant.MODULE_PATH + "/" + m.id + ".docx");
 			}
 			// also save itself as a module
 			List<Object> docFlow = doc.getBody().getContent();
 			BigInteger commentId = maxCommentId.add(BigInteger.ONE);
-			
+
 			doc.createComment(commentId, name);
 			Object start = Docx.createCommentRangeStart(commentId);
 			Object end = Docx.createCommentRangeEnd(commentId);
 			Object ref = Docx.createRunCommentReference(commentId);
-			
+
 			docFlow.add(0, start);
-			List<Object> tail = doc.getTailAccessor();
-			tail.add(end);
-			tail.add(ref);
-			
-			doc.save(settings.Constant.MODULE_PATH + name + ".docx");
+			// List<Object> tail = doc.getTailAccessor();
+			// simply use the last paragraph
+			ContentAccessor last = (ContentAccessor) docFlow
+					.get(docFlow.size() - 1);
+			last.getContent().add(end);
+			last.getContent().add(ref);
+
+			doc.save(settings.Constant.MODULE_PATH + "/" + name + ".docx");
 		}
 	}
 }

@@ -2,12 +2,14 @@
 
 
 <header>
-    <hgroup>
-        <h1>@document.name</h1>
+    <hgroup id="doc">
+        <h1 style="font-size:14px">@document.name</h1>
+        <a style="float:right;text-decoration:underline" href="/service/download/@document.name">Download</a>
     </hgroup>
 </header>
 <article class="tasks">
-    @for(item <- document.lists){
+    @if(document!=null){
+    @for(item <- document.list){
     <div class="folder">
             @item match{
                 case question : template.Question =>{
@@ -25,9 +27,15 @@
 
                 case module:template.Module =>{
                     <header>
-                        <h3><a href="">@module.name</a></h3>
+                        <h3 style="display:block;"><a href="">@module.name</a><a style="float:right;text-decoration:underline" href="/service/download/@module.name">Download</a></h3>
                         <span class="loader">Loading</span>
                     </header>
+                    <ul class="list">
+                        <li>
+                            @module.text
+                        </li>
+
+                    </ul>
                 }
             }
 
@@ -35,4 +43,5 @@
 
     </div>
 }
+    }
 </article>

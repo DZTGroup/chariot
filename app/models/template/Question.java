@@ -5,10 +5,10 @@ package models.template;
  */
 
 public class Question {
-    public Long questionId;
+    public String questionId;
     public String context;
 
-    public Question(Long questionId, String context){
+    public Question(String questionId, String context){
         this.questionId = questionId;
         this.context = context;
     }

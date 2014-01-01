@@ -12,6 +12,8 @@ import org.docx4j.wml.Body;
 
 import com.aperture.docx.Docx;
 import com.aperture.docx.dom.DocxTreeStructure;
+import com.aperture.docx.dom.ModuleCompiler;
+import com.aperture.docx.service.DocxService;
 
 import play.*;
 import play.mvc.*;
@@ -77,20 +79,43 @@ public class Application extends Controller {
 				controllers.routes.javascript.Documents.index()));
 	}
 
-	// test stub by mao
+	/***********************************************
+	 * test stub by Aohajin *
+	 ***********************************************/
 	public static Result parse() throws Docx4JException {
-		String path = settings.Constant.DEBUG_PATH + "sample.docx";
-		String outputPath = settings.Constant.DEBUG_PATH + "mod.docx";
+		String path = settings.Constant.DEBUG_PATH + "/" + "sample.docx";
 
 		Docx doc = new Docx(path);
 		new DocxTreeStructure(doc).parseAs("sample");
 
-		doc.save(outputPath);
+		// test doc gen
+		ModuleCompiler mc = new ModuleCompiler();
+		com.aperture.docx.dom.Module m = new com.aperture.docx.dom.Module();
+		m.init("sample");
+		mc.pendModule(m);
+		mc.save(settings.Constant.DEBUG_PATH + "/" + "compiled.docx");
+
 		return ok("done!");
 	}
 
+	private static void iter(List<Object> list, StringBuilder sb, String indent) {
+		for (Object o : list) {
+			sb.append(indent + o.getClass().getName() + "\n");
+			if (o instanceof models.template.Module) {
+				iter(((models.template.Module) o).lists, sb, indent + "\t");
+			}
+		}
+	}
+
+	public static Result analyze() throws Docx4JException {
+		StringBuilder sb = new StringBuilder();
+		iter(DocxService.analyzeModule("sample"), sb, "");
+		return ok(sb.toString());
+	}
+
 	public static Result all(String name) throws Docx4JException {
-		String inputfilepath = settings.Constant.DEBUG_PATH + name + ".docx";
+		String inputfilepath = settings.Constant.DEBUG_PATH + "/" + name
+				+ ".docx";
 
 		final StringBuilder sb = new StringBuilder();
 
