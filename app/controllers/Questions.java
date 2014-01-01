@@ -43,9 +43,18 @@ public class Questions extends Controller {
     public static Result saveQuestion(){
         Http.RequestBody body = request().body();
         Map<String ,String[]> map = body.asFormUrlEncoded();
-        Question q = Question.getById(map.get("id")[0]);
-        q.description = map.get("description")[0];
-        q.type = map.get("type")[0];
+
+        String id = map.get("id")[0];
+        String description = map.get("description")[0];
+        String type = map.get("type")[0];
+        Question q = Question.getById(id);
+        if(q==null){
+            q = new Question(id,description,type);
+        }else{
+            q.description = description ;
+            q.type =type;
+        }
+
         q.save();
         return ok();
     }

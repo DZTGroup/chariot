@@ -1,5 +1,5 @@
 @(document:template.Module)
-
+@import com.google.gson.Gson;
 
 <header>
     <hgroup id="doc">
@@ -8,20 +8,31 @@
     </hgroup>
 </header>
 <article class="tasks">
-    @if(document!=null){
-    @for(item <- document.list){
-    <div class="folder">
+    @displayQuestion(question:template.Question) = {
+        <li>
+            <h4>@question.context <a href="javascript:;" class="J_question_edit" data-id="@question.questionId">编辑问题</a></h4>
+            <dl class="questions">
+                @defining(Question.getById(question.questionId)){ q=>
+                    @if(q!=null){
+                        @defining(QuestionDescription.parse(q.description)){qd=>
+                            <dt>@qd.content</dt>
+                            @for(i <- 0 to (qd.options.length - 1)){
+                            <dd>@(i+1).@qd.options(i)</dd>
+                            }
+                        }
+                    }
+                }
+            </dl>
+        </li>
+    }
+
+    @displayList(list:List[Object]) = {
+        @for(item <- list){
+            <div class="folder">
             @item match{
                 case question : template.Question =>{
                     <ul class="list">
-                        <li>
-                            <h4>@question.context <a href="javascript:;" class="J_question_edit" data-id="@question.questionId">编辑问题</a></h4>
-                            <dl class="questions">
-                                <dt>你的性别？</dt>
-                                <dd>A.男</dd>
-                                <dd>B.女</dd>
-                            </dl>
-                        </li>
+                        @displayQuestion(question)
                     </ul>
                 }
 
@@ -34,14 +45,17 @@
                         <li>
                             @module.text
                         </li>
-
                     </ul>
+                    @if(module.list!=null){
+                        @displayList(module.list)
+                    }
                 }
             }
+            </div>
+        }
+    }
 
-
-
-    </div>
-}
+    @if(document!=null){
+        @displayList(document.list)
     }
 </article>
