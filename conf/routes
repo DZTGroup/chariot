@@ -38,4 +38,5 @@ POST    /questionsave               controllers.Questions.saveQuestion
 
 #Test stub
 GET		/parse						controllers.Application.parse()
+GET		/analyze					controllers.Application.analyze()
 GET		/all/*name					controllers.Application.all(name:String)

@@ -1,9 +1,13 @@
 package com.aperture.docx.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 import com.aperture.docx.Docx;
 import com.aperture.docx.dom.DocxTreeStructure;
+import com.aperture.docx.dom.Module;
 import com.aperture.docx.dom.ModuleCompiler;
 
 public class DocxService {
@@ -14,7 +18,7 @@ public class DocxService {
 		new DocxTreeStructure(doc).parseAs(name);
 	}
 
-	public static boolean getModule(String name) throws Docx4JException {
+	public static boolean getCompiledModule(String name) throws Docx4JException {
 		ModuleCompiler mc = new ModuleCompiler();
 		com.aperture.docx.dom.Module m = new com.aperture.docx.dom.Module();
 		m.init(name);
@@ -27,5 +31,13 @@ public class DocxService {
 		return true;
 	}
 	
-	//public List<Object> 
+	public static List<Object> analyzeModule(String name) throws Docx4JException{
+		Module m = new Module();
+		m.init(name);
+		if(m.isInitialized()){
+			return m.analyse();
+		}
+		
+		return new ArrayList<Object>();
+	}
 }

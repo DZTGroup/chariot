@@ -118,6 +118,8 @@ public class Module {
 						String name = doc
 								.getCommentTextById(((CommentRangeStart) o)
 										.getId());
+						if (name.equals(id))
+							return null;
 						Module sub = new Module();
 						try {
 							sub.init(name);
@@ -126,13 +128,11 @@ public class Module {
 							e.printStackTrace();
 						}
 						if (sub.isInitialized() == true) {
-
+							models.template.Module m = new models.template.Module(
+									name, Docx.extractText(sub.doc.getBody()),
+									sub.analyse());
+							searchList.add(m);
 						}
-						models.template.Module m = new models.template.Module(
-								name, Docx.extractText(sub.doc.getBody()), sub
-										.analyse());
-
-						searchList.add(m);
 					}
 				}
 				return null;
@@ -152,7 +152,7 @@ public class Module {
 				int end = qm.index + settings.Constant.QUESTION_CONTEXT_RADIUS
 						+ 4;
 				end = end <= pureText.length() ? end : pureText.length();
-				
+
 				models.template.Question q = new models.template.Question(
 						qm.qid, pureText.substring(start, end));
 
