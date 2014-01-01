@@ -45,7 +45,10 @@ public class Upload extends Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        Logger.info("File name:"+myUploadPath+"/"+fileName);
         com.aperture.docx.service.DocxService.parseDocument(fileName, myUploadPath+"/"+fileName);
+        
         return ok("{\"success\":\"true\", \"fileName\":\"" + fileName
                 + "\"}");
     }
