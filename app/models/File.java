@@ -26,6 +26,7 @@ public class File extends Model {
     public File(String name, String type) {
         this.name = name;
         this.type = type;
+        this.parentId = Long.valueOf(0);
     }
 
     // -- Queries
