@@ -17,6 +17,7 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.CommentsPart;
 import org.docx4j.wml.CommentRangeStart;
 import org.docx4j.wml.Comments;
+import org.docx4j.wml.Comments.Comment;
 import org.docx4j.wml.ContentAccessor;
 import org.jvnet.jaxb2_commons.ppp.Child;
 
@@ -87,6 +88,15 @@ public class Docx {
 	public Comments getComment() {
 		return wordMLPackage.getMainDocumentPart().getCommentsPart()
 				.getContents();
+	}
+
+	public String getCommentTextById(BigInteger id) {
+		for (Comment c : this.getComment().getComment()) {
+			if (c.getId().equals(id))
+				return Docx.extractText(c);
+		}
+
+		return null;
 	}
 
 	public Object getCommentRangeStartById(BigInteger id) {
@@ -205,7 +215,6 @@ public class Docx {
 
 		return run;
 	}
-	
 
 	public static org.docx4j.wml.R.CommentReference createCommentReference(
 			java.math.BigInteger commentId) {
@@ -243,10 +252,15 @@ public class Docx {
 		});
 		return sb.toString();
 	}
-	
-	public Object getNextObject(Object o){
-		ContentAccessor parent = (ContentAccessor)((Child)o).getParent();
-		
+
+	public Object getNextObject(Object o) {
+		ContentAccessor parent = (ContentAccessor) ((Child) o).getParent();
+
+		int index = parent.getContent().indexOf(o);
+		if (index < parent.getContent().size()) {
+			return parent.getContent().get(index + 1);
+		}
+
 		return null;
 	}
 

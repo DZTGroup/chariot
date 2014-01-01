@@ -15,7 +15,7 @@ public class Data {
 
     public static Module generate(){
         String q1Context = "甲方___________";
-        Question q1 = new Question(new Long(1),q1Context);
+        Question q1 = new Question(new Long(1).toString(),q1Context);
 
         List<Object> list1 = new ArrayList<Object>();
         list1.add(q1);

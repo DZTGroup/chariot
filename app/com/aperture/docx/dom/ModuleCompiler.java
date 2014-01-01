@@ -89,6 +89,8 @@ public class ModuleCompiler {
 
 								doc.tail(ref, cr.getParent() != null ? cr
 										.getParent().getClass() : null);
+								
+								break;
 							}
 						}
 					}

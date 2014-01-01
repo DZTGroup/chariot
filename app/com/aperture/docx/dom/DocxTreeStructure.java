@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.UUID;
 
 //import javax.xml.bind.JAXBElement;
 
@@ -47,8 +48,9 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 	// traversal facility
 	Stack<Object> currentPath = new Stack<Object>();
 
-	// text content
-	StringBuilder pureText = new StringBuilder();
+	// is now dealing with question?
+	boolean isDealingQuestion = false;
+	Map<Object, Long> questionLocation = new HashMap<Object, Long>();
 
 	public DocxTreeStructure(Docx d) {
 		doc = d;
@@ -117,20 +119,33 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 		return true;
 	}
 
+	boolean isQuestionMarker(Object start) {
+		Object next = doc.getNextObject(start);
+		if (next instanceof R) {
+			if (Docx.extractText(next).matches("^__+$")) {
+				Object end = doc.getNextObject(next);
+
+				if (end instanceof CommentRangeEnd) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	// parsing
 	// MAGIC, do not touch
 	@Override
 	public List<Object> apply(Object o) {
-		// append pureText
-		if (o instanceof org.docx4j.wml.Text) {
-			pureText.append(((org.docx4j.wml.Text) o).getValue());
+		// check if question here
+		// if is question, ignore all control Comment(write them down just as
+		// normal nodes)
+		if (o instanceof CommentRangeStart && isQuestionMarker(o)) {
+			isDealingQuestion = true;
 		}
-
-		// getAllElementFromObject(o);
-		//
-		if (o instanceof CommentRangeStart) {
-			// if this is question
-
+		// pre check
+		boolean isModuleStackEmptyBefore = moduleStack.isEmpty();
+		if (o instanceof CommentRangeStart && !isDealingQuestion) {
 			Module m = new Module();
 			List<Object> path = new ArrayList<Object>(currentPath);
 			// ignore the first one of path, which is 'Body'
@@ -162,8 +177,7 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 				errors.add(e);
 			}
 			moduleStack.push(m);
-
-		} else if (o instanceof CommentRangeEnd) {
+		} else if (o instanceof CommentRangeEnd && !isDealingQuestion) {
 			currentPop = moduleStack.pop();
 			// CommentRangeStart is just a child
 			Object commentRangeEnder = XmlUtils.deepCopy(o);
@@ -180,16 +194,16 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 						.get(o) != null ? theirParent.get(o).getClass() : null);
 			}
 
-		} else if (o instanceof CommentReference) {
+		} else if (o instanceof CommentReference && !isDealingQuestion) {
 			CommentReference cr = (CommentReference) o;
 			BigInteger id = cr.getId();
+
 			// update
 			if (maxCommentId.compareTo(id) < 0)
 				maxCommentId = id;
 
 			for (Comment c : doc.getComment().getComment()) {
 				if (id.equals(c.getId())) {
-					// System.out.println(Docx.extractText(c));
 					if (currentPop != null) {
 						currentPop.id = Docx.extractText(c);
 						currentPop.doc.createComment(id, currentPop.id);
@@ -216,6 +230,7 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 
 						currentPop = null;
 					}
+					break;
 				}
 			}
 		} else {
@@ -232,9 +247,38 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 				m.doc.tail(oc, theirParent.get(o) != null ? theirParent.get(o)
 						.getClass() : null);
 			}
+
+			// dealing question, mode CommentRef, generate question id
+			if (o instanceof CommentReference && isDealingQuestion) {
+				isDealingQuestion = false;
+				CommentReference cr = (CommentReference) o;
+				BigInteger id = cr.getId();
+
+				// update
+				if (maxCommentId.compareTo(id) < 0)
+					maxCommentId = id;
+
+				for (Comment c : doc.getComment().getComment()) {
+					if (id.equals(c.getId())) {
+						// remove comment from main
+						doc.getComment().getComment().remove(c);
+						// generate question id
+						UUID qid = UUID.randomUUID();
+
+						// create new for module ( or main )
+						if (moduleStack.isEmpty()) {
+							doc.createComment(id, qid.toString());
+						} else {
+							moduleStack.peek().doc.createComment(id,
+									qid.toString());
+						}
+						break;
+					}
+				}
+			}
 		}
 
-		if (moduleStack.isEmpty()) {
+		if (isModuleStackEmptyBefore || moduleStack.isEmpty()) {
 			Object parent = theirParent.get(o);
 			if (parent != null && removeList.contains(parent)) {
 				while (parent != null && removeList.contains(parent)) {
