@@ -102,7 +102,7 @@ public class Application extends Controller {
 		for (Object o : list) {
 			sb.append(indent + o.getClass().getName() + "\n");
 			if (o instanceof models.template.Module) {
-				iter(((models.template.Module) o).lists, sb, indent + "\t");
+				iter(((models.template.Module) o).list, sb, indent + "\t");
 			}
 		}
 	}

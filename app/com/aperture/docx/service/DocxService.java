@@ -31,13 +31,13 @@ public class DocxService {
 		return true;
 	}
 	
-	public static List<Object> analyzeModule(String name) throws Docx4JException{
+	public static models.template.Module analyzeModule(String name) throws Docx4JException{
 		Module m = new Module();
 		m.init(name);
 		if(m.isInitialized()){
 			return m.analyse();
 		}
 		
-		return new ArrayList<Object>();
+		return null;
 	}
 }
