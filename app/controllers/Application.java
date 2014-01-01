@@ -1,5 +1,7 @@
 package controllers;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 import org.docx4j.TraversalUtil;
@@ -113,7 +115,8 @@ public class Application extends Controller {
 		return ok(sb.toString());
 	}
 
-	public static Result all(String name) throws Docx4JException {
+	public static Result all(String name) throws Docx4JException, UnsupportedEncodingException {
+		name = URLDecoder.decode(name, "utf-8");
 		String inputfilepath = settings.Constant.DEBUG_PATH + "/" + name
 				+ ".docx";
 
