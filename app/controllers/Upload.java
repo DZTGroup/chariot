@@ -6,7 +6,6 @@ import org.apache.commons.io.IOUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 import play.Logger;
-import play.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Http.MultipartFormData;
@@ -58,8 +57,10 @@ public class Upload extends Controller {
         FilePart picture = body.getFile("picture");
         String md5 = body.asFormUrlEncoded().get("md5")[0];
         if (picture != null) {
-            String fileName = picture.getFilename();
-            String contentType = picture.getContentType();
+            @SuppressWarnings("unused")
+			String fileName = picture.getFilename();
+            @SuppressWarnings("unused")
+			String contentType = picture.getContentType();
             File file = picture.getFile();
             try {
                 String md5File = DigestUtils.md5Hex(new FileInputStream(file));
@@ -81,7 +82,8 @@ public class Upload extends Controller {
     }
 
     public static Result uploadDirect() {
-        File file = request().body().asRaw().asFile();
+        @SuppressWarnings("unused")
+		File file = request().body().asRaw().asFile();
         return ok("File uploaded");
     }
 
