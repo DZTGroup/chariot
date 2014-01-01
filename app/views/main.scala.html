@@ -10,6 +10,7 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/backbone-min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/modal.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/sonic.js")"></script>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
     	<script src="@routes.Assets.at("javascripts/fileuploader.js")" type="text/javascript"></script>
         <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
@@ -19,7 +20,7 @@
         		element: document.getElementById('file-uploader'),
           				 action: '/service/upload/',
            				 onComplete: function(id, fileName, responseJSON){
-						 alert("文件上传成功");
+           				 setTimeout(function(){$('#loading').modal('hide');},700);           				 
 						 window.location.href="#/documents"
             			 return false;
           				 },
@@ -77,6 +78,9 @@
                     <button type="button" data-dismiss="modal" class="btn">关闭</button>
                     <button type="button" class="btn btn-primary">保存</button>
                 </div>
+            </div>
+            <div id="loading">
+               
             </div>
     </body>
 </html>

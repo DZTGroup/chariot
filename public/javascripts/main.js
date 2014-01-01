@@ -298,5 +298,6 @@
     Backbone.history.start();
   });
 
+  window.Modal=Modal;
 
 }).call(this);
