@@ -103,7 +103,7 @@
       var tpl = '<div class="modal hide fade modal-overflow in" tabindex="-1" data-width="760"  aria-hidden="false">'+
                         '<div class="modal-header">'+
                             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'+
-                            '<h3>Responsive</h3>'+
+                            '<h3 class="J_title"></h3>'+
                         '</div>'+
                         '<div class="modal-body"></div>'+
                         '<div class="modal-footer">'+
@@ -111,11 +111,13 @@
                             '<button type="button" class="btn btn-primary J_save">保存</button>'+
                         '</div>'+
                     '</div>';
-      var M = function(contentHtml){
+      var M = function(contentHtml,title){
           var self = this;
           var el = this.el = $(tpl);
           el.find('.modal-body').append(contentHtml)
+          el.find('.J_title').text(title);
           el.modal();
+
 
           el.on('hide',function(){
               self.trigger('hide');
@@ -184,7 +186,7 @@
           template:_.template(TPL),
           render:function(){
               var html = this.template(this.model.attributes);
-              this.modal = new Modal(html);
+              this.modal = new Modal(html,'编辑问题');
               this.modal.el.find('.J_type').val(this.model.get('type'));
           }
       });

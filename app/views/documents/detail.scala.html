@@ -10,6 +10,7 @@
 <article class="tasks">
     @displayQuestion(question:template.Question) = {
         <li>
+            <h5 class="module_title">问题上下文</h5>
             <h4>@question.context <a href="javascript:;" class="J_question_edit" data-id="@question.questionId">编辑问题</a></h4>
             <dl class="questions">
                 @defining(Question.getById(question.questionId)){ q=>
@@ -31,6 +32,10 @@
             <div class="folder">
             @item match{
                 case question : template.Question =>{
+                    <header>
+                        <h3 style="display:block;"><a href="javascript:;">问题</a></h3>
+                        <span class="loader">Loading</span>
+                    </header>
                     <ul class="list">
                         @displayQuestion(question)
                     </ul>
@@ -38,13 +43,15 @@
 
                 case module:template.Module =>{
                     <header>
-                        <h3 class="module_block">
-                        	<a href="">@module.name</a>
-                        	<div style="display:inline-block">
+                        <h3 class="module_block" style="display:block;">
+                        <a href="javascript:;">模块 <span style="color:black;">@module.name</span></a>
+                        <div style="display:inline-block;float:right">
                         		<input type="button" class="downloadLink" align="right" onclick='window.location.href="/service/download/@helper.urlEncode(module.name)"' value="下载模块"/>                        	
                         		<button id="file-uploader-@module.name" type="button" class="downloadLink" align="right">更新模块</button>
-                        		<script>
-                        		jQuery(function(){
+                        		
+                        </div>
+                        <script>
+                         jQuery(function(){
         				 var uploader = new qq.FileUploader({
         				 element: document.getElementById('file-uploader-@module.name'),
           				 action: '/service/upload/module',
@@ -57,12 +64,12 @@
         			});           
     			});
                         		</script>
-                        	</div>
                         </h3>
                         <span class="loader">Loading</span>
                     </header>
                     <ul class="list">
                         <li>
+                            <h5 class="module_title">模块文字</h5>
                             @module.text
                         </li>
                     </ul>
