@@ -602,6 +602,48 @@ qq.extend(qq.FileUploader.prototype, {
     _onSubmit:function (id, fileName) {
         qq.FileUploaderBasic.prototype._onSubmit.apply(this, arguments);
         this._addToList(id, fileName);
+        // add a dialog here
+        var loader={
+                   		width: 150,
+                   		height: 150,
+                   		stepsPerFrame: 1,
+                   		trailLength: 1,
+                   		pointDistance: .02,
+                   		fps: 30,
+
+                   		fillColor: '#05E2FF',
+
+                   		step: function(point, index) {
+                   			
+                   			this._.beginPath();
+                   			this._.moveTo(point.x, point.y);
+                   			this._.arc(point.x, point.y, index * 7, 0, Math.PI*2, false);
+                   			this._.closePath();
+                   			this._.fill();
+
+                   		},
+
+                   		path: [
+                   			['arc', 50, 50, 30, 0, 360]
+                   		]
+
+                   	};
+
+                   var d, a, container = document.getElementById('loading');
+                   	
+                   	d = document.createElement('div');
+                   	d.className = 'l';
+
+                   	a = new Sonic(loader);
+
+                   	d.appendChild(a.canvas);
+                   	container.appendChild(d);
+                   	
+                   	a.play();
+                   
+                   $("#loading").modal();
+        
+        
     },
     _onProgress:function (id, fileName, loaded, total) {
         qq.FileUploaderBasic.prototype._onProgress.apply(this, arguments);

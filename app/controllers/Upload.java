@@ -87,11 +87,17 @@ public class Upload extends Controller {
     }
 
 
-    public static Result fetchDocument(String fileName) throws IOException {
+    public static Result fetchDocument(String fileName) throws IOException, Docx4JException {
 
         response().setHeader("Content-Disposition",
                 "attachment;filename=\"" + fileName + "\"");
-        return ok(new File(Constant.USER_DIR+"/"+fileName));
+        if(com.aperture.docx.service.DocxService.getCompiledModule(fileName)){
+        	return ok(new File(Constant.USER_DIR+"/"+fileName+".docx"));
+        }
+        else{
+        	return badRequest();
+        }
+        
     }
 
     protected static String getRequestParam(String key) {
