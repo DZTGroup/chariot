@@ -500,7 +500,6 @@ qq.FileUploader = function (o) {
         listElement:null,
 
         template:'<div class="qq-uploader">' +
-            '<div class="qq-upload-drop-area"><span>Drop files here to upload</span></div>' +
             '<div class="qq-upload-button">'+o.name+'</div>' +
             '<ul class="qq-upload-list"></ul>' +
             '</div>',
@@ -514,8 +513,6 @@ qq.FileUploader = function (o) {
         classes:{
             // used to get elements from templates
             button:'qq-upload-button',
-            drop:'qq-upload-drop-area',
-            dropActive:'qq-upload-drop-area-active',
             list:'qq-upload-list',
 
             file:'qq-upload-file',
@@ -541,7 +538,6 @@ qq.FileUploader = function (o) {
     this._button = this._createUploadButton(this._find(this._element, 'button'));
 
     this._bindCancelEvent();
-    this._setupDragDrop();
 };
 
 // inherit from Basic Uploader
@@ -558,46 +554,6 @@ qq.extend(qq.FileUploader.prototype, {
         }
 
         return element;
-    },
-    _setupDragDrop:function () {
-        var self = this,
-            dropArea = this._find(this._element, 'drop');
-
-        var dz = new qq.UploadDropZone({
-            element:dropArea,
-            onEnter:function (e) {
-                qq.addClass(dropArea, self._classes.dropActive);
-                e.stopPropagation();
-            },
-            onLeave:function (e) {
-                e.stopPropagation();
-            },
-            onLeaveNotDescendants:function (e) {
-                qq.removeClass(dropArea, self._classes.dropActive);
-            },
-            onDrop:function (e) {
-                dropArea.style.display = 'none';
-                qq.removeClass(dropArea, self._classes.dropActive);
-                self._uploadFileList(e.dataTransfer.files);
-            }
-        });
-
-        dropArea.style.display = 'none';
-
-        qq.attach(document, 'dragenter', function (e) {
-            if (!dz._isValidFileDrag(e)) return;
-
-            dropArea.style.display = 'block';
-        });
-        qq.attach(document, 'dragleave', function (e) {
-            if (!dz._isValidFileDrag(e)) return;
-
-            var relatedTarget = document.elementFromPoint(e.clientX, e.clientY);
-            // only fire when leaving document out
-            if (!relatedTarget || relatedTarget.nodeName == "HTML") {
-                dropArea.style.display = 'none';
-            }
-        });
     },
     _onSubmit:function (id, fileName) {
         qq.FileUploaderBasic.prototype._onSubmit.apply(this, arguments);
