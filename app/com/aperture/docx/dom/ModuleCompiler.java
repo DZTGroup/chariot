@@ -20,6 +20,8 @@ import com.google.common.collect.BiMap;
 public class ModuleCompiler {
 	Docx doc;
 
+	int moduleCount = 0;
+
 	public ModuleCompiler() throws Docx4JException {
 		doc = new Docx();
 	}
@@ -43,14 +45,18 @@ public class ModuleCompiler {
 	public void pendModule(Module m) throws Docx4JException {
 		if (m == null || !m.initialized)
 			return;
+		// if moduleCount == 0, its the root module
+		final boolean isRootModule = moduleCount == 0;
+		moduleCount++;
+
 		final Module pendingModule = m;
+		final List<Docx4JException> errors = new ArrayList<Docx4JException>();
 
 		final BiMap<Module, Object> subs = m.getSubModuleEntry();
 		new TraversalUtil(pendingModule.doc.getBody(),
 				new TraversalUtil.CallbackImpl() {
 					BigInteger wrapperId = null;
 					boolean isInsideModule = false;
-					List<Docx4JException> errors = new ArrayList<Docx4JException>();
 
 					@Override
 					public List<Object> apply(Object o) {
@@ -77,7 +83,7 @@ public class ModuleCompiler {
 									.equals(wrapperId)) {
 								pend(o);
 								// clear
-							}else{
+							} else {
 								isInsideModule = false;
 							}
 
@@ -107,7 +113,8 @@ public class ModuleCompiler {
 								}
 							}
 						} else {
-							if (wrapperId != null && isInsideModule) {
+							if ((isRootModule && wrapperId == null)
+									|| (wrapperId != null && isInsideModule)) {
 								pend(o);
 							}
 						}
