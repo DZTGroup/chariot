@@ -10,6 +10,7 @@ GET 	/								controllers.Documents.view()
 #Documents
 GET     /documents                         controllers.Documents.index()
 GET     /document/:id                      controllers.Documents.folder(id:Long)
+POST    /document/changedir                controllers.Documents.changeDir()
 
 # Authentication
 GET     /login                              controllers.Application.login()

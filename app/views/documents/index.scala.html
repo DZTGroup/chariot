@@ -9,19 +9,28 @@
 <ul class="document_list">
     @displayFileImg(t:String)={
         @t match{
-            case "doc" => {<img src="@routes.Assets.at("images/word.png")" />}
+            case "doc" => {<img src="@routes.Assets.at("images/word.png")"  />}
             case "dir" => {<img src="@routes.Assets.at("images/folder.png")" />}
         }
 
     }
 
 	@for(f <- files) {
-  		<li>
-  			<a href="#/document/@f.id">
-                @displayFileImg(f.`type`)
-  				@f.name
-  			</a>
-  		</li>
+        @defining(f.`type`){tt=>
+            <li data-id="@f.id" data-type="@tt" draggable="true" class="J_doc">
+                <a href="#/document/@f.id" >
+                    @displayFileImg(tt)
+                    @f.name
+                </a>
+            </li>
+        }
 	}
 </ul>
+
+<script>
+    $('.J_doc').each(function(i,doc){
+        new FolderDragger(doc,$(doc).data('id'),$(doc).data("type"));
+
+    });
+</script>
 

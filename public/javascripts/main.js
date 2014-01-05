@@ -303,3 +303,77 @@
   window.Modal=Modal;
 
 }).call(this);
+
+
+(function(win){
+    //Drag  Doc or Dir to another Dir
+    var getUid =(function(){
+        var id = 0;
+        return function(){
+            return id++;
+        }
+    })();
+
+    var FolderDragger = function(item,id,type){
+        this.item = item;
+        this.id = id
+        this.type = type;
+        this.uid = getUid();
+        this._init();
+        FolderDragger.instances.push(this);
+    };
+    FolderDragger.prototype._init = function(){
+        var self = this;
+        //drag
+        this.item.addEventListener('dragstart',function(e){
+            console.log('drag');
+            self.drag(e);
+        },false);
+
+        //drop
+        if(this.type==="dir"){
+            this.item.addEventListener('dragover',function(e){
+                e.preventDefault();
+            },false);
+            this.item.addEventListener('drop',function(e){
+                e.preventDefault();
+                self.drop(e);
+            },false);
+        }
+    };
+    FolderDragger.prototype.drag = function(e){
+        e.dataTransfer.setData("uid",this.uid);
+    };
+
+    FolderDragger.prototype.drop = function(e){
+        var from = FolderDragger.findInstanceByUid(e.dataTransfer.getData('uid'));
+        this.dropItIn(from.id,function(){
+            from.item.remove();
+        });
+    };
+    FolderDragger.prototype.dropItIn = function(id,cb){
+        $.ajax({
+            url:"/document/changedir",
+            data:{
+                id:id,
+                parentId:this.id
+            },
+            type:"POST",
+            dataType:"json",
+            success:cb
+        });
+
+    }
+
+    FolderDragger.instances = [];
+
+    FolderDragger.findInstanceByUid = function(id){
+        var ins = this.instances.filter(function(instance){
+            return instance.uid = id;
+        });
+
+        return ins?ins[0]:null;
+    }
+
+    win.FolderDragger = FolderDragger;
+})(this);
