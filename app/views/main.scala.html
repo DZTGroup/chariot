@@ -4,6 +4,9 @@
     <head>
         <title>Lawbingo</title>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("css/bootstrap/css/bootstrap.min.css")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("css/bootstrap/css/bootstrap-modal-bs3patch.css")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("css/bootstrap/css/bootstrap-modal.css")">
         <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-1.7.1.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/underscore-min.js")"></script>
@@ -30,59 +33,33 @@
 		</script> 
     </head>
     <body>
-        <header>
-            <a href="@routes.Documents.view" id="logo"><span>law</span>bingo</a>
-            <dl id="user">
-                <dt>@user.name <span>(@user.email)</span></dt>
-                <dd>
-                    <a href="@routes.Application.logout()">退出</a>
-                </dd>
-            </dl>
+        <header class="navbar navbar-inverse navbar-fixed-top">
+            <a href="@routes.Documents.view" id="logo" class="navbar-brand"><span>law</span>bingo</a>
+            <div id="user">
+                <span class="username">@user.name</span> <span class="email">(@user.email)</span>
+                <a href="@routes.Application.logout()" class="btn btn-default navbar-btn">退出</a>
+            </div>
         </header>
-        <nav>
-            <h4 class="dashboard"><a href="#/">主页</a></h4>
-            <ul id="projects">
-                <li>
-                    <span class="toggle"></span>
-                    <h4 class="groupName">文档</h4>
-                    <span class="loader">Loading</span>
-                    <!-- <dl class="options">
-                        <dt>Options</dt>
-                        <dd>
-                            <button class="newProject" id="file-uploader">导入文档模板</button>
-                        </dd>
-                    </dl> -->
-                    <ul>
-                        <li>
-                            <a class="name" href="#@routes.Documents.index()">文档列表</a>
-                            <span class="loader">Loading</span>
-                        </li>
-                    </ul>
-                </li>
+        <div class="row">
+            <nav class="col-md-2 side-nav">
+                <ul id="projects" class="list-group">
+                    <li class="list-group-item">
+                        <a class="name" href="#@routes.Documents.index()">文档列表</a>
+                    </li>
+                    <li class="list-group-item">菜单</li>
+                    <li class="list-group-item">菜单</li>
+                    <li class="list-group-item">菜单</li>
+                    <li class="list-group-item">菜单</li>
+                    <li class="list-group-item">菜单</li>
+                </ul>
+                <button class="btn btn-primary" id="file-uploader">导入文档模板</button>
 
-            </ul>
-            <button class="newGroup" id="file-uploader">导入文档模板</button>
-        </nav>
-        <section id="main">
-            @body
-        </section>
-
-            <div id="responsive" class="modal hide fade modal-overflow in" tabindex="-1" data-width="760"  aria-hidden="false">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">关闭</button>
-                    <h3>Responsive</h3>
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn">关闭</button>
-                    <button type="button" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-            <div id="loading">
-               
-            </div>
+            </nav>
+            <section id="main" class="col-md-10 main">
+                @body
+            </section>
+            <div id="loading"></div>
+        </div>
     </body>
 </html>
 

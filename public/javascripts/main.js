@@ -100,7 +100,7 @@
 
   //Modal box
   var Modal = (function(){
-      var tpl = '<div class="modal hide fade modal-overflow in" tabindex="-1" data-width="760"  aria-hidden="false">'+
+      var tpl = '<div class="modal fade modal-overflow in" tabindex="-1" data-width="760"  aria-hidden="false">'+
                         '<div class="modal-header">'+
                             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'+
                             '<h3 class="J_title"></h3>'+
@@ -151,12 +151,12 @@
             '<td>问题:</td><td><textarea placeholder="问题描述" class="J_content"><%=desc.content%></textarea></td>'+
           '</tr></tbody></table>'+
           '<div class="J_option_area options_area"><p><button type="button" class="btn btn-primary J_option_add">+选项</button></p>'+
-          '<ul class="J_options options_list">'+
+          '<ol class="J_options options_list">'+
           '<%if(desc.options){desc.options.forEach(function(item,i){%>'+
-          '<li><%=(i+1)%>.<input type="text" value="<%=item%>"><a onclick="$(this).parent().remove();" href="javascript:;">x</a></li>'+
+          '<li><input type="text" value="<%=item%>"><a onclick="$(this).parent().remove();" href="javascript:;">x</a></li>'+
           '<%})}%>'+
-          '</ul></div></div>';
-      var DISPLAY_TPL = '<dl class="questions"><dt><%=desc.content%></dt>'+
+          '</ol></div></div>';
+      var DISPLAY_TPL = '<dl class="questions well"><dt><%=desc.content%></dt>'+
           '<%if(type!="blank" && desc.options){desc.options.forEach(function(item,i){%>'+
           '<dd><%=(i+1)%>.<%=item%></dd>'+
           '<%})}%>'+
@@ -251,7 +251,7 @@
       };
       Controller.prototype.addOption = function(){
           var options = this.view.modal.el.find('.J_options');
-          $('<li>'+(options.find('li').length+1)+'.<input type="text" ><a onclick="$(this).parent().remove();" href="javascript:;">x</a></li>')
+          $('<li><input type="text" ><a onclick="$(this).parent().remove();" href="javascript:;">x</a></li>')
           .appendTo(options).hide().fadeIn();
 
       };

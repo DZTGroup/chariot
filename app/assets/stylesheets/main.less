@@ -4,18 +4,11 @@
 // author: mda@zenexity.com - 2011
 // -----------------------------------
 
-@import 'libs/_reset.less';
-@import 'libs/_mate.less';
 @import 'libs/_theme.less';
 @import 'libs/_modal.less';
-
 // ----------------------- MAIN STYLES
-body {
-    background: @mainBackground;
-    color: @mainColor;
-    font: @defaultFont;
-    -webkit-font-smoothing: antialised;
-    -webkit-user-select: none;
+body{
+    padding-top:50px;
 }
 
 a {
@@ -26,13 +19,25 @@ a {
     }
 }
 
+.main{
+    position:absolute;
+    right:0;
+    top:50px;
+    bottom:0;
+    padding-top:10px;
+    overflow:auto;
+}
+
+.btn{
+    ul{
+        margin:0;
+    }
+}
+
 // --------------------------- IMPORTS
-@import 'main/_layout.less';        // General grid
-@import 'main/_widgets.less';       // Some shared elements
-@import 'main/_drawer.less';        // Project drawer
+@import 'main/sidebar.less';
 @import 'main/_header.less';        // Top header + User bar
-@import 'main/_breadcrumb.less';    // Breadcrumb + App menu
-@import 'apps/_tasks.less';         // Tasks 
+@import 'apps/module.less';         // Module
 @import 'apps/_document.less';      // Document
 @import 'apps/_fileuploader.less';      // fileupload
 @import 'apps/_question.less';      // question

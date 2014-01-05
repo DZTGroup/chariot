@@ -4,15 +4,11 @@
 // author: mda@zenexity.com - 2011
 // -----------------------------------
 
+@import "../libs/_theme.less";
+
 body {
     & > header {
-        box-sizing: border-box;
-        padding: 10px;
-        z-index: 9;
-        .gradient(@headerLight, @headerDark);
-        box-shadow: 0 0 7px rgba(0,0,0,.8),
-                    inset 0 1px 0 rgba(255,255,255,.2),
-                    inset 0 -1px 0 rgba(0,0,0,.8);
+        background:#2d6ca2 !important;
     }
 }
 
@@ -26,25 +22,15 @@ body {
     span {
         color: @activeColor;
     }
+    &:hover{
+        text-decoration:none;
+    }
 }
 
 #user {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    > * {
-        display: inline-block;
-    }
-    dt {
-        color: #fff;
-        span {
-            opacity: .5;
-            font-size: 11px;
-        }
-    }
-    dd {
-        a , button {
-            .button();
-        }
+    float:right;
+    margin-right:10px;
+    .username{
+        color:#fff;
     }
 }

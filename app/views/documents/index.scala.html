@@ -1,11 +1,11 @@
 @(files: List[File],file:File)
 
 
-<header>
-    <hgroup>
-        <h1>@file.name</h1>
-    </hgroup>
-</header>
+<ol class="breadcrumb">
+    <li><a href="#/documents">文档列表</a></li>
+    <li class="active">@file.name</li>
+</ol>
+
 <ul class="document_list">
     @displayFileImg(t:String)={
         @t match{
