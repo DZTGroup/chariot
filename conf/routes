@@ -11,6 +11,8 @@ GET 	/								controllers.Documents.view()
 GET     /documents                         controllers.Documents.index()
 GET     /document/:id                      controllers.Documents.folder(id:Long)
 POST    /document/changedir                controllers.Documents.changeDir()
+POST    /document/delete                   controllers.Documents.delete()
+POST    /document/create                   controllers.Documents.createFolder()
 
 # Authentication
 GET     /login                              controllers.Application.login()

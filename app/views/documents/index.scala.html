@@ -6,7 +6,30 @@
     <li class="active">@file.name</li>
 </ol>
 
-<ul class="document_list">
+<ul class="operate_list Fix">
+    <li data-id="@file.id" class="J_folder_new">
+        <a href="javascript:;" title="新建文件夹">
+            <img src="@routes.Assets.at("images/folder_add.png")">
+            <span>新建</span>
+        </a>
+    </li>
+    @if(file.id!=0){
+        <li>
+            <a href="@if(file.parentId==0){#documents}else{#document/@file.parentId}" title="返回">
+                <img src="@routes.Assets.at("images/folder_up.png")">
+                <span>返回</span>
+            </a>
+        </li>
+    }
+    <li>
+        <a href="javascript:;" data-type="trash" class="J_doc">
+            <img src="@routes.Assets.at("images/trash.png")">
+            <span>垃圾箱</span>
+        </a>
+    </li>
+</ul>
+
+<ul class="document_list Fix">
     @displayFileImg(t:String)={
         @t match{
             case "doc" => {<img src="@routes.Assets.at("images/word.png")"  />}
@@ -20,7 +43,7 @@
             <li data-id="@f.id" data-type="@tt" draggable="true" class="J_doc">
                 <a href="#/document/@f.id" >
                     @displayFileImg(tt)
-                    @f.name
+                    <span>@f.name</span>
                 </a>
             </li>
         }
@@ -30,7 +53,6 @@
 <script>
     $('.J_doc').each(function(i,doc){
         new FolderDragger(doc,$(doc).data('id'),$(doc).data("type"));
-
     });
 </script>
 

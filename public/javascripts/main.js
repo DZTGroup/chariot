@@ -76,6 +76,12 @@
 
 
   AppRouter = (function(Router) {
+      function load(url){
+          $('#top_loading').show()
+          $('#main').load(url,function(){
+              $('#top_loading').hide()
+          });
+      }
       var router = Router.extend({
           routes:{
               "documents": "documents",
@@ -83,13 +89,14 @@
               "document/:id": "document"
           },
           documents:function(){
-              return $("#main").load("/documents");
+              return load("/documents");
+
           },
           fileUpload:function(){
-              return $("#main").load("/fileUpload");
+              return load("/fileUpload");
           },
           document:function(id){
-              return $("#main").load("/document/"+id);
+              return load("/document/"+id);
           }
       });
 
@@ -331,7 +338,7 @@
         },false);
 
         //drop
-        if(this.type==="dir"){
+        if(this.type!=="doc"){
             this.item.addEventListener('dragover',function(e){
                 e.preventDefault();
             },false);
@@ -347,11 +354,22 @@
 
     FolderDragger.prototype.drop = function(e){
         var from = FolderDragger.findInstanceByUid(e.dataTransfer.getData('uid'));
+        if(!from || from.type==="trash"){
+            return;
+        }
         this.dropItIn(from.id,function(){
             from.item.remove();
         });
     };
     FolderDragger.prototype.dropItIn = function(id,cb){
+        if(this.type==="trash"){
+            this.remove(id,cb);
+        }else {
+            this.change(id,cb);
+        }
+    };
+    FolderDragger.prototype.change = function(id,cb){
+        //更改目录
         $.ajax({
             url:"/document/changedir",
             data:{
@@ -362,7 +380,27 @@
             dataType:"json",
             success:cb
         });
+    };
+    FolderDragger.prototype.remove = function(id,cb){
+        //删除
+        if(confirm("你确定要删除吗，删除后无法恢复!")){
+            $.ajax({
+                url:"/document/delete",
+                data:{
+                    id:id
+                },
+                type:"POST",
+                dataType:"json",
+                success:function(res){
+                    if(res.code==200){
+                        cb()
+                    }else {
+                        alert(res.data);
+                    }
 
+                }
+            });
+        }
     }
 
     FolderDragger.instances = [];
@@ -376,4 +414,45 @@
     }
 
     win.FolderDragger = FolderDragger;
+})(this);
+
+
+(function(win){
+    //新建文件夹
+
+    var tpl = '<li data-type="dir" draggable="true" class="J_doc">\
+                    <a href="javascript:;"><img src="/assets/images/folder.png"><span class="J_name"></span></a></li>';
+    $(document).on('click','.J_folder_new',function(){
+        var parentId = $(this).data('id');
+        var folder = $(tpl).prependTo($('.document_list'))
+        var name = folder.find('.J_name');
+        name.editInPlace('init',{
+            context:this,
+            onChange:function(value){
+                create($(this).data('id'),value);
+            }
+        })
+        name.editInPlace('edit');
+    });
+
+    function create(parentId,name){
+        $.ajax({
+            url:"/document/create",
+            data:{
+                parentId:parentId,
+                name:name
+            },
+            type:"POST",
+            dataType:"json",
+            success:function(res){
+                if(res.code==200){
+                    location.reload();
+                }else {
+                    alert(res.data);
+                }
+            }
+        });
+    }
+
+
 })(this);

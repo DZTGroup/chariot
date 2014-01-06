@@ -7,16 +7,28 @@
     }
 }
 
-.document_list{
+.document_list(@width){
     padding:20px;
     li{
-        width:8%;
-        text-align:center;
-        margin-right:20px;
-        float:left;
-        img{
-            width:100%;
-            height:auto;
-        }
+            width:@width;
+            text-align:center;
+            margin-right:20px;
+            float:left;
+            img{
+                width:100%;
+                height:auto;
+            }
     }
+}
+
+.document_list{
+    .document_list(8%);
+    input{
+        width:100%;
+    }
+
+}
+.operate_list{
+    .document_list(4%);
+    border-bottom:solid 1px #42c0fb;
 }

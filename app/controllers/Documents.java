@@ -16,7 +16,8 @@ public class Documents extends Controller {
     final static private String DOC = "doc";
 
     public static Result index() {
-        File root = new File("Root","dir");
+        File root = new File("所有文档","dir");
+        root.id=Long.parseLong("0");
         Long rootId = new Long("0");
         return ok(index.render(File.getFilesByParentId(rootId), root));
     } 
@@ -41,9 +42,6 @@ public class Documents extends Controller {
         }catch(Exception e){
             return badRequest();
         }
-
-
-
     }
 
     public static Result view() {
@@ -68,6 +66,52 @@ public class Documents extends Controller {
         ajax.setCode(200);
         ajax.setData(new String("success"));
 
+        return ok(ajax.toJson());
+    }
+
+    public static Result delete(){
+
+        Http.RequestBody body = request().body();
+        Map<String ,String[]> map = body.asFormUrlEncoded();
+        Ajax ajax = new Ajax();
+
+        String id = map.get("id")[0];
+        File file = File.getById(Long.parseLong(id));
+        if(file!=null && file.type.equals("dir")){
+            List<File> files = File.getFilesByParentId(file.id);
+            if(files.isEmpty()){
+                file.delete();
+                ajax.setCode(200);
+                ajax.setData(new String("删除成功"));
+            }else{
+                ajax.setCode(500);
+                ajax.setData(new String("该目录不为空,不能删除"));
+            }
+        }else {
+            file.delete();
+            ajax.setCode(200);
+            ajax.setData(new String("删除成功"));
+        }
+
+
+        return ok(ajax.toJson());
+    }
+
+    public static Result createFolder(){
+
+        Http.RequestBody body = request().body();
+        Map<String ,String[]> map = body.asFormUrlEncoded();
+        Ajax ajax = new Ajax();
+
+        String parentId = map.get("parentId")[0];
+        String name = map.get("name")[0];
+
+        File file = new File(name,"dir");
+        file.parentId = Long.parseLong(parentId);
+
+        file.save();
+        ajax.setCode(200);
+        ajax.setData(new String("创建成功"));
         return ok(ajax.toJson());
     }
 
