@@ -369,7 +369,7 @@
 
     FolderDragger.findInstanceByUid = function(id){
         var ins = this.instances.filter(function(instance){
-            return instance.uid = id;
+            return instance.uid == id;
         });
 
         return ins?ins[0]:null;
