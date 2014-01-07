@@ -14,7 +14,7 @@
         </a>
     </li>
     @if(file.id!=0){
-        <li>
+        <li data-id="@file.parentId" class="J_doc" data-type="dir">
             <a href="@if(file.parentId==0){#documents}else{#document/@file.parentId}" title="返回">
                 <img src="@routes.Assets.at("images/folder_up.png")">
                 <span>返回</span>
