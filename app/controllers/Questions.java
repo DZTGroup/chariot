@@ -1,11 +1,12 @@
 package controllers;
 
-import ajax.Ajax;
+import util.Ajax;
 import models.Question;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
+import util.QuestionRestrictHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,20 +20,19 @@ public class Questions extends Controller {
         Question question = Question.getById(id);
 
         Ajax ajax = new Ajax();
+        Map<Object,Object> map = new HashMap<Object,Object>();
+        map.put("id",id);
 
         if(question==null){
-            ajax.setCode(404);
-            ajax.setData(new String("no such question"));
+            map.put("description","{}");
+            map.put("type","");
         }else{
-            ajax.setCode(200);
-
-            Map<Object,Object> map = new HashMap<Object,Object>();
-            map.put("id",question.id);
             map.put("description",question.description);
             map.put("type",question.type);
-
-            ajax.setData(map);
         }
+        map.put("restricts",new QuestionRestrictHelper().getList());
+        ajax.setCode(200);
+        ajax.setData(map);
 
         return ok(ajax.toJson());
     }

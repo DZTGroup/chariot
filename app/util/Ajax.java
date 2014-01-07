@@ -1,4 +1,4 @@
-package ajax;
+package util;
 
 import com.google.gson.Gson;
 
