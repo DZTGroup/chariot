@@ -16,3 +16,5 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+.DS_Store
+/.target
