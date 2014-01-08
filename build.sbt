@@ -1,19 +1,11 @@
 import play.Project._
 
-name := "chariot-admin"
+name := "chariot"
 
-version := "1.0"
+version := "1.0-SNAPSHOT"
 
-libraryDependencies ++= Seq(
-	javaJdbc, 
-	javaEbean,
-	cache,
-	"mysql" % "mysql-connector-java" % "5.1.18",
-	"com.google.code.gson" % "gson" % "1.7.1",
-	"org.docx4j" % "docx4j" % "3.0.0",
-	"commons-io" % "commons-io" % "2.0.1",
-	"commons-codec" % "commons-codec" % "1.7",
-	"com.google.collections" % "google-collections" % "1.0"
-)
+play.Project.playJavaSettings
 
-playJavaSettings
+lazy val core =project.in(file("chariot-core"))
+lazy val admin=project.in(file("chariot-admin")).dependsOn(core)
+

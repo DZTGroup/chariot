@@ -1,0 +1,68 @@
+@( user: User)(body: Html)
+
+<html>
+    <head>
+        <title>Lawbingo</title>
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("css/bootstrap/css/bootstrap.min.css")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("css/bootstrap/css/bootstrap-modal-bs3patch.css")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("css/bootstrap/css/bootstrap-modal.css")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-1.7.1.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/underscore-min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/backbone-min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/modal.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/sonic.js")"></script>
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+    	<script src="@routes.Assets.at("javascripts/fileuploader.js")" type="text/javascript"></script>
+        <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
+        <script>        
+    		jQuery(function(){
+        		var uploader = new qq.FileUploader({
+        		element: document.getElementById('file-uploader'),
+          				 action: '/service/upload/doc',
+          				 name:'导入文档模板',
+           				 onComplete: function(id, fileName, responseJSON){
+           				 setTimeout(function(){$('#loading').modal('hide');},700);           				 
+						 window.location.href="#/documents"
+            			 return false;
+          				 },
+        			});           
+    			});
+		</script> 
+    </head>
+    <body>
+        <header class="navbar navbar-inverse navbar-fixed-top">
+            <a href="@routes.Documents.view" id="logo" class="navbar-brand"><span>law</span>bingo</a>
+            <div id="user">
+                <span class="username">@user.name</span> <span class="email">(@user.email)</span>
+                <a href="@routes.Application.logout()" class="btn btn-default navbar-btn">退出</a>
+            </div>
+            <div id="top_loading" style="display:none;">
+                正在加载...
+            </div>
+        </header>
+        <div class="row">
+            <nav class="col-md-2 side-nav">
+                <ul id="projects" class="list-group">
+                    <li class="list-group-item">
+                        <a class="name" href="#@routes.Documents.index()">文档列表</a>
+                    </li>
+                    <li class="list-group-item">菜单</li>
+                    <li class="list-group-item">菜单</li>
+                    <li class="list-group-item">菜单</li>
+                    <li class="list-group-item">菜单</li>
+                    <li class="list-group-item">菜单</li>
+                </ul>
+                <button class="btn btn-primary" id="file-uploader">导入文档模板</button>
+
+            </nav>
+            <section id="main" class="col-md-10 main">
+                @body
+            </section>
+            <div id="loading"></div>
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,47 @@
+@(form: Form[Application.Login])
+
+<html>
+    <head>
+        <title>Lawbingo</title>
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("css/bootstrap/css/bootstrap.min.css")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+    </head>
+    <body>
+
+    <header class="navbar navbar-inverse navbar-fixed-top">
+        <a href="@routes.Documents.view" id="logo" class="navbar-brand"><span>law</span>bingo</a>
+    </header>
+
+        <div class="container">
+        
+        @helper.form(routes.Application.authenticate) {
+
+            <h1 class="form-signin-heading">Please Sign In</h1>
+
+            @if(form.hasGlobalErrors) { 
+                <p class="error">
+                    @form.globalError.message
+                </p>
+            }
+            
+            @if(flash.contains("success")) {
+                <p class="success">
+                    @flash.get("success")
+                </p>
+            }
+
+            <input type="text" name="email" class="form-control" placeholder="Email" required="" autofocus="" value="@form("email").value">
+            <input type="password" name="password" class="form-control" placeholder="Password" required="">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+        }
+        
+        <p class="note">
+            Try <em>alpha@@sample.com</em> with <em>123</em> as password;<br/> or <em>beta@@sample.com</em> with <em>123</em> as password.
+        </p>
+        </div>
+    </body>
+</html>
+    
+
+

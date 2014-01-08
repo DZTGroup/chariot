@@ -1,0 +1,48 @@
+// -----------------------------------
+// HEADER
+// -----------------------------------
+// author: mda@zenexity.com - 2011
+// -----------------------------------
+
+@import "../libs/_theme.less";
+
+body {
+    & > header {
+        background:#2d6ca2 !important;
+    }
+}
+
+#logo {
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    span {
+        color: @activeColor;
+    }
+    &:hover{
+        text-decoration:none;
+    }
+}
+
+#user {
+    float:right;
+    margin-right:10px;
+    .username{
+        color:#fff;
+    }
+}
+
+#top_loading{
+    position:absolute;
+    top:5px;
+    left:50%;
+    color:#fff;
+    padding-left:50px;
+    margin-left:-57px;
+    height:40px;
+    background:url(/assets/images/toploading.gif) no-repeat 0 0;
+    background-size:40px 40px;
+    line-height:40px;
+}

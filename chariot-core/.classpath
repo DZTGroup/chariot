@@ -1,0 +1,51 @@
+<classpath>
+  <classpathentry kind="src" path="src/main/scala" output="target/scala-2.10/classes"/>
+  <classpathentry kind="src" path="src/main/java" output="target/scala-2.10/classes"/>
+  <classpathentry kind="src" path="src/test/scala" output="target/scala-2.10/test-classes"/>
+  <classpathentry kind="src" path="src/test/java" output="target/scala-2.10/test-classes"/>
+  <classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.docx4j/docx4j/jars/docx4j-3.0.0.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.plutext/jaxb-svg11/jars/jaxb-svg11-1.0.2.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.plutext/jaxb-xslfo/jars/jaxb-xslfo-1.0.1.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.plutext/jaxb-xmldsig-core/jars/jaxb-xmldsig-core-1.0.0.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/repository/local/org.slf4j/slf4j-api/1.7.5/jars/slf4j-api.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.slf4j/slf4j-log4j12/jars/slf4j-log4j12-1.7.5.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/log4j/log4j/bundles/log4j-1.2.17.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/commons-lang/commons-lang/jars/commons-lang-2.4.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/commons-codec/commons-codec/jars/commons-codec-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/repository/local/commons-io/commons-io/2.0.1/jars/commons-io.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/xmlgraphics-commons/jars/xmlgraphics-commons-1.5.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/repository/local/commons-logging/commons-logging/1.1.1/jars/commons-logging.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/fop/jars/fop-1.1.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-svg-dom/jars/batik-svg-dom-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-anim/jars/batik-anim-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-awt-util/jars/batik-awt-util-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-util/jars/batik-util-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-dom/jars/batik-dom-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-css/jars/batik-css-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-ext/jars/batik-ext-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/xml-apis/xml-apis/jars/xml-apis-1.3.04.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/xml-apis/xml-apis-ext/jars/xml-apis-ext-1.3.04.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-xml/jars/batik-xml-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/repository/local/xalan/xalan/2.7.1/jars/xalan.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/repository/local/xalan/serializer/2.7.1/jars/serializer.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-parser/jars/batik-parser-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-bridge/jars/batik-bridge-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-gvt/jars/batik-gvt-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-script/jars/batik-script-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-js/jars/batik-js-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-transcoder/jars/batik-transcoder-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-svggen/jars/batik-svggen-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.xmlgraphics/batik-extension/jars/batik-extension-1.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.avalon.framework/avalon-framework-api/jars/avalon-framework-api-4.3.1.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.avalon.framework/avalon-framework-impl/jars/avalon-framework-impl-4.3.1.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/net.arnx/wmf2svg/jars/wmf2svg-0.9.0.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.poi/poi-scratchpad/jars/poi-scratchpad-3.8.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.apache.poi/poi/jars/poi-3.8.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.antlr/antlr-runtime/jars/antlr-runtime-3.3.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.antlr/stringtemplate/jars/stringtemplate-3.2.1.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/antlr/antlr/jars/antlr-2.7.7.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/com.google.collections/google-collections/jars/google-collections-1.0.jar"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="output" path="bin"/>
+</classpath>
