@@ -4,7 +4,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
-import com.aperture.docx.service.DocxService;
 
 import play.Logger;
 import play.mvc.Controller;
@@ -12,6 +11,7 @@ import play.mvc.Result;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
+import util.DocxService;
 import views.html.*;
 
 import java.io.File;
@@ -49,12 +49,12 @@ public class Upload extends Controller {
 			e.printStackTrace();
 		}
 		if(type.equals("doc")){
-			com.aperture.docx.service.DocxService.parseDocument(
+			util.DocxService.parseDocument(
 					DocxService.DocType.DOC, fileName, myUploadPath + "/"
 							+ fileName);
 		}
 		else if(type.equals("module")){
-			com.aperture.docx.service.DocxService.parseDocument(
+			util.DocxService.parseDocument(
 					DocxService.DocType.MODULE, fileName, myUploadPath + "/"
 							+ fileName);
 		}
@@ -108,7 +108,7 @@ public class Upload extends Controller {
 
 		response().setHeader("Content-Disposition",
 				"attachment;filename=\"" + fileName + "\"");
-		if (com.aperture.docx.service.DocxService.getCompiledModule(fileName)) {
+		if (util.DocxService.getCompiledModule(fileName)) {
 			return ok(new File(Constant.USER_DIR + "/" + fileName + ".docx"));
 		} else {
 			return badRequest();

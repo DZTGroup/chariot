@@ -21,7 +21,7 @@ public class QuestionRestrictHelper {
     private ArrayList<QuestionRestrict> list;
 
     public QuestionRestrictHelper(){
-        list = new ArrayList<>();
+        list = new ArrayList<QuestionRestrict>();
         list.add(new QuestionRestrict( NUMBER,NUMBER_NAME,Pattern.compile(NUMBER_PATTERN)));
         list.add(new QuestionRestrict(DATE,DATE_NAME,Pattern.compile(DATE_PATTERN)));
     }

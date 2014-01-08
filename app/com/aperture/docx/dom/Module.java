@@ -91,12 +91,35 @@ public class Module {
 		return result;
 	}
 
-	class QuestionMarker {
+	private class QuestionMarker {
 		public String qid;
 		public int index;
 	}
 
-	public models.template.Module analyse() {
+	public static class QuestionModel {
+		public String questionId;
+		public String context;
+
+		public QuestionModel(String id, String c) {
+			questionId = id;
+			context = c;
+		}
+	}
+
+	public static class ModuleModel {
+		public String name;
+		public String text;
+
+		public List<Object> children;
+
+		public ModuleModel(String n, String t, List<Object> c) {
+			name = n;
+			text = t;
+			children = c;
+		}
+	}
+
+	public ModuleModel analyse() {
 		final List<Object> searchList = new ArrayList<Object>();
 		final StringBuilder pureText = new StringBuilder();
 		new TraversalUtil(doc.getBody(), new TraversalUtil.CallbackImpl() {
@@ -128,7 +151,7 @@ public class Module {
 							e.printStackTrace();
 						}
 						if (sub.isInitialized() == true) {
-							models.template.Module m = sub.analyse();
+							ModuleModel m = sub.analyse();
 							searchList.add(m);
 						}
 					}
@@ -138,7 +161,7 @@ public class Module {
 		});
 		List<Object> result = new ArrayList<Object>();
 		for (Object o : searchList) {
-			if (o instanceof models.template.Module)
+			if (o instanceof ModuleModel)
 				result.add(o);
 			if (o instanceof QuestionMarker) {
 				QuestionMarker qm = (QuestionMarker) o;
@@ -151,13 +174,13 @@ public class Module {
 						+ 4;
 				end = end <= pureText.length() ? end : pureText.length();
 
-				models.template.Question q = new models.template.Question(
-						qm.qid, pureText.substring(start, end));
+				QuestionModel q = new QuestionModel(qm.qid, pureText.substring(
+						start, end));
 
 				result.add(q);
 			}
 		}
-		return new models.template.Module(id, Docx.extractText(doc.getBody()),
+		return new ModuleModel(id, Docx.extractText(doc.getBody()),
 				result);
 	}
 }

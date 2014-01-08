@@ -15,7 +15,6 @@ import org.docx4j.wml.Body;
 import com.aperture.docx.Docx;
 import com.aperture.docx.dom.DocxTreeStructure;
 import com.aperture.docx.dom.ModuleCompiler;
-import com.aperture.docx.service.DocxService;
 
 import play.*;
 import play.mvc.*;
@@ -23,6 +22,7 @@ import play.data.*;
 import static play.data.Form.*;
 
 import models.*;
+import util.DocxService;
 import views.html.*;
 
 public class Application extends Controller {

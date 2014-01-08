@@ -1,7 +1,7 @@
 package controllers;
 
 import util.Ajax;
-import com.aperture.docx.service.DocxService;
+import util.DocxService;
 import models.*;
 import play.mvc.*;
 import views.html.dashboard;

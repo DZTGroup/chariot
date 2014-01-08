@@ -1,6 +1,6 @@
 import play.Project._
 
-name := "chariot"
+name := "chariot-admin"
 
 version := "1.0"
 
@@ -17,4 +17,3 @@ libraryDependencies ++= Seq(
 )
 
 playJavaSettings
-

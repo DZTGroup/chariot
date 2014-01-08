@@ -1,4 +1,4 @@
-package com.aperture.docx.service;
+package util;
 
 import java.util.List;
 
@@ -21,6 +21,10 @@ public class DocxService {
 		String getType() {
 			return type;
 		}
+	}
+	
+	public static models.template.Module cast(Module.ModuleModel m){
+		return new models.template.Module(m.name, m.text, m.children);
 	}
 
 	public static void parseDocument(DocType type, String name, String path)
@@ -58,7 +62,7 @@ public class DocxService {
 		Module m = new Module();
 		m.init(name);
 		if (m.isInitialized()) {
-			return m.analyse();
+			return cast(m.analyse());
 		}
 
 		return null;
