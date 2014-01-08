@@ -45,7 +45,7 @@
   <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.antlr/antlr-runtime/jars/antlr-runtime-3.3.jar"/>
   <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/org.antlr/stringtemplate/jars/stringtemplate-3.2.1.jar"/>
   <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/antlr/antlr/jars/antlr-2.7.7.jar"/>
-  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/com.google.collections/google-collections/jars/google-collections-1.0.jar"/>
+  <classpathentry kind="lib" path="/usr/local/Cellar/play/2.2.1/libexec/framework/../repository/cache/com.google.guava/guava/bundles/guava-14.0.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="output" path="bin"/>
 </classpath>
