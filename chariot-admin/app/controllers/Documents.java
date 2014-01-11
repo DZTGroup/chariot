@@ -28,16 +28,17 @@ public class Documents extends Controller {
                 List<File> files = File.getFilesByParentId(id);
                 return ok(index.render(files,file));
             }else{
-                return detail(file.name);
+                return detail(file.name,id);
             }
         }else{
             return badRequest();
         }
     }
 
-    public static Result detail(String name) {
+    public static Result detail(String name,Long id) {
         try{
             models.template.Module document = DocxService.analyzeModule(name);
+            document.id = id;
             return ok(detail.render(document));
         }catch(Exception e){
             return badRequest();

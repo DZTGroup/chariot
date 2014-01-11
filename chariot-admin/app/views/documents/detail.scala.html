@@ -2,7 +2,11 @@
 @import com.google.gson.Gson;
 
 <ol class="breadcrumb">
-    <li class="active">@document.name <button class="downloadLink btn btn-primary btn-sm" style="float:right" onclick='window.location.href="/service/download/@helper.urlEncode(document.name)"'>下载文档</button></li>
+    <li class="active">
+        @document.name
+        <a href="#/page/@document.id">编辑模块分页>></a>
+        <button class="downloadLink btn btn-primary btn-sm" style="float:right" onclick='window.location.href="/service/download/@helper.urlEncode(document.name)"'>下载文档</button>
+    </li>
 </ol>
 
 <article class="tasks">

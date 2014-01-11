@@ -10,6 +10,7 @@ import java.util.*;
 public class Module {
     public String name;
     public String text;
+    public Long id;
 
     public List<Object> list;
 
