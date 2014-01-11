@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
 public class QuestionRestrictHelper {
     //all the restricts
 
+    private static final String NONE = "none";
+    private static final String NONE_NAME = "无约束";
+    private static final String NONE_PATTERN = "[\\w\\W]*";
     private static final String NUMBER = "number";
     private static final String NUMBER_NAME = "数字";
     private static final String NUMBER_PATTERN = "\\d+";
@@ -22,6 +25,7 @@ public class QuestionRestrictHelper {
 
     public QuestionRestrictHelper(){
         list = new ArrayList<QuestionRestrict>();
+        list.add(new QuestionRestrict( NONE,NONE_NAME,Pattern.compile(NONE_PATTERN)));
         list.add(new QuestionRestrict( NUMBER,NUMBER_NAME,Pattern.compile(NUMBER_PATTERN)));
         list.add(new QuestionRestrict(DATE,DATE_NAME,Pattern.compile(DATE_PATTERN)));
     }

@@ -154,15 +154,23 @@
       };
       var TPL = '<div class="question_editor"><table><tbody>'+
           '<tr><td>问题类型:</td><td><select class="J_type"><%_.each(types,function(value,key){%><option value="<%=key%>"><%=value%></option><%});%></select></td></tr>'+
+          '<tr class="J_options_restrict" style="display:<%if(type=="blank"||type==""){}else{%>none<%}%>;">'+
+            '<td>问题约束:</td><td>'+
+            '<select class="J_restrict"><%restricts.forEach(function(r){%>'+
+                '<option value="<%=r.type%>" <%if(desc.restrict && desc.restrict==r.type){%>selected<%}%>><%=r.name%></option>'+
+            '<%});%></select></td>'+
+          '</tr>'+
           '<tr>'+
             '<td>问题:</td><td><textarea placeholder="问题描述" class="J_content"><%=desc.content%></textarea></td>'+
-          '</tr></tbody></table>'+
-          '<div class="J_option_area options_area"><p><button type="button" class="btn btn-primary J_option_add">+选项</button></p>'+
+          '</tr>'+
+          '</tbody></table>'+
+          '<div class="J_option_area options_area" style="display:<%if(type=="blank" || type==""){%>none<%}%>;"><p><button type="button" class="btn btn-primary J_option_add">+选项</button></p>'+
           '<ol class="J_options options_list">'+
           '<%if(desc.options){desc.options.forEach(function(item,i){%>'+
           '<li><input type="text" value="<%=item%>"><a onclick="$(this).parent().remove();" href="javascript:;">x</a></li>'+
           '<%})}%>'+
-          '</ol></div></div>';
+          '</ol></div>'+
+          '</div>';
       var DISPLAY_TPL = '<dl class="questions well"><dt><%=desc.content%></dt>'+
           '<%if(type!="blank" && desc.options){desc.options.forEach(function(item,i){%>'+
           '<dd><%=(i+1)%>.<%=item%></dd>'+
@@ -264,23 +272,29 @@
       };
       Controller.prototype.changeType = function(type){
           var options = this.view.modal.el.find('.J_option_area');
+          var restricts = this.view.modal.el.find('.J_options_restrict');
           if(type=="blank"){
               options.hide();
+              restricts.show();
           }else {
               options.show();
+              restricts.hide();
           }
       };
       Controller.prototype.getData = function(){
           var el = this.view.modal.el;
           var type = el.find('.J_type').val();
           var options = [],content,desc,description;
+          var restrict = el.find('.J_restrict').val();
           content = el.find('.J_content').val();
+          desc = {content:content,options:options};
           if(type!=="blank"){
               el.find('.J_options input').each(function(){
-                  options.push($(this).val());
+                  desc.options.push($(this).val());
               });
+          }else {
+              desc.restrict = restrict;
           }
-          desc = {content:content,options:options};
           description = JSON.stringify(desc);
           return {
               id:this.model.get('id'),
