@@ -85,39 +85,25 @@ public class Application extends Controller {
 	 * test stub by Aohajin *
 	 ***********************************************/
 	public static Result parse() throws Docx4JException {
-		String path = settings.Constant.DEBUG_PATH + "/" + "sample.docx";
+		/*
+		 * String path = settings.Constant.DEBUG_PATH + "/" + "sample.docx";
+		 * 
+		 * Docx doc = new Docx(path); new ModuleParser(doc).parseAs("sample");
+		 * 
+		 * // test doc gen ModuleCompiler mc = new ModuleCompiler();
+		 * com.aperture.docx.templating.Module m = new
+		 * com.aperture.docx.templating.Module(); m.init("sample");
+		 * mc.pendModule(m); mc.save(settings.Constant.DEBUG_PATH + "/" +
+		 * "compiled.docx");
+		 */
 
-		Docx doc = new Docx(path);
-		new ModuleParser(doc).parseAs("sample");
-
-		// test doc gen
-		ModuleCompiler mc = new ModuleCompiler();
-		com.aperture.docx.templating.Module m = new com.aperture.docx.templating.Module();
-		m.init("sample");
-		mc.pendModule(m);
-		mc.save(settings.Constant.DEBUG_PATH + "/" + "compiled.docx");
-		
-		//ByteArrayOutputStream
+		// ByteArrayOutputStream
 
 		return ok("done!");
 	}
 
-	private static void iter(List<Object> list, StringBuilder sb, String indent) {
-		for (Object o : list) {
-			sb.append(indent + o.getClass().getName() + "\n");
-			if (o instanceof models.template.Module) {
-				iter(((models.template.Module) o).list, sb, indent + "\t");
-			}
-		}
-	}
-
-	public static Result analyze() throws Docx4JException {
-		StringBuilder sb = new StringBuilder();
-		iter(DocxTemplatingService.analyzeModule("sample").list, sb, "");
-		return ok(sb.toString());
-	}
-
-	public static Result all(String name) throws Docx4JException, UnsupportedEncodingException {
+	public static Result all(String name) throws Docx4JException,
+			UnsupportedEncodingException {
 		name = URLDecoder.decode(name, "utf-8");
 		String inputfilepath = settings.Constant.DEBUG_PATH + "/" + name
 				+ ".docx";

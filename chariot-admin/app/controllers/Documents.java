@@ -38,7 +38,7 @@ public class Documents extends Controller {
 
     public static Result detail(String name,Long id) {
         try{
-            models.template.Module document = DocxTemplatingService.analyzeModule(name);
+            models.template.Module document = DocxTemplatingService.analyzeModule(id);
             document.id = id;
             return ok(detail.render(document));
         }catch(Exception e){
