@@ -12,11 +12,6 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Body;
 
-import com.aperture.docx.core.Docx;
-import com.aperture.docx.templating.ModuleParser;
-import com.aperture.docx.templating.ModuleCompiler;
-import com.aperture.docx.templating.api.DocxTemplatingService;
-
 import play.*;
 import play.mvc.*;
 import play.data.*;
