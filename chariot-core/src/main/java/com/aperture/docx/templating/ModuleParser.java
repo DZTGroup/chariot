@@ -20,10 +20,12 @@ import org.docx4j.wml.ContentAccessor;
 import org.docx4j.wml.R;
 import org.docx4j.wml.R.CommentReference;
 
+import com.aperture.docx.core.BinarySaver;
 import com.aperture.docx.core.Docx;
 
 public class ModuleParser implements TraversalUtil.Callback {
 	Docx doc;
+	BinarySaver saver;
 
 	List<Exception> errors = new ArrayList<Exception>();
 
@@ -52,8 +54,12 @@ public class ModuleParser implements TraversalUtil.Callback {
 	boolean isDealingQuestion = false;
 	Map<Object, Long> questionLocation = new HashMap<Object, Long>();
 
-	public ModuleParser(Docx d) {
+	/*
+	 * Constructor!
+	 */
+	public ModuleParser(Docx d, BinarySaver s) {
 		doc = d;
+		saver = s;
 	}
 
 	protected Object getLastChild(Object parent) {
@@ -146,7 +152,7 @@ public class ModuleParser implements TraversalUtil.Callback {
 		// pre check
 		boolean isModuleStackEmptyBefore = moduleStack.isEmpty();
 		if (o instanceof CommentRangeStart && !isDealingQuestion) {
-			Module m = new Module();
+			Module m = ModuleIO.newModuleWithSaver();
 			List<Object> path = new ArrayList<Object>(currentPath);
 			// ignore the first one of path, which is 'Body'
 			Object head = null;
@@ -205,8 +211,8 @@ public class ModuleParser implements TraversalUtil.Callback {
 			for (Comment c : doc.getComment().getComment()) {
 				if (id.equals(c.getId())) {
 					if (currentPop != null) {
-						currentPop.id = Docx.extractText(c);
-						currentPop.doc.createComment(id, currentPop.id);
+						currentPop.setName(Docx.extractText(c));
+						currentPop.doc.createComment(id, currentPop.moduleName);
 						Object ref = Docx.createRunCommentReference(id);
 
 						R parentR = (R) theirParent.get(o);
@@ -219,7 +225,7 @@ public class ModuleParser implements TraversalUtil.Callback {
 						if (!moduleStack.isEmpty()) {
 							doc.getComment().getComment().remove(c);
 							moduleStack.peek().doc.createComment(id,
-									currentPop.id);
+									currentPop.moduleName);
 							R.CommentReference refc = Docx
 									.createCommentReference(id);
 							// R already added, just add ref in this case
@@ -315,7 +321,7 @@ public class ModuleParser implements TraversalUtil.Callback {
 		if (errors.size() == 0) {
 			// done, save
 			for (Module m : extractedModules) {
-				m.doc.save(settings.Constant.MODULE_PATH + "/" + m.id + ".docx");
+				m.save();
 			}
 			// also save itself as a module
 			List<Object> docFlow = doc.getBody().getContent();
@@ -334,7 +340,7 @@ public class ModuleParser implements TraversalUtil.Callback {
 			last.getContent().add(end);
 			last.getContent().add(ref);
 
-			doc.save(settings.Constant.MODULE_PATH + "/" + name + ".docx");
+			doc.save(this.saver);
 		}
 	}
 }

@@ -1,6 +1,5 @@
 package com.aperture.docx.templating;
 
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +24,6 @@ public class ModuleCompiler {
 
 	public ModuleCompiler() throws Docx4JException {
 		doc = new Docx();
-	}
-	
-	public void save(OutputStream os) throws Docx4JException{
-		doc.save(os);
 	}
 
 	public void save(String path) throws Docx4JException {

@@ -1,8 +1,9 @@
 package com.aperture.docx.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,6 +48,14 @@ public class Docx {
 
 	public Docx(String path) throws Docx4JException {
 		wordMLPackage = WordprocessingMLPackage.load(new java.io.File(path));
+		wmlDocumentEl = (org.docx4j.wml.Document) wordMLPackage
+				.getMainDocumentPart().getJaxbElement();
+	}
+
+	public Docx(BinaryLoader loader) throws Docx4JException {
+		ByteArrayInputStream is = new ByteArrayInputStream(
+				loader.loadAsBinaryData());
+		wordMLPackage = WordprocessingMLPackage.load(is);
 		wmlDocumentEl = (org.docx4j.wml.Document) wordMLPackage
 				.getMainDocumentPart().getJaxbElement();
 	}
@@ -204,11 +213,16 @@ public class Docx {
 			log.error(e.getMessage());
 		}
 	}
-	
+
 	// use this to store to database
-	public void save(OutputStream os) throws Docx4JException{
+	public void save(com.aperture.docx.core.BinarySaver s)
+			throws Docx4JException {
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		Save saver = new Save(wordMLPackage);
 		saver.save(os);
+
+		// call interface
+		s.saveAsBinaryData(os.toByteArray());
 	}
 
 	// comments related

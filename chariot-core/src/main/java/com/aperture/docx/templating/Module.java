@@ -1,6 +1,5 @@
 package com.aperture.docx.templating;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +13,17 @@ import org.docx4j.wml.ContentAccessor;
 
 import settings.Constant;
 
+import com.aperture.docx.core.BinaryLoader;
+import com.aperture.docx.core.BinarySaver;
 import com.aperture.docx.core.Docx;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 public class Module {
-	String id;
+	String moduleName;
 
 	Docx doc;
+	BinarySaver saver;
 
 	boolean initialized = false;
 
@@ -40,15 +42,31 @@ public class Module {
 		initialized = true;
 	}
 
-	public void init(String name) throws Docx4JException {
-		String path = settings.Constant.MODULE_PATH + "/" + name + ".docx";
-		File f = new File(path);
-		if (f.isFile() && f.canRead()) {
-			doc = new Docx(path);
-			this.id = name;
+	// set this if you need save
+	public void setSaver(BinarySaver s) {
+		this.saver = s;
+	}
 
-			initialized = true;
+	public void setName(String name) {
+		if (this.saver != null) {
+			this.saver.setName(name);
 		}
+	}
+
+	public void save() throws Docx4JException {
+		this.doc.save(saver);
+	}
+
+	// saver not needed
+	public void init(BinaryLoader loader) throws Docx4JException {
+		doc = new Docx(loader);
+		this.moduleName = loader.getName();
+
+		initialized = true;
+	}
+	
+	public String getName(){
+		return this.moduleName;
 	}
 
 	public BiMap<Module, Object> getSubModuleEntry() throws Docx4JException {
@@ -131,7 +149,7 @@ public class Module {
 						String name = doc
 								.getCommentTextById(((CommentRangeStart) o)
 										.getId());
-						if (name.equals(id))
+						if (name.equals(moduleName))
 							return null;
 						Module sub = new Module();
 						try {
@@ -171,6 +189,7 @@ public class Module {
 				result.add(q);
 			}
 		}
-		return new ModuleModel(id, Docx.extractText(doc.getBody()), result);
+		return new ModuleModel(moduleName, Docx.extractText(doc.getBody()),
+				result);
 	}
 }

@@ -1,7 +1,6 @@
 package controllers;
 
 import util.Ajax;
-import util.DocxService;
 import models.*;
 import play.mvc.*;
 import views.html.dashboard;
@@ -9,6 +8,8 @@ import views.html.documents.*;
 
 import java.util.List;
 import java.util.Map;
+
+import com.aperture.docx.templating.api.DocxTemplatingService;
 
 @Security.Authenticated(Secured.class)
 public class Documents extends Controller {
@@ -37,7 +38,7 @@ public class Documents extends Controller {
 
     public static Result detail(String name,Long id) {
         try{
-            models.template.Module document = DocxService.analyzeModule(name);
+            models.template.Module document = DocxTemplatingService.analyzeModule(name);
             document.id = id;
             return ok(detail.render(document));
         }catch(Exception e){

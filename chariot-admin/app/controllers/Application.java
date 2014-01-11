@@ -15,6 +15,7 @@ import org.docx4j.wml.Body;
 import com.aperture.docx.core.Docx;
 import com.aperture.docx.templating.ModuleParser;
 import com.aperture.docx.templating.ModuleCompiler;
+import com.aperture.docx.templating.api.DocxTemplatingService;
 
 import play.*;
 import play.mvc.*;
@@ -22,7 +23,6 @@ import play.data.*;
 import static play.data.Form.*;
 
 import models.*;
-import util.DocxService;
 import views.html.*;
 
 public class Application extends Controller {
@@ -113,7 +113,7 @@ public class Application extends Controller {
 
 	public static Result analyze() throws Docx4JException {
 		StringBuilder sb = new StringBuilder();
-		iter(DocxService.analyzeModule("sample").list, sb, "");
+		iter(DocxTemplatingService.analyzeModule("sample").list, sb, "");
 		return ok(sb.toString());
 	}
 

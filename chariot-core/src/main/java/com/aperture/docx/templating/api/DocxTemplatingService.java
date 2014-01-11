@@ -1,16 +1,15 @@
-package util;
+package com.aperture.docx.templating.api;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
-import com.aperture.docx.core.Docx;
 import com.aperture.docx.templating.Module;
-import com.aperture.docx.templating.ModuleParser;
 import com.aperture.docx.templating.ModuleCompiler;
+import com.aperture.docx.templating.ModuleIO;
 
-public class DocxService {
+public class DocxTemplatingService {
 	public enum DocType {
 		DOC("doc"), MODULE("module");
 		private final String type;
@@ -51,8 +50,7 @@ public class DocxService {
 	public static void parseDocument(DocType type, String name, String path)
 			throws Docx4JException {
 		name = name.replaceAll("\\.docx$", "");
-		Docx doc = new Docx(path);
-		new ModuleParser(doc).parseAs(name);
+		ModuleIO.newDocument(name, path);
 
 		if (type == DocType.DOC) {
 			List<models.File> files = models.File.find.where().eq("name", name)
@@ -65,24 +63,24 @@ public class DocxService {
 		}
 	}
 
-	public static boolean getCompiledModule(String name) throws Docx4JException {
+	public static boolean getCompiledModule(long id) throws Docx4JException {
 		ModuleCompiler mc = new ModuleCompiler();
-		com.aperture.docx.templating.Module m = new com.aperture.docx.templating.Module();
-		m.init(name);
-		if (!m.isInitialized()) {
-			return false;
-		}
-		mc.pendModule(m);
-		mc.save(settings.Constant.USER_DIR + "/" + name + ".docx");
+		Module m = ModuleIO.loadModule(id);
 
-		return true;
+		if (m != null) {
+			mc.pendModule(m);
+			mc.save(settings.Constant.USER_DIR + "/" + m.getName() + ".docx");
+
+			return true;
+		}
+
+		return false;
 	}
 
-	public static models.template.Module analyzeModule(String name)
+	public static models.template.Module analyzeModule(long id)
 			throws Docx4JException {
-		Module m = new Module();
-		m.init(name);
-		if (m.isInitialized()) {
+		Module m = ModuleIO.loadModule(id);
+		if (m != null) {
 			return cast(m.analyse());
 		}
 
