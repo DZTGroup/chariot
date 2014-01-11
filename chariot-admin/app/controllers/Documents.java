@@ -1,5 +1,6 @@
 package controllers;
 
+import models.template.*;
 import util.Ajax;
 import models.*;
 import play.mvc.*;
@@ -29,17 +30,16 @@ public class Documents extends Controller {
                 List<File> files = File.getFilesByParentId(id);
                 return ok(index.render(files,file));
             }else{
-                return detail(file.name,id);
+                return detail(id,file.documentId);
             }
         }else{
             return badRequest();
         }
     }
 
-    public static Result detail(String name,Long id) {
+    public static Result detail(Long id,Long documentId) {
         try{
-            models.template.Module document = DocxTemplatingService.analyzeModule(id);
-            document.id = id;
+            models.template.Module document  =  DocxTemplatingService.analyzeModule(documentId);
             return ok(detail.render(document));
         }catch(Exception e){
             return badRequest();
