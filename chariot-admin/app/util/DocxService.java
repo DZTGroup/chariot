@@ -1,5 +1,6 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -22,9 +23,29 @@ public class DocxService {
 			return type;
 		}
 	}
-	
-	public static models.template.Module cast(Module.ModuleModel m){
-		return new models.template.Module(m.name, m.text, m.children);
+
+	private static Object cast_impl(Object o) {
+		if (o instanceof Module.ModuleModel) {
+			Module.ModuleModel mm = (Module.ModuleModel) o;
+			models.template.Module m = new models.template.Module(mm.name,
+					mm.text, null);
+			m.list = new ArrayList<Object>();
+			for (Object mo : mm.children) {
+				Object casted = cast_impl(mo);
+				if (casted != null)
+					m.list.add(casted);
+			}
+
+			return m;
+		} else if (o instanceof Module.QuestionModel) {
+			Module.QuestionModel qm = (Module.QuestionModel) o;
+			return new models.template.Question(qm.questionId, qm.context);
+		}
+		return null;
+	}
+
+	public static models.template.Module cast(Module.ModuleModel m) {
+		return (models.template.Module) cast_impl(m);
 	}
 
 	public static void parseDocument(DocType type, String name, String path)
