@@ -17,16 +17,19 @@ public class File extends Model {
 	@Id
     public Long id;
 
+    public Long documentId;
+
     public String name;
 
     public String type;
 
     public Long parentId;
 
-    public File(String name, String type) {
+    public File(String name, String type,Long documentId) {
         this.name = name;
         this.type = type;
         this.parentId = Long.valueOf(0);
+        this.documentId = documentId;
     }
 
     // -- Queries
