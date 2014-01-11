@@ -34,7 +34,7 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 		return m;
 	}
 
-	public static void newDocument(String name, String path)
+	public static long newDocument(String name, String path)
 			throws Docx4JException {
 		ModuleIO io = new ModuleIO();
 
@@ -42,6 +42,8 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 		io.module.name = name;
 
 		new ModuleParser(new Docx(path), io).parseAs(name);
+
+		return io.module.id;
 	}
 
 	@Override

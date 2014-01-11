@@ -50,14 +50,14 @@ public class DocxTemplatingService {
 	public static void parseDocument(DocType type, String name, String path)
 			throws Docx4JException {
 		name = name.replaceAll("\\.docx$", "");
-		ModuleIO.newDocument(name, path);
+		long id = ModuleIO.newDocument(name, path);
 
 		if (type == DocType.DOC) {
 			List<models.File> files = models.File.find.where().eq("name", name)
 					.findList();
 			// not found, insert
 			if (files.size() == 0) {
-				models.File file = new models.File(name, type.getType());
+				models.File file = new models.File(name, type.getType(), id);
 				file.save();
 			}
 		}
