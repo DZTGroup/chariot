@@ -16,7 +16,7 @@ public class Documents extends Controller {
     final static private String DOC = "doc";
 
     public static Result index() {
-        File root = new File("所有文档","dir");
+        File root = new File("所有文档","dir",null);
         root.id=Long.parseLong("0");
         Long rootId = new Long("0");
         return ok(index.render(File.getFilesByParentId(rootId), root));
@@ -107,7 +107,7 @@ public class Documents extends Controller {
         String parentId = map.get("parentId")[0];
         String name = map.get("name")[0];
 
-        File file = new File(name,"dir");
+        File file = new File(name,"dir",null);
         file.parentId = Long.parseLong(parentId);
 
         file.save();
