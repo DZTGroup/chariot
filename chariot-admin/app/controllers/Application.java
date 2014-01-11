@@ -93,8 +93,9 @@ public class Application extends Controller {
 		 */
 
 		// ByteArrayOutputStream
+		models.Module m = models.Module.find.byId((long) 6);
 
-		return ok("done!");
+		return ok(Boolean.toString(m.content != null));
 	}
 
 	public static Result all(String name) throws Docx4JException,
