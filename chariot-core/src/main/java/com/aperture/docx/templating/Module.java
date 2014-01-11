@@ -1,4 +1,4 @@
-package com.aperture.docx.dom;
+package com.aperture.docx.templating;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -9,11 +9,12 @@ import org.docx4j.TraversalUtil;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.wml.CommentRangeEnd;
 import org.docx4j.wml.CommentRangeStart;
-import org.docx4j.wml.R;
 import org.docx4j.wml.Comments.Comment;
 import org.docx4j.wml.ContentAccessor;
 
-import com.aperture.docx.Docx;
+import settings.Constant;
+
+import com.aperture.docx.core.Docx;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -50,27 +51,13 @@ public class Module {
 		}
 	}
 
-	boolean isQuestionMarker(Object start) {
-		Object next = doc.getNextObject(start);
-		if (next instanceof R) {
-			if (Docx.extractText(next).matches("^__+$")) {
-				Object end = doc.getNextObject(next);
-
-				if (end instanceof CommentRangeEnd) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	public BiMap<Module, Object> getSubModuleEntry() throws Docx4JException {
 		BiMap<Module, Object> result = HashBiMap.create();
 		for (Comment c : doc.getComment().getComment()) {
 			BigInteger id = c.getId();
 
 			Object cstart = doc.getCommentRangeStartById(id);
-			if (!isQuestionMarker(cstart)) {
+			if (!QuestionUtil.isQuestionMarker(doc, cstart)) {
 				ContentAccessor parent = (ContentAccessor) ((CommentRangeStart) cstart)
 						.getParent();
 				int index = parent.getContent().indexOf(cstart);
@@ -92,8 +79,9 @@ public class Module {
 	}
 
 	private class QuestionMarker {
-		public String qid;
-		public int index;
+		String qid;
+		int start;
+		int end;
 	}
 
 	public static class QuestionModel {
@@ -131,11 +119,13 @@ public class Module {
 				}
 
 				if (o instanceof CommentRangeStart) {
-					if (isQuestionMarker(o)) {
+					int blankSize = QuestionUtil.getQuestionBlankSize(doc, o);
+					if (blankSize > 0) {
 						QuestionMarker qm = new QuestionMarker();
 						qm.qid = doc.getCommentTextById(((CommentRangeStart) o)
 								.getId());
-						qm.index = pureText.length();
+						qm.start = pureText.length();
+						qm.end = qm.start + blankSize;
 						searchList.add(qm);
 					} else {
 						String name = doc
@@ -166,21 +156,21 @@ public class Module {
 			if (o instanceof QuestionMarker) {
 				QuestionMarker qm = (QuestionMarker) o;
 				// bound checking
-				int start = qm.index
+				int start = qm.start
 						- settings.Constant.QUESTION_CONTEXT_RADIUS;
 				start = start > 0 ? start : 0;
 
-				int end = qm.index + settings.Constant.QUESTION_CONTEXT_RADIUS
-						+ 4;
+				int end = qm.end + settings.Constant.QUESTION_CONTEXT_RADIUS;
 				end = end <= pureText.length() ? end : pureText.length();
 
 				QuestionModel q = new QuestionModel(qm.qid, pureText.substring(
-						start, end));
+						start, qm.start)
+						+ Constant.QUESTON_BLANK_REPRESENTATION
+						+ pureText.substring(qm.end, end));
 
 				result.add(q);
 			}
 		}
-		return new ModuleModel(id, Docx.extractText(doc.getBody()),
-				result);
+		return new ModuleModel(id, Docx.extractText(doc.getBody()), result);
 	}
 }

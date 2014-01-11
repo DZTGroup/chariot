@@ -1,5 +1,8 @@
-package com.aperture.docx;
+package com.aperture.docx.core;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,13 +18,23 @@ import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.CommentsPart;
+import org.docx4j.openpackaging.io3.Save;
+
 import org.docx4j.wml.CommentRangeStart;
 import org.docx4j.wml.Comments;
 import org.docx4j.wml.Comments.Comment;
 import org.docx4j.wml.ContentAccessor;
 import org.jvnet.jaxb2_commons.ppp.Child;
 
+// use slf4j interface
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Docx {
+	// log
+	Logger log = LoggerFactory.getLogger(Docx.class);
+
+	// debug mark
 	public boolean _debug = false;
 
 	// maintain docx structure here
@@ -173,8 +186,7 @@ public class Docx {
 		});
 
 		if (visited.size() > 0) {
-			System.out.println(visited.get(visited.size() - 1).getClass()
-					.getName());
+			log.info(visited.get(visited.size() - 1).getClass().getName());
 			return ((ContentAccessor) visited.get(visited.size() - 1))
 					.getContent();
 		}
@@ -182,7 +194,21 @@ public class Docx {
 	}
 
 	public void save(String path) throws Docx4JException {
-		wordMLPackage.save(new java.io.File(path));
+		// wordMLPackage.save(new java.io.File(path));
+
+		Save saver = new Save(wordMLPackage);
+		try {
+			saver.save(new FileOutputStream(new java.io.File(path)));
+		} catch (FileNotFoundException e) {
+			//
+			log.error(e.getMessage());
+		}
+	}
+	
+	// use this to store to database
+	public void save(OutputStream os) throws Docx4JException{
+		Save saver = new Save(wordMLPackage);
+		saver.save(os);
 	}
 
 	// comments related

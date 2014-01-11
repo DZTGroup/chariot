@@ -1,5 +1,6 @@
-package com.aperture.docx.dom;
+package com.aperture.docx.templating;
 
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.docx4j.wml.Comments.Comment;
 import org.docx4j.wml.R.CommentReference;
 import org.jvnet.jaxb2_commons.ppp.Child;
 
-import com.aperture.docx.Docx;
+import com.aperture.docx.core.Docx;
 import com.google.common.collect.BiMap;
 
 public class ModuleCompiler {
@@ -24,6 +25,10 @@ public class ModuleCompiler {
 
 	public ModuleCompiler() throws Docx4JException {
 		doc = new Docx();
+	}
+	
+	public void save(OutputStream os) throws Docx4JException{
+		doc.save(os);
 	}
 
 	public void save(String path) throws Docx4JException {

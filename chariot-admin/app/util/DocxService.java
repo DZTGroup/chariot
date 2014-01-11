@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
-import com.aperture.docx.Docx;
-import com.aperture.docx.dom.DocxTreeStructure;
-import com.aperture.docx.dom.Module;
-import com.aperture.docx.dom.ModuleCompiler;
+import com.aperture.docx.core.Docx;
+import com.aperture.docx.templating.Module;
+import com.aperture.docx.templating.ModuleParser;
+import com.aperture.docx.templating.ModuleCompiler;
 
 public class DocxService {
 	public enum DocType {
@@ -31,7 +31,7 @@ public class DocxService {
 			throws Docx4JException {
 		name = name.replaceAll("\\.docx$", "");
 		Docx doc = new Docx(path);
-		new DocxTreeStructure(doc).parseAs(name);
+		new ModuleParser(doc).parseAs(name);
 
 		if (type == DocType.DOC) {
 			List<models.File> files = models.File.find.where().eq("name", name)
@@ -46,7 +46,7 @@ public class DocxService {
 
 	public static boolean getCompiledModule(String name) throws Docx4JException {
 		ModuleCompiler mc = new ModuleCompiler();
-		com.aperture.docx.dom.Module m = new com.aperture.docx.dom.Module();
+		com.aperture.docx.templating.Module m = new com.aperture.docx.templating.Module();
 		m.init(name);
 		if (!m.isInitialized()) {
 			return false;

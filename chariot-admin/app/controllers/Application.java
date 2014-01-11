@@ -12,9 +12,9 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Body;
 
-import com.aperture.docx.Docx;
-import com.aperture.docx.dom.DocxTreeStructure;
-import com.aperture.docx.dom.ModuleCompiler;
+import com.aperture.docx.core.Docx;
+import com.aperture.docx.templating.ModuleParser;
+import com.aperture.docx.templating.ModuleCompiler;
 
 import play.*;
 import play.mvc.*;
@@ -88,14 +88,16 @@ public class Application extends Controller {
 		String path = settings.Constant.DEBUG_PATH + "/" + "sample.docx";
 
 		Docx doc = new Docx(path);
-		new DocxTreeStructure(doc).parseAs("sample");
+		new ModuleParser(doc).parseAs("sample");
 
 		// test doc gen
 		ModuleCompiler mc = new ModuleCompiler();
-		com.aperture.docx.dom.Module m = new com.aperture.docx.dom.Module();
+		com.aperture.docx.templating.Module m = new com.aperture.docx.templating.Module();
 		m.init("sample");
 		mc.pendModule(m);
 		mc.save(settings.Constant.DEBUG_PATH + "/" + "compiled.docx");
+		
+		//ByteArrayOutputStream
 
 		return ok("done!");
 	}

@@ -1,4 +1,4 @@
-package com.aperture.docx.dom;
+package com.aperture.docx.templating;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -20,9 +20,9 @@ import org.docx4j.wml.ContentAccessor;
 import org.docx4j.wml.R;
 import org.docx4j.wml.R.CommentReference;
 
-import com.aperture.docx.Docx;
+import com.aperture.docx.core.Docx;
 
-public class DocxTreeStructure implements TraversalUtil.Callback {
+public class ModuleParser implements TraversalUtil.Callback {
 	Docx doc;
 
 	List<Exception> errors = new ArrayList<Exception>();
@@ -52,7 +52,7 @@ public class DocxTreeStructure implements TraversalUtil.Callback {
 	boolean isDealingQuestion = false;
 	Map<Object, Long> questionLocation = new HashMap<Object, Long>();
 
-	public DocxTreeStructure(Docx d) {
+	public ModuleParser(Docx d) {
 		doc = d;
 	}
 

@@ -2,6 +2,7 @@ package settings;
 
 public class Constant {
 	final public static int QUESTION_CONTEXT_RADIUS = 20;
+	final public static String QUESTON_BLANK_REPRESENTATION = "<-Question->";
 	
 	final public static String DOCX_TEMPLATE = System.getProperty("user.dir") + "/template/template.docx";
 	final public static String DEBUG_PATH = System.getProperty("user.dir") + "/template/debug";
