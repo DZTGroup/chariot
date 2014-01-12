@@ -49,4 +49,27 @@ public class Module {
 
         return list;
     }
+
+    public Module getModuleById(Long id){
+        List<Module> moduleList = getModuleList();
+
+        for(Module m:moduleList){
+            if(m.id == id){
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public Question getQuestionById(String id){
+        List<Question> questionList = getQuestionList();
+
+        for(Question m:questionList){
+            if(m.questionId.equals(id)){
+                return m;
+            }
+        }
+        return null;
+    }
+
 }
