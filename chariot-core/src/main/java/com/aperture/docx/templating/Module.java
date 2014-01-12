@@ -155,7 +155,7 @@ public class Module {
 							return null;
 						try {
 							Module sub = ModuleIO.loadModule(name);
-							if (sub.isInitialized() == true) {
+							if (sub != null && sub.isInitialized() == true) {
 								ModuleModel m = sub.analyse();
 								searchList.add(m);
 							}

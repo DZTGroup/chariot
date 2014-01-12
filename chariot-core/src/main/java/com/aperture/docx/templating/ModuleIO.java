@@ -2,6 +2,8 @@ package com.aperture.docx.templating;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
+import play.Logger;
+
 import com.aperture.docx.core.*;
 
 public class ModuleIO implements BinaryLoader, BinarySaver {
@@ -10,10 +12,11 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 	protected ModuleIO() {
 	}
 
-	static Module loadModule(String name) throws Docx4JException {
+	public static Module loadModule(String name) throws Docx4JException {
 		Module m = null;
 
 		ModuleIO io = new ModuleIO();
+		Logger.debug(name);
 		io.module = models.Module.find.select("id, name, content").where()
 				.eq("name", name).findUnique();
 		if (io.module != null) {
