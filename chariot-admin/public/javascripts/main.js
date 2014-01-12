@@ -86,7 +86,8 @@
           routes:{
               "documents": "documents",
               "fileUpload":"fileUpload",
-              "document/:id": "document"
+              "document/:id": "document",
+              "page/:id": "page"
           },
           documents:function(){
               return load("/documents");
@@ -97,6 +98,9 @@
           },
           document:function(id){
               return load("/document/"+id);
+          },
+          page:function(id){
+              return load('/page/'+id);
           }
       });
 

@@ -42,6 +42,7 @@ public class Documents extends Controller {
 		try {
 			models.template.Module document = DocxTemplatingService
 					.analyzeModule(documentId);
+
 			return ok(detail.render(document));
 		} catch (Exception e) {
 			Logger.error("[error]", e);
