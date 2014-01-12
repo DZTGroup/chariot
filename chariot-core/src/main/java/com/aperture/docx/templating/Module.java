@@ -11,6 +11,8 @@ import org.docx4j.wml.CommentRangeStart;
 import org.docx4j.wml.Comments.Comment;
 import org.docx4j.wml.ContentAccessor;
 
+import play.Logger;
+
 import settings.Constant;
 
 import com.aperture.docx.core.BinaryLoader;
@@ -151,16 +153,15 @@ public class Module {
 										.getId());
 						if (name.equals(moduleName))
 							return null;
-						Module sub = new Module();
 						try {
-							sub.init(name);
+							Module sub = ModuleIO.loadModule(name);
+							if (sub.isInitialized() == true) {
+								ModuleModel m = sub.analyse();
+								searchList.add(m);
+							}
 						} catch (Docx4JException e) {
 							//
-							e.printStackTrace();
-						}
-						if (sub.isInitialized() == true) {
-							ModuleModel m = sub.analyse();
-							searchList.add(m);
+							Logger.error("Parsing Module "+name+" error:", e);
 						}
 					}
 				}

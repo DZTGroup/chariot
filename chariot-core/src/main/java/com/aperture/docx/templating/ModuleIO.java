@@ -10,6 +10,21 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 	protected ModuleIO() {
 	}
 
+	static Module loadModule(String name) throws Docx4JException {
+		Module m = null;
+
+		ModuleIO io = new ModuleIO();
+		io.module = models.Module.find.select("id, name, content").where()
+				.eq("name", name).findUnique();
+		if (io.module != null) {
+			m = new Module();
+
+			m.init(io);
+		}
+
+		return m;
+	}
+
 	public static Module loadModule(long id) throws Docx4JException {
 		Module m = null;
 
