@@ -32,7 +32,7 @@ GET     /formUpload                 controllers.Upload.renderUpload()
 POST    /doUpload                   controllers.Upload.uploadForm()
 
 POST    /service/upload/:type           controllers.Upload.uploadDocument(qqfile: String, type:String)
-GET /service/download/:filename		controllers.Upload.fetchDocument(filename: String)
+GET /service/download/:filename/:id		controllers.Upload.fetchDocument(filename: String, id: Long)
 
 
 #Questions

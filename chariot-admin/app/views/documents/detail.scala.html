@@ -5,7 +5,7 @@
     <li class="active">
         @document.name
         <a href="#/page/@document.id">编辑模块分页>></a>
-        <button class="downloadLink btn btn-primary btn-sm" style="float:right" onclick='window.location.href="/service/download/@helper.urlEncode(document.name)"'>下载文档</button>
+        <button class="downloadLink btn btn-primary btn-sm" style="float:right" onclick='window.location.href="/service/download/@helper.urlEncode(document.name)/@document.id"'>下载文档</button>
     </li>
 </ol>
 
@@ -46,7 +46,7 @@
                         <h4 class="panel-title">
                         <a href="javascript:;">模块 <span style="color:black;">@module.name</span></a>
                         <div class="download">
-                            <button class="downloadLink btn btn-primary btn-sm"  onclick='window.location.href="/service/download/@helper.urlEncode(module.name)"'>下载模块</button>
+                            <button class="downloadLink btn btn-primary btn-sm"  onclick='window.location.href="/service/download/@helper.urlEncode(module.name)/@module.id"'>下载模块</button>
                         	<button class="downloadLink btn btn-primary btn-sm" id="file-uploader-@module.name" >更新模块</button>
                         </div>
                         <script>
