@@ -28,6 +28,8 @@ public class DocxTemplatingService {
 			Module.ModuleModel mm = (Module.ModuleModel) o;
 			models.template.Module m = new models.template.Module(mm.name,
 					mm.text, null);
+			
+			m.id = mm.id;
 			m.list = new ArrayList<Object>();
 			for (Object mo : mm.children) {
 				Object casted = cast_impl(mo);
