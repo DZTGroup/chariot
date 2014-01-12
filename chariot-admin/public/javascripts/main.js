@@ -518,6 +518,7 @@
             newPage.find('.list-group').empty();
             var name = "新建分页"+(pages.size()+1);
             newPage.find('.J_page_name').text(name);
+            newPage.find('.J_desc').val('');
             var pageNameEl = newPage.find('.J_page_name');
 
             editName(pageNameEl);
@@ -530,7 +531,7 @@
         //选择分页
         $('.J_pages_select').change(function(){
             var value = $(this).val();
-            var li  = $(this).parent();
+            var li  = $(this).parents(".list-group-item");
             $('.J_page_name').each(function(i,name){
                 if($(name).text()===value){
                     $(name).parents('.J_page').find('.list-group').append(li);
@@ -545,6 +546,7 @@
             $('.J_page').each(function(){
                 var pageItem = {};
                 pageItem.name = $(this).find('.J_page_name').text();
+                pageItem.desc = $(this).find('.J_desc').val();
                 data.push(pageItem);
                 pageItem.moduleList = [];
 

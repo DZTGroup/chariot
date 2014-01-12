@@ -50,7 +50,7 @@ public class PageContent {
                 return pageList.get(i);
             }
         }
-        PageItem defaultPage = new PageItem("默认分页",new ArrayList<LittleModule>());
+        PageItem defaultPage = new PageItem("默认分页","这是一个默认分页",new ArrayList<LittleModule>());
         pageList.add(defaultPage);
         return defaultPage;
     }

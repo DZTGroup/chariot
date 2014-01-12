@@ -20,14 +20,13 @@
                 </span>
             </h4>
         </div>
+        <div class="well">
+            <textarea style="width:100%;" class="J_desc" placeholder="分页的描述写在这">@pageItem.desc</textarea>
+        </div>
         <ul class="list-group">
             @for(littleModule <- pageItem.moduleList){
                 <li class="list-group-item J_move">
-                    <select class="J_pages_select">
-                        @for(p <- pageContent.pageList){
-                            <option @if(p.name==pageItem.name){selected}>@p.name</option>
-                        }
-                    </select>
+
                     @defining(littleModule.`type`){ t=>
                         @t match {
                             case "module" =>{
@@ -45,6 +44,11 @@
                         }
                     }
                      <span style="float:right;">
+                         <select class="J_pages_select">
+                             @for(p <- pageContent.pageList){
+                             <option @if(p.name==pageItem.name){selected}>@p.name</option>
+                             }
+                         </select>
                         <a class="J_up" href="javascript:;">上移</a>
                         <a class="J_down" href="javascript:;">下移</a>
                      </span>

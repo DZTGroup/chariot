@@ -7,10 +7,12 @@ import java.util.ArrayList;
  */
 public class PageItem{
     public String name;
+    public String desc;
     public ArrayList<LittleModule> moduleList;
 
-    PageItem(String name,ArrayList<LittleModule> moduleList){
+    PageItem(String name,String desc,ArrayList<LittleModule> moduleList){
         this.name = name;
+        this.desc = desc;
         this.moduleList = moduleList;
     }
 
