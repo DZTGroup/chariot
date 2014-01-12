@@ -1,8 +1,8 @@
 package controllers;
 
-import models.template.*;
 import util.Ajax;
 import models.*;
+import play.Logger;
 import play.mvc.*;
 import views.html.dashboard;
 import views.html.documents.*;
@@ -14,107 +14,109 @@ import com.aperture.docx.templating.api.DocxTemplatingService;
 
 @Security.Authenticated(Secured.class)
 public class Documents extends Controller {
-    final static private String DIR = "dir";
-    final static private String DOC = "doc";
+	final static private String DIR = "dir";
+	final static private String DOC = "doc";
 
-    public static Result index() {
-        File root = new File("所有文档","dir",null);
-        root.id=Long.parseLong("0");
-        Long rootId = new Long("0");
-        return ok(index.render(File.getFilesByParentId(rootId), root));
-    } 
-    public static Result folder(Long id){
-        File file = File.getById(id);
-        if(file!=null){
-            if(file.type.equals(DIR)){
-                List<File> files = File.getFilesByParentId(id);
-                return ok(index.render(files,file));
-            }else{
-                return detail(id,file.documentId);
-            }
-        }else{
-            return badRequest();
-        }
-    }
+	public static Result index() {
+		File root = new File("所有文档", "dir", null);
+		root.id = Long.parseLong("0");
+		Long rootId = new Long("0");
+		return ok(index.render(File.getFilesByParentId(rootId), root));
+	}
 
-    public static Result detail(Long id,Long documentId) {
-        try{
-            models.template.Module document  =  DocxTemplatingService.analyzeModule(documentId);
-            return ok(detail.render(document));
-        }catch(Exception e){
-            return badRequest();
-        }
-    }
+	public static Result folder(Long id) {
+		File file = File.getById(id);
+		if (file != null) {
+			if (file.type.equals(DIR)) {
+				List<File> files = File.getFilesByParentId(id);
+				return ok(index.render(files, file));
+			} else if (file.type.equals(DOC)) {
+				return detail(id, file.documentId);
+			}
+		}
+		
+		return badRequest();
+	}
 
-    public static Result view() {
-        return ok(dashboard.render(User.find.byId(session("email"))));
-    }
+	public static Result detail(Long id, Long documentId) {
+		try {
+			models.template.Module document = DocxTemplatingService
+					.analyzeModule(documentId);
+			return ok(detail.render(document));
+		} catch (Exception e) {
+			Logger.error("[error]", e);
+			return internalServerError("oops");
+		}
+	}
 
-    public static Result changeDir(){
+	public static Result view() {
+		return ok(dashboard.render(User.find.byId(session("email"))));
+	}
 
-        Http.RequestBody body = request().body();
-        Map<String ,String[]> map = body.asFormUrlEncoded();
+	public static Result changeDir() {
 
-        String id = map.get("id")[0];
-        String parentId = map.get("parentId")[0];
+		Http.RequestBody body = request().body();
+		Map<String, String[]> map = body.asFormUrlEncoded();
 
-        File file = File.getById(Long.parseLong(id));
+		String id = map.get("id")[0];
+		String parentId = map.get("parentId")[0];
 
-        Ajax ajax = new Ajax();
+		File file = File.getById(Long.parseLong(id));
 
-        file.parentId = Long.parseLong(parentId);
-        file.save();
+		Ajax ajax = new Ajax();
 
-        ajax.setCode(200);
-        ajax.setData(new String("success"));
+		file.parentId = Long.parseLong(parentId);
+		file.save();
 
-        return ok(ajax.toJson());
-    }
+		ajax.setCode(200);
+		ajax.setData(new String("success"));
 
-    public static Result delete(){
+		return ok(ajax.toJson());
+	}
 
-        Http.RequestBody body = request().body();
-        Map<String ,String[]> map = body.asFormUrlEncoded();
-        Ajax ajax = new Ajax();
+	public static Result delete() {
 
-        String id = map.get("id")[0];
-        File file = File.getById(Long.parseLong(id));
-        if(file!=null && file.type.equals("dir")){
-            List<File> files = File.getFilesByParentId(file.id);
-            if(files.isEmpty()){
-                file.delete();
-                ajax.setCode(200);
-                ajax.setData(new String("删除成功"));
-            }else{
-                ajax.setCode(500);
-                ajax.setData(new String("该目录不为空,不能删除"));
-            }
-        }else {
-            file.delete();
-            ajax.setCode(200);
-            ajax.setData(new String("删除成功"));
-        }
+		Http.RequestBody body = request().body();
+		Map<String, String[]> map = body.asFormUrlEncoded();
+		Ajax ajax = new Ajax();
 
+		String id = map.get("id")[0];
+		File file = File.getById(Long.parseLong(id));
+		if (file != null && file.type.equals("dir")) {
+			List<File> files = File.getFilesByParentId(file.id);
+			if (files.isEmpty()) {
+				file.delete();
+				ajax.setCode(200);
+				ajax.setData(new String("删除成功"));
+			} else {
+				ajax.setCode(500);
+				ajax.setData(new String("该目录不为空,不能删除"));
+			}
+		} else {
+			file.delete();
+			ajax.setCode(200);
+			ajax.setData(new String("删除成功"));
+		}
 
-        return ok(ajax.toJson());
-    }
+		return ok(ajax.toJson());
+	}
 
-    public static Result createFolder(){
+	public static Result createFolder() {
 
-        Http.RequestBody body = request().body();
-        Map<String ,String[]> map = body.asFormUrlEncoded();
-        Ajax ajax = new Ajax();
+		Http.RequestBody body = request().body();
+		Map<String, String[]> map = body.asFormUrlEncoded();
+		Ajax ajax = new Ajax();
 
-        String parentId = map.get("parentId")[0];
-        String name = map.get("name")[0];
+		String parentId = map.get("parentId")[0];
+		String name = map.get("name")[0];
 
-        File file = new File(name,"dir",null);
-        file.parentId = Long.parseLong(parentId);
+		File file = new File(name, "dir", null);
+		file.parentId = Long.parseLong(parentId);
 
-        file.save();
-        ajax.setCode(200);
-        ajax.setData(new String("创建成功"));
-        return ok(ajax.toJson());
-    }
+		file.save();
+		ajax.setCode(200);
+		ajax.setData(new String("创建成功"));
+		return ok(ajax.toJson());
+	}
 
 }
