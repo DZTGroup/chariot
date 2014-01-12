@@ -24,8 +24,8 @@
             @for(littleModule <- pageItem.moduleList){
                 <li class="list-group-item J_move">
                     <select class="J_pages_select">
-                        @for(pageItem <- pageContent.pageList){
-                            <option>@pageItem.name</option>
+                        @for(p <- pageContent.pageList){
+                            <option @if(p.name==pageItem.name){selected}>@p.name</option>
                         }
                     </select>
                     @defining(littleModule.`type`){ t=>
