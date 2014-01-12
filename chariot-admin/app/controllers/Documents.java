@@ -34,7 +34,7 @@ public class Documents extends Controller {
 				return detail(id, file.documentId);
 			}
 		}
-		
+
 		return badRequest();
 	}
 
