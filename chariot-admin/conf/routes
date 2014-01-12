@@ -16,6 +16,7 @@ POST    /document/create                   controllers.Documents.createFolder()
 
 #Page
 GET     /page/:id                          controllers.Page.index(id:Long)
+POST    /page/save                         controllers.Page.save()
 
 # Authentication
 GET     /login                              controllers.Application.login()

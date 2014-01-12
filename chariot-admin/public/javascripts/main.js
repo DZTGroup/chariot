@@ -474,3 +474,111 @@
 
 
 })(this);
+
+(function(){
+    //分页
+
+    var Page = function(outDom,documentId){
+        //上下移
+        $(outDom).on("click",".J_up",function(){
+            var moveEl = $(this).parents('.J_move').eq(0);
+            moveEl.insertBefore(moveEl.prev());
+        });
+        $(outDom).on('click',".J_down",function(){
+            var moveEl = $(this).parents('.J_move').eq(0);
+            moveEl.insertAfter(moveEl.next());
+        });
+
+        function editName(nameEl){
+            nameEl.currentName = nameEl.text();
+            nameEl.editInPlace('init',{
+                context:this,
+                onChange:function(value){
+                    nameEl.editInPlace('close',value);
+                    //改变select的值
+                    $('.J_pages_select option').each(function(i,option){
+                        if(option.text==nameEl.currentName){
+                            option.text = value;
+                        }
+                    });
+                    nameEl.currentName = value;
+                }
+            })
+        }
+        //修改名字
+        $('.J_page_name').each(function(i,el){
+            editName($(el));
+        });
+
+        //新建
+        $(outDom).on('click','.J_new_page',function(){
+            var pages = $('.J_page');
+            var lastPage = pages.eq(pages.size()-1);
+            var newPage = lastPage.clone().insertAfter(lastPage);
+            newPage.find('.list-group').empty();
+            var name = "新建分页"+(pages.size()+1);
+            newPage.find('.J_page_name').text(name);
+            var pageNameEl = newPage.find('.J_page_name');
+
+            editName(pageNameEl);
+            pageNameEl.editInPlace('edit');
+
+            //add an option
+            $('.J_pages_select').append('<option>'+name+'</option>')
+        });
+
+        //选择分页
+        $('.J_pages_select').change(function(){
+            var value = $(this).val();
+            var li  = $(this).parent();
+            $('.J_page_name').each(function(i,name){
+                if($(name).text()===value){
+                    $(name).parents('.J_page').find('.list-group').append(li);
+                }
+            });
+
+        });
+
+        //save
+        $('.J_save').on('click',function(){
+            var data = [];
+            $('.J_page').each(function(){
+                var pageItem = {};
+                pageItem.name = $(this).find('.J_page_name').text();
+                data.push(pageItem);
+                pageItem.moduleList = [];
+
+                $(this).find('.J_m').each(function(){
+                    pageItem.moduleList.push({
+                        id:$(this).data('id'),
+                        type:$(this).data('type')
+                    });
+                });
+            });
+            data = {
+                pageList:data
+            }
+
+            //ajax save
+            $.ajax({
+              url:"/page/save",
+              data:{
+                  id:documentId,
+                  content:JSON.stringify(data)
+              },
+              type:"POST",
+              dataType:"json",
+              success:function(){
+                  $('.J_suc').fadeIn();
+                  setTimeout(function(){
+                      $('.J_suc').fadeOut();
+                  },3000);
+              }
+
+            });
+        });
+    }
+
+    window.Page = Page;
+
+})();

@@ -1,39 +1,59 @@
 @(pageContent:PageContent,document:template.Module)
-
+<div class="J_page_holder">
 <ol class="breadcrumb">
     <li class="active">
-        @document.name <a href="javascript:;">新建分页</a>
+        @document.name <a href="javascript:;" class="J_new_page">新建分页</a>
     </li>
 </ol>
-
+    <div class="alert alert-success J_suc" style="display:none;">
+        保存成功!
+    </div>
+<div>
 @for(pageItem <- pageContent.pageList){
-    <div class="panel panel-info">
+    <div class="panel panel-info J_move J_page">
         <div class="panel-heading">
-            <h4 class="panel-title">@pageItem.name</h4>
+            <h4 class="panel-title">
+                <span class="J_page_name">@pageItem.name</span>
+                <span style="float:right;">
+                    <a class="J_up" href="javascript:;">上移</a>
+                    <a class="J_down" href="javascript:;">下移</a>
+                </span>
+            </h4>
         </div>
         <ul class="list-group">
             @for(littleModule <- pageItem.moduleList){
-                <li class="list-group-item">
+                <li class="list-group-item J_move">
+                    <select class="J_pages_select">
+                        @for(pageItem <- pageContent.pageList){
+                            <option>@pageItem.name</option>
+                        }
+                    </select>
                     @defining(littleModule.`type`){ t=>
                         @t match {
                             case "module" =>{
                                 @defining(document.getModuleById(Long.parseLong(littleModule.id))){ module=>
-                                    模块:<span title="@module.text">@module.name</span>
-                                    <span class="">
-                                        <a class="J_module_up">上移</a>
-                                        <a class="J_module_down">上移</a>
-                                    </span>
+                                    模块:<span title="@module.text" class="J_m" data-type="module" data-id="@module.id">@module.name</span>
+
                                 }
                             }
                             case "question" =>{
                                 @defining(document.getQuestionById(littleModule.id)){ question=>
-                                    问题:<span>@question.context</span>
+                                    问题:<span class="J_m" data-type="question" data-id="@question.questionId">@question.context</span>
+
                                 }
                             }
                         }
                     }
+                     <span style="float:right;">
+                        <a class="J_up" href="javascript:;">上移</a>
+                        <a class="J_down" href="javascript:;">下移</a>
+                     </span>
                 </li>
             }
         </ul>
     </div>
 }
+</div>
+    <button class="btn btn-primary J_save">保存分页</button>
+</div>
+<script>window.Page(".J_page_holder",@document.id)</script>
