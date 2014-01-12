@@ -4,6 +4,7 @@ package models;
 import javax.persistence.*;
 
 import play.db.ebean.*;
+import play.data.validation.*;
 
 /**
  * Project entity managed by Ebean
@@ -16,8 +17,10 @@ public class Module extends Model {
 	@Id
     public Long id;
     
+	@Constraints.Required
     public String name;
     
+    @Constraints.Required
     @Lob
     public byte[] content;
 

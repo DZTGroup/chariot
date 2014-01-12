@@ -9,7 +9,6 @@ libraryDependencies ++= Seq(
 	javaEbean,
 	cache,
 	"com.google.code.gson" % "gson" % "1.7.1",
-	"org.docx4j" % "docx4j" % "3.0.0",
 	"commons-io" % "commons-io" % "2.0.1",
 	"commons-codec" % "commons-codec" % "1.7"
 )

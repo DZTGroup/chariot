@@ -14,7 +14,8 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 		Module m = null;
 
 		ModuleIO io = new ModuleIO();
-		io.module = models.Module.find.byId(id);
+		io.module = models.Module.find.select("id, name, content").where()
+				.idEq(Long.valueOf(id)).findUnique();
 		if (io.module != null) {
 			m = new Module();
 
