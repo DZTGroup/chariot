@@ -104,14 +104,14 @@ public class Upload extends Controller {
 		return ok(formUpload.render("Your new application is ready."));
 	}
 
-	public static Result fetchDocument(String fileName) throws IOException,
+	public static Result fetchDocument(String fileName, long id) throws IOException,
 			Docx4JException {
 
 		response().setHeader("Content-Disposition",
 				"attachment;filename=\"" + fileName + "\"");
 		//TODO: fake id
 		// pass id here
-		if (com.aperture.docx.templating.api.DocxTemplatingService.getCompiledModule(1000)) {
+		if (com.aperture.docx.templating.api.DocxTemplatingService.getCompiledModule(id)) {
 			return ok(new File(Constant.USER_DIR + "/" + fileName + ".docx"));
 		} else {
 			return badRequest();
