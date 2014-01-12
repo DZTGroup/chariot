@@ -27,14 +27,9 @@ import org.docx4j.wml.Comments.Comment;
 import org.docx4j.wml.ContentAccessor;
 import org.jvnet.jaxb2_commons.ppp.Child;
 
-// use slf4j interface
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import play.Logger;
 
 public class Docx {
-	// log
-	Logger log = LoggerFactory.getLogger(Docx.class);
-
 	// debug mark
 	public boolean _debug = false;
 
@@ -195,7 +190,7 @@ public class Docx {
 		});
 
 		if (visited.size() > 0) {
-			log.info(visited.get(visited.size() - 1).getClass().getName());
+			Logger.info(visited.get(visited.size() - 1).getClass().getName());
 			return ((ContentAccessor) visited.get(visited.size() - 1))
 					.getContent();
 		}
@@ -210,7 +205,7 @@ public class Docx {
 			saver.save(new FileOutputStream(new java.io.File(path)));
 		} catch (FileNotFoundException e) {
 			//
-			log.error(e.getMessage());
+			Logger.error(e.getMessage());
 		}
 	}
 

@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
@@ -11,6 +12,9 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Body;
+import org.docx4j.wml.Comments.Comment;
+
+import com.aperture.docx.core.Docx;
 
 import play.*;
 import play.mvc.*;
@@ -101,13 +105,13 @@ public class Application extends Controller {
 	public static Result all(String name) throws Docx4JException,
 			UnsupportedEncodingException {
 		name = URLDecoder.decode(name, "utf-8");
-		String inputfilepath = settings.Constant.DEBUG_PATH + "/" + name
-				+ ".docx";
+		models.Module module = models.Module.find.select("id, name, content")
+				.where().eq("name", name).findUnique();
 
 		final StringBuilder sb = new StringBuilder();
 
-		WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
-				.load(new java.io.File(inputfilepath));
+		final WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
+				.load(new ByteArrayInputStream(module.content));
 		MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
 		org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) documentPart
 				.getJaxbElement();
@@ -124,6 +128,17 @@ public class Application extends Controller {
 				}
 				if (o instanceof org.docx4j.wml.Text)
 					text = ((org.docx4j.wml.Text) o).getValue();
+				else if (o instanceof org.docx4j.wml.R.CommentReference) {
+					org.docx4j.wml.R.CommentReference cr = (org.docx4j.wml.R.CommentReference) o;
+					for (Comment c : wordMLPackage.getMainDocumentPart()
+							.getCommentsPart().getContents().getComment()) {
+						if (c.getId().equals(cr.getId())){
+							text = Docx.extractText(c);
+							break;
+						}
+					}
+				}
+
 				sb.append(indent + o.getClass().getName() + "  \"" + text
 						+ "\"\n");
 				// sb.append(text+"\n");

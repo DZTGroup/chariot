@@ -22,6 +22,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 public class Module {
+	long id = -1;
 	String moduleName;
 
 	Docx doc;
@@ -50,6 +51,7 @@ public class Module {
 	}
 
 	public void setName(String name) {
+		moduleName = name;
 		if (this.saver != null) {
 			this.saver.setName(name);
 		}
@@ -62,12 +64,13 @@ public class Module {
 	// saver not needed
 	public void init(BinaryLoader loader) throws Docx4JException {
 		doc = new Docx(loader);
+		this.id = loader.getId();
 		this.moduleName = loader.getName();
 
 		initialized = true;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return this.moduleName;
 	}
 
@@ -115,12 +118,14 @@ public class Module {
 	}
 
 	public static class ModuleModel {
+		public long id;
 		public String name;
 		public String text;
 
 		public List<Object> children;
 
-		public ModuleModel(String n, String t, List<Object> c) {
+		public ModuleModel(long i, String n, String t, List<Object> c) {
+			id = i;
 			name = n;
 			text = t;
 			children = c;
@@ -128,6 +133,7 @@ public class Module {
 	}
 
 	public ModuleModel analyse() {
+		Logger.debug("new module:" + moduleName);
 		final List<Object> searchList = new ArrayList<Object>();
 		final StringBuilder pureText = new StringBuilder();
 		new TraversalUtil(doc.getBody(), new TraversalUtil.CallbackImpl() {
@@ -151,6 +157,7 @@ public class Module {
 						String name = doc
 								.getCommentTextById(((CommentRangeStart) o)
 										.getId());
+						Logger.debug(name);
 						if (name.equals(moduleName))
 							return null;
 						try {
@@ -161,7 +168,8 @@ public class Module {
 							}
 						} catch (Docx4JException e) {
 							//
-							Logger.error("Parsing Module "+name+" error:", e);
+							Logger.error("Parsing Module " + name + " error:",
+									e);
 						}
 					}
 				}
@@ -190,7 +198,8 @@ public class Module {
 				result.add(q);
 			}
 		}
-		return new ModuleModel(moduleName, Docx.extractText(doc.getBody()),
+		Logger.debug("end module:" + moduleName);
+		return new ModuleModel(this.id, moduleName, Docx.extractText(doc.getBody()),
 				result);
 	}
 }

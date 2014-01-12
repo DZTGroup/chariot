@@ -16,7 +16,6 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 		Module m = null;
 
 		ModuleIO io = new ModuleIO();
-		Logger.debug(name);
 		io.module = models.Module.find.select("id, name, content").where()
 				.eq("name", name).findUnique();
 		if (io.module != null) {
@@ -61,15 +60,26 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 		io.module.name = name;
 
 		new ModuleParser(new Docx(path), io).parseAs(name);
-
 		return io.module.id;
 	}
 
 	@Override
 	public void saveAsBinaryData(byte[] data) {
 		//
-		module.content = data;
-		module.save();
+		if (module.name != null) {
+			models.Module m = models.Module.find.where()
+					.eq("name", module.name).findUnique();
+			if ( m != null){
+				m.content = data;
+				m.update();
+				
+				module.content = data;
+				module.id = m.id;
+			}else{
+				module.content = data;
+				module.save();
+			}
+		}
 	}
 
 	@Override
@@ -88,5 +98,11 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 	public void setName(String name) {
 		//
 		module.name = name;
+	}
+
+	@Override
+	public long getId() {
+		//
+		return module.id;
 	}
 }

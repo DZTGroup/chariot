@@ -20,6 +20,8 @@ import org.docx4j.wml.ContentAccessor;
 import org.docx4j.wml.R;
 import org.docx4j.wml.R.CommentReference;
 
+import play.Logger;
+
 import com.aperture.docx.core.BinarySaver;
 import com.aperture.docx.core.Docx;
 
@@ -125,20 +127,6 @@ public class ModuleParser implements TraversalUtil.Callback {
 		return true;
 	}
 
-	boolean isQuestionMarker(Object start) {
-		Object next = doc.getNextObject(start);
-		if (next instanceof R) {
-			if (Docx.extractText(next).matches("^__+$")) {
-				Object end = doc.getNextObject(next);
-
-				if (end instanceof CommentRangeEnd) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	// parsing
 	// MAGIC, do not touch
 	@Override
@@ -146,7 +134,7 @@ public class ModuleParser implements TraversalUtil.Callback {
 		// check if question here
 		// if is question, ignore all control Comment(write them down just as
 		// normal nodes)
-		if (o instanceof CommentRangeStart && isQuestionMarker(o)) {
+		if (o instanceof CommentRangeStart && QuestionUtil.isQuestionMarker(doc, o)) {
 			isDealingQuestion = true;
 		}
 		// pre check

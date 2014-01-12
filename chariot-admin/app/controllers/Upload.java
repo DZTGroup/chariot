@@ -111,7 +111,7 @@ public class Upload extends Controller {
 				"attachment;filename=\"" + fileName + "\"");
 		//TODO: fake id
 		// pass id here
-		if (com.aperture.docx.templating.api.DocxTemplatingService.getCompiledModule(1000)) {
+		if (com.aperture.docx.templating.api.DocxTemplatingService.getCompiledModule(4)) {
 			return ok(new File(Constant.USER_DIR + "/" + fileName + ".docx"));
 		} else {
 			return badRequest();
