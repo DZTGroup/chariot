@@ -1,10 +1,14 @@
 package com.aperture.docx.templating;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
 import org.docx4j.wml.CommentRangeEnd;
+import org.docx4j.wml.CommentRangeStart;
 import org.docx4j.wml.R;
 import org.docx4j.wml.Text;
 
@@ -55,5 +59,47 @@ public class QuestionUtil {
 
 	static public boolean isQuestionMarker(Docx doc, Object cstart) {
 		return getQuestionBlankSize(doc, cstart) > 0;
+	}
+
+	static void fillBlank(Text question, String answer) {
+		org.docx4j.wml.R container = (org.docx4j.wml.R) question.getParent();
+		container.getContent().clear();
+
+		Text at = Docx.factory.createText();
+		at.setValue(answer);
+
+		container.getContent().add(at);
+	}
+
+	static public void fillQuestionBlank(Docx d, Map<String, String> answers) {
+		final Docx doc = d;
+		final Map<String, Text> targetMap = new HashMap<String, Text>();
+		new TraversalUtil(doc.getBody(), new TraversalUtil.CallbackImpl() {
+			@Override
+			public List<Object> apply(Object o) {
+				//
+				if (o instanceof CommentRangeStart) {
+					org.docx4j.wml.Text text = QuestionUtil.getQuestionText(
+							doc, o);
+					if (text != null) {
+						// is surely question;
+						String questionId = doc
+								.getCommentTextById(((CommentRangeStart) o)
+										.getId());
+
+						targetMap.put(questionId, text);
+					}
+				}
+				return null;
+			}
+
+		});
+
+		for (Map.Entry<String, Text> entry : targetMap.entrySet()) {
+			if (answers.containsKey(entry.getKey())) {
+				String answer = answers.get(entry.getKey());
+				QuestionUtil.fillBlank(entry.getValue(), answer);
+			}
+		}
 	}
 }

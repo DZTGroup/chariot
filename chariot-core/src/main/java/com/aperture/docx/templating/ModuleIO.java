@@ -2,8 +2,6 @@ package com.aperture.docx.templating;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
-import play.Logger;
-
 import com.aperture.docx.core.*;
 
 public class ModuleIO implements BinaryLoader, BinarySaver {
@@ -65,17 +63,14 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 
 	@Override
 	public void saveAsBinaryData(byte[] data) {
-		//
 		if (module.name != null) {
 			models.Module m = models.Module.find.where()
 					.eq("name", module.name).findUnique();
-			if ( m != null){
-				m.content = data;
-				m.update();
-				
+			if (m != null) {
 				module.content = data;
 				module.id = m.id;
-			}else{
+				module.update();
+			} else {
 				module.content = data;
 				module.save();
 			}

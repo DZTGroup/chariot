@@ -20,8 +20,6 @@ import org.docx4j.wml.ContentAccessor;
 import org.docx4j.wml.R;
 import org.docx4j.wml.R.CommentReference;
 
-import play.Logger;
-
 import com.aperture.docx.core.BinarySaver;
 import com.aperture.docx.core.Docx;
 
@@ -212,6 +210,7 @@ public class ModuleParser implements TraversalUtil.Callback {
 						// if exist
 						if (!moduleStack.isEmpty()) {
 							doc.getComment().getComment().remove(c);
+							moduleStack.peek().setName(currentPop.moduleName);
 							moduleStack.peek().doc.createComment(id,
 									currentPop.moduleName);
 							R.CommentReference refc = Docx

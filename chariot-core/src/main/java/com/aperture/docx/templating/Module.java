@@ -133,7 +133,6 @@ public class Module {
 	}
 
 	public ModuleModel analyse() {
-		Logger.debug("new module:" + moduleName);
 		final List<Object> searchList = new ArrayList<Object>();
 		final StringBuilder pureText = new StringBuilder();
 		new TraversalUtil(doc.getBody(), new TraversalUtil.CallbackImpl() {
@@ -157,7 +156,6 @@ public class Module {
 						String name = doc
 								.getCommentTextById(((CommentRangeStart) o)
 										.getId());
-						Logger.debug(name);
 						if (name.equals(moduleName))
 							return null;
 						try {
@@ -198,7 +196,6 @@ public class Module {
 				result.add(q);
 			}
 		}
-		Logger.debug("end module:" + moduleName);
 		return new ModuleModel(this.id, moduleName, Docx.extractText(doc.getBody()),
 				result);
 	}

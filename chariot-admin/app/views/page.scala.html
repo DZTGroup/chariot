@@ -2,7 +2,7 @@
 <div class="J_page_holder">
 <ol class="breadcrumb">
     <li class="active">
-        @document.name <a href="javascript:;" class="J_new_page">新建分页</a>
+        @document.name
     </li>
 </ol>
     <div class="alert alert-success J_suc" style="display:none;">
@@ -58,6 +58,7 @@
     </div>
 }
 </div>
+	<button class="btn btn-primary J_new_page">新建分页</button>
     <button class="btn btn-primary J_save">保存分页</button>
 </div>
 <script>window.Page(".J_page_holder",@document.id)</script>

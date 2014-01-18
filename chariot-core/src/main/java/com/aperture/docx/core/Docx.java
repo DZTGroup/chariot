@@ -39,7 +39,7 @@ public class Docx {
 	WordprocessingMLPackage wordMLPackage;
 	org.docx4j.wml.Document wmlDocumentEl;
 
-	static org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
+	public static org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
 
 	public Docx(String path) throws Docx4JException {
 		wordMLPackage = WordprocessingMLPackage.load(new java.io.File(path));
