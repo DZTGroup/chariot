@@ -22,6 +22,7 @@ public class PageContent {
         return pageContent;
     }
 
+
     public boolean hasModule(Object module){
         //是否已经有这个模块或者问题了
         for(int i=0;i<pageList.size();i++){
