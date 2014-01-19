@@ -1,4 +1,4 @@
-@(pi:PageItem,size:Integer)
+@(currentPageId:Integer,documentId:Long,pi:models.PageContent.PageItem,size:Integer)
 @for(module <- pi.moduleList){
       <ul>
       @defining(module.`type`){ t =>
@@ -46,4 +46,8 @@
             }
       }
       </ul>
+
+}
+@if(currentPageId < size-1){
+<a href="/interview/@documentId/@(currentPageId+1)">下一页</a>
 }
