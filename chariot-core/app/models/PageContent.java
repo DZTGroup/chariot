@@ -2,7 +2,6 @@ package models;
 
 import com.aperture.docx.templating.api.DocxTemplatingService;
 import com.google.gson.Gson;
-import com.sun.org.apache.xalan.internal.xsltc.dom.ArrayNodeListIterator;
 import models.template.Module;
 import models.template.Question;
 
