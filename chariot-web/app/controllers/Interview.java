@@ -19,7 +19,7 @@ public class Interview extends Controller {
 
         if (content != null) {
             if(pageId < content.pageList.size()){
-                return ok(interview.render(content.pageList.get(pageId),content.pageList.size()));
+                return ok(interview.render(pageId,documentId, content.pageList.get(pageId),content.pageList.size()));
             }else {
                 return badRequest();
             }
