@@ -1,0 +1,172 @@
+
+<html>
+<head>
+<title>注册免费的 LAWBINGO 账户</title>
+<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
+</head>
+
+<body class="translate smartling-zh">
+<form name="frmSignUp" method="post" action="MyAccount_Join.aspx?ut_source=account_login" id="frmSignUp" class="signup-in" onsubmit="return validateForm();">
+    <div class="hd-container"> 
+     <div class="base-header anon-header" id="hd"> 
+  <div id="Wc_Site_Topbar_Anon_divNav" class="inner-header no-nav new-anon-header">
+	 
+    <div class="clearfix"> 
+      <ol class="user-area"> 
+        <li><a id="Wc_Site_Topbar_Anon_hlLogin" title="登入" class="sign-in" href="/login">登入</a></li> 
+        <li class="last"><a class="help" href="/help/" title="打开帮助中心" target="_blank">说明</a></li> 
+      </ol> 
+      <a class="logo" href="/" title="提供最佳的律师咨询服务!">LAWBINGO™</a>
+    </div> 
+    
+</div> 
+</div>
+
+<!-- end hdr -->
+    </div>
+    <div class="heading">
+        <div class="hdr-int">
+            <h1>
+                <span class="fLt">注册免费的账户</span><span class="hdr-nxt">已经有<br />账户？<a id="hlLogin" href="/login">登入</a></span>
+            </h1>
+            <br class="clr" />
+        </div>
+    </div>
+    <div class="container">
+        <div class="account">
+            <div class="content">
+                <div class="col_wrap drop-shadow">
+                    <div class="col_lft">
+                        <div class="col_pad">
+<input type="hidden" name="Wc_Form_Join$hidDirectToPro" id="Wc_Form_Join_hidDirectToPro" value="0" />
+<input type="hidden" name="Wc_Form_Join$hidPackage" id="Wc_Form_Join_hidPackage" value="0" />
+<input type="hidden" name="Wc_Form_Join$hidCreateBeta" id="Wc_Form_Join_hidCreateBeta" value="0" />
+<input type="hidden" name="Wc_Form_Join$uspt" id="Wc_Form_Join_uspt" value="0" />
+<input type="hidden" name="Wc_Form_Join$afterJoinRedirectUrl" id="Wc_Form_Join_afterJoinRedirectUrl" />
+
+
+<div class="fld_rw">
+    <div class="fld_lbl">
+        <label for="Wc_Form_Join_txtUserName">账户名称：</label>
+    </div>
+    <div class="fld_inp">
+        <input name="Wc_Form_Join$txtUserName" type="text" maxlength="50" size="20" id="Wc_Form_Join_txtUserName" tabindex="1" class="RQR textfield " name="txtUserName" title="請輸入使用者名稱。" />
+        <div class="bodyTextSmall">
+            <span class="tip">最多 50 个字符，不允许空格。</span><span class="missing"></span>
+        </div>
+    </div>
+</div>
+
+<div class="fld_rw">
+    <div class="fld_lbl">
+        <label for="Wc_Form_Join_txtPass">账户密码：</label>
+    </div>
+    <div class="fld_inp">
+        <input name="Wc_Form_Join$txtPass" type="password" size="15" id="Wc_Form_Join_txtPass" tabindex="2" class="RQR passwd textfield" name="txtPass" title="請輸入密碼。" />
+        <div class="bodyTextSmall">
+            <span class="tip">至少 7 个字符，不允许有空格。</span> <span class="missing"></span>
+        </div>
+    </div>
+</div>
+
+<div class="fld_rw">
+    <div class="fld_lbl">
+        <label for="Wc_Form_Join_txtPassConfirm">再输入一遍密码：</label>
+    </div>
+    <div class="fld_inp">
+        <input name="Wc_Form_Join$txtPassConfirm" type="password" size="15" id="Wc_Form_Join_txtPassConfirm" tabindex="3" class="RQR passwd textfield" name="txtPassConfirm" title="請再次輸入密碼。" />
+        <div class="bodyTextSmall">
+            <span class="missing"></span>
+        </div>
+    </div>
+</div>
+
+<div class="fld_rw">
+    <div class="fld_lbl">
+        <label for="Wc_Form_Join_txtContEmail">输入您的电子邮件地址：</label>
+    </div>
+    <div class="fld_inp">
+        <input name="Wc_Form_Join$txtContEmail" type="text" maxlength="50" size="30" id="Wc_Form_Join_txtContEmail" tabindex="4" class="RQR textfield" title="請輸入電子郵件位址。" />
+        <div class="bodyTextSmall">
+            <span class="tip">最多 50 个字符。</span><span class="missing"></span>
+        </div>
+    </div>
+</div>
+
+<div id="signUpOpt">
+   
+    <div class="btn-container">
+        
+        <a id="Wc_Form_Join_btnSignup" tabindex="7" class="btn yellow wide btn-yellow-wide" href="javascript:__doPostBack('Wc_Form_Join$btnSignup','')"><span class="wide">注册</span></a>
+    </div>
+    
+    
+    <div class="bodyTextSmall">
+        按一下「注册」，即表示您同意我们的 <a id="Wc_Form_Join_hlTerms" href="http://zh.surveymonkey.com/mp/policy/terms-of-use/" target="_blank">使用条款</a> 和 <a id="Wc_Form_Join_hlPriv" href="http://zh.surveymonkey.com/mp/policy/privacy-policy/" target="_blank">隐私权政策 </a> ，也同意收到我们电子邮件发出的新闻和提示。 
+    </div>
+    
+</div>
+
+<input name="Wc_Form_Join$h_zone" type="hidden" id="Wc_Form_Join_h_zone" class="h_zone" />
+<input name="Wc_Form_Join$ut_source" type="hidden" id="Wc_Form_Join_ut_source" />
+                        </div>
+                    </div>
+                    <div class="con-or">或</div>
+                    <div class="col_rgt">
+                        <div class="col_pad">
+                            
+                            <h3 style="padding-left:0;line-height:1.1em;">或者使用您的 Google 或 Facebook 账户注册</h3>
+                            <p>现在您可以连接您的账户并使用您的 Facebook 或 Google 账户登入 LAWBINGO。只需轻松几步即可快速开始，而且相当安全，您的 LAWBINGO 资料将完全受到保密。</p>
+
+                            <a id="hlGoogle" class="TextBtn" onclick="var gw=window.open('','_google','width=500,height=580,scrollbars=yes');gw.focus();" href="https://www.google.com/accounts/o8/ud?openid.ns=http://specs.openid.net/auth/2.0&amp;openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&amp;openid.identity=http://specs.openid.net/auth/2.0/identifier_select&amp;openid.return_to=https://zh.surveymonkey.com/auth.ashx?pid=CW6U%26sm=hxInqmjYrFv57PAhGbL_2bBkOvZOtfcTfAkHz7G1hHNIg_3d&amp;openid.realm=https://*.surveymonkey.com&amp;openid.mode=checkid_setup&amp;openid.ns.ax=http://openid.net/srv/ax/1.0&amp;openid.ax.mode=fetch_request&amp;openid.ax.required=email,firstname,lastname,language&amp;openid.ax.type.email=http://axschema.org/contact/email&amp;openid.ax.type.firstname=http://axschema.org/namePerson/first&amp;openid.ax.type.lastname=http://axschema.org/namePerson/last&amp;openid.ax.type.language=http://axschema.org/pref/language&amp;openid.ns.ui=http://specs.openid.net/extensions/ui/1.0&amp;openid.ui.mode=popup&amp;openid.ui.icon=true" target="_google">
+                                <img src="https://secure.surveymonkey.com/i/google.png" width="16" height="16" alt="" class="thirdPartyIMG" />使用 Google 注册</a><br /><a id="hlFacebook" class="TextBtn" onclick="var gw=window.open('','_facebook','width=680,height=400,scrollbars=yes');gw.focus();" href="https://graph.facebook.com/oauth/authorize?client_id=127709503932081&amp;redirect_uri=http://zh.surveymonkey.com/auth.ashx?sm=hxInqmjYrFv57PAhGbL_2bBoRXojw5PxkSMxcOKzgKrCtkBZKGoSih9UXng2zeuPS8ABb4ya09QefRB5auw3Kzww_3d_3d&amp;scope=email,user_birthday,user_location&amp;display=popup" target="_facebook">
+                                <img src="https://secure.surveymonkey.com/i/facebook.gif" width="16" height="16" alt="" class="thirdPartyIMG" />使用 Facebook 注冊</a>
+                                
+                            <div class="bodyTextSmall">使用您的 Facebook 或 Google 账户來建立账户，即表示您同意我們的<a id="hlTerms" href="/mp/policy/terms-of-use" target="_blank" style="font-size:X-Small;">使用条款</a>和<a id="hlPriv" href="/mp/policy/privacy-policy/" target="_blank" style="font-size:X-Small;">隐私权政策</a>。</div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+<div id="ft" class="base-footer  anon-footer ">
+    <div class="inner-ft ">
+        
+        <div class="grid ft-bottom new-anon-footer">
+            <div class="col grid-u-2-5">
+                
+                    <ul>
+                        <li>
+                            <a href="/mp/aboutus/">
+                                关于 LAWBINGO
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Monkey_Privacy.aspx">
+                                隐私权政策
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/mp/aboutus/contactus/">
+                                与我们联络
+                            </a>
+                        </li>
+                    </ul>
+                    
+                <span class="copy">
+                
+                    著作权所有 © LAWBINGO
+                </span>
+                
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+<!-- 14  -->
+</body>
+</html>

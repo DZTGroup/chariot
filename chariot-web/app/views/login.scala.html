@@ -3,28 +3,17 @@
 <head>
 <title>LAWBINGO - 登入</title>
 <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
 </head>
 <body class="signup-in translate smartling-zh">
 <div>
 @helper.form(routes.Application.authenticate) {
-
-            @if(form.hasGlobalErrors) { 
-                <p class="error">
-                    @form.globalError.message
-                </p>
-            }
-            
-            @if(flash.contains("success")) {
-                <p class="success">
-                    @flash.get("success")
-                </p>
-            }
 <div class="hd-container">        
 <div class="base-header anon-header" id="hd"> 
   <div id="wc_Site_Topbar1_divNav" class="inner-header no-nav new-anon-header">	 
     <div class="clearfix"> 
       <ol class="user-area"> 
-        <li><a id="wc_Site_Topbar1_hlLogin" title="登入" class="sign-in" href="/MyAccount_Login.aspx">登入</a></li> 
+        <li><a id="wc_Site_Topbar1_hlLogin" title="登入" class="sign-in" href="/login">登入</a></li> 
         <li class="last"><a class="help" href="/help/" title="打开帮助中心" target="_blank">说明</a></li> 
       </ol> 
       <a class="logo" href="/" title="提供最佳的律师咨询服务！">LAWBINGO™</a>
@@ -37,10 +26,9 @@
     <div class="heading">
         <div class="hdr-int">
             <h1>
-                <span class="fLt">登入您的账户</span><span id="SignInText" class="hdr-nxt">还没有<br />账户？<a id="hlJoin" href="https://zh.surveymonkey.com/MyAccount_Join.aspx?ut_source=account_login">註冊</a></span>
+                <span class="fLt">登入您的账户</span><span id="SignInText" class="hdr-nxt">还没有<br />账户？<a id="hlJoin" href="/register">註冊</a></span>
             </h1>
-            <br class="clr" />
-            
+            <br class="clr" />            
         </div>
     </div>
 
@@ -55,7 +43,7 @@
 <div id="signInFld">
     <div class="fld_rw">
         <div class="fld_lbl">
-            <label id="wc_Login1_usernameLabel" for="wc_Login1_txtUsername">输入您的使用者名称：</label>
+            <label id="wc_Login1_usernameLabel" for="wc_Login1_txtUsername">输入您的账户名称：</label>
         </div>
         <div class="fld_inp">
             <input name="email" required="" type="text" maxlength="50" size="20" id="wc_Login1_txtUsername" tabindex="1" title="Please enter a username." class="RQR textfield notranslate" value="@form("email").value"/>
@@ -69,6 +57,18 @@
         <div class="fld_inp">
             <input name="password" type="password" size="20" id="wc_Login1_txtPassword" tabindex="2" title="Please enter a password." class="RQR textfield notranslate" />
         </div>
+        
+                    @if(form.hasGlobalErrors) { 
+                <p class="error">
+                    @form.globalError.message
+                </p>
+            }
+            
+            @if(flash.contains("success")) {
+                <p class="success">
+                    @flash.get("success")
+                </p>
+            }
     </div>
 </div>
 
@@ -80,8 +80,7 @@
 
     <div class="btn-container">
         
-        <a id="wc_Login1_btnLogin" tabindex="30" class="btn yellow wide btn-yellow-wide" type="submit"><span class="wide">登入</span></a>
-        <button class="btn yellow wide btn-yellow-wide" type="submit">Login</button>
+        <a id="wc_Login1_btnLogin" tabindex="30" class="btn yellow wide btn-yellow-wide" onclick="$('form').submit()"><span class="wide">登入</span></a>
     </div>
     <input type="hidden" name="wc_Login1$hdDirectToPro" id="wc_Login1_hdDirectToPro" value="0" />
 </div>

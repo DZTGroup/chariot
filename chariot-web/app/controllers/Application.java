@@ -1,7 +1,7 @@
 package controllers;
 
 import static play.data.Form.form;
-import models.User;
+import models.EndUser;
 import play.*;
 import play.data.Form;
 import play.mvc.*;
@@ -22,7 +22,7 @@ public class Application extends Controller {
  		public String password;
 
  		public String validate() {
- 			if (User.authenticate(email, password) == null) {
+ 			if (EndUser.authenticate(email, password) == null) {
  				return "Invalid user or password";
  			}
  			return null;
@@ -57,6 +57,10 @@ public class Application extends Controller {
  		session().clear();
  		flash("success", "You've been logged out");
  		return redirect(routes.Application.login());
+ 	}
+ 	
+	public static Result register() {
+ 		return ok(register.render());
  	}
 
 }
