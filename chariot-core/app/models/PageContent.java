@@ -1,10 +1,13 @@
 package models;
 
+import com.aperture.docx.templating.api.DocxTemplatingService;
+import com.google.gson.Gson;
+import com.sun.org.apache.xalan.internal.xsltc.dom.ArrayNodeListIterator;
 import models.template.Module;
 import models.template.Question;
 
 import java.util.ArrayList;
-
+import play.Logger;
 /**
  * Created by maquanhua on 1/11/14.
  */
@@ -22,6 +25,68 @@ public class PageContent {
         return pageContent;
     }
 
+    public static PageContent parseFromDocumentId(Long id){
+        PageContent content  = null;
+
+        try {
+            Module document =  DocxTemplatingService.analyzeModule(id);
+
+            DocumentPaging p  = DocumentPaging.getByDocumentId(id);
+
+            if(p!=null){
+                content = p.convertContent();
+            }else{
+                content  = PageContent.parseDocumentToPageContent(document);
+            }
+
+        } catch (Exception e) {
+            Logger.info(e.getMessage());
+
+        }
+
+        return content;
+    }
+
+    public static void updatePaging(ArrayList<Long> documentList){
+        //更新分页信息，如果模块有改动
+        for(Long id: documentList){
+            try{
+                DocumentPaging p  = DocumentPaging.getByDocumentId(id);
+
+                if(p!=null){
+                    PageContent newContent = parseFromDocumentId(id);
+                    PageContent oldContent = p.convertContent();
+
+
+                    //删除没有的模块或者问题，更新新增的模块到默认分页
+                    for(PageItem pageItem:newContent.pageList){
+                        for(LittleModule module: pageItem.moduleList){
+                            if(!oldContent.hasModule(module)){
+                                oldContent.getDefaultPage().addModule(module);
+                            }
+                        }
+                    }
+                    //删除老的里面已经没有了的模块
+                    for(PageItem pageItem:oldContent.pageList){
+                        for(LittleModule module: pageItem.moduleList){
+                            if(!newContent.hasModule(module)){
+                                pageItem.moduleList.remove(module);
+                            }
+                        }
+                    }
+
+                    Gson gson = new Gson();
+                    p.content = gson.toJson(oldContent);
+                    p.save();
+                }
+
+            }catch (Exception e){
+                Logger.info(e.getMessage());
+            }
+
+        }
+
+    }
 
     public boolean hasModule(Object module){
         //是否已经有这个模块或者问题了

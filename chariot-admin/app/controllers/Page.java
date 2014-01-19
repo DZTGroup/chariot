@@ -20,21 +20,11 @@ import java.util.Map;
 public class Page extends Controller {
 
     public static Result index(Long id) {
-
         try {
+            PageContent content = PageContent.parseFromDocumentId(id);
             Module document =  DocxTemplatingService.analyzeModule(id);
-
-            PageContent content  = null;
-
-            DocumentPaging p  = DocumentPaging.getByDocumentId(id);
-            if(p!=null){
-                content = p.convertContent();
-            }else{
-                content  = PageContent.parseDocumentToPageContent(document);
-            }
-
             return ok(page.render(content,document));
-        } catch (Exception e) {
+        }catch (Exception e){
             return badRequest();
         }
     }
