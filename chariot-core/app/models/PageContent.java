@@ -2,7 +2,6 @@ package models;
 
 import com.aperture.docx.templating.api.DocxTemplatingService;
 import com.google.gson.Gson;
-import com.sun.org.apache.xalan.internal.xsltc.dom.ArrayNodeListIterator;
 import models.template.Module;
 import models.template.Question;
 
@@ -119,6 +118,64 @@ public class PageContent {
         PageItem defaultPage = new PageItem("默认分页","这是一个默认分页",new ArrayList<LittleModule>());
         pageList.add(defaultPage);
         return defaultPage;
+    }
+
+    /**
+     * Created by maquanhua on 1/12/14.
+     */
+
+    /*
+    * 分页用的
+    * json 转 Object
+    *
+    * */
+    public static class LittleModule{
+        public String id;
+        public String type;
+
+        LittleModule(String id,String type){
+            this.id = id;
+            this.type = type;
+        }
+
+        public static LittleModule parseModule(Object module){
+            //把Module或者Question 转成LittleModule
+            if(module instanceof Module){
+                return new LittleModule(((Module)(module)).id.toString(),"module");
+            }else {
+                return new LittleModule(((Question)(module)).questionId,"question");
+            }
+
+        }
+    }
+
+    /**
+     * Created by maquanhua on 1/12/14.
+     */
+    public static class PageItem{
+        public String name;
+        public String desc;
+        public ArrayList<LittleModule> moduleList;
+
+        PageItem(String name,String desc,ArrayList<LittleModule> moduleList){
+            this.name = name;
+            this.desc = desc;
+            this.moduleList = moduleList;
+        }
+
+        public boolean hasModule(Object module){
+            for(int i=0;i<moduleList.size();i++){
+                LittleModule lm = LittleModule.parseModule(module);
+                if(moduleList.get(i).id == lm.id){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void addModule(Object module){
+            moduleList.add(LittleModule.parseModule(module));
+        }
     }
 }
 
