@@ -1,0 +1,131 @@
+body {
+  background-color : #fff;
+  font-family : Arial,Helvetica,sans-serif;
+  font-size : 16px;
+  height : 100%;
+  color:#333;
+}
+h1,h2,h3,h4 {
+  margin : 0;
+  padding : 0;
+}
+h1,h2,h3,h4 {
+  color : #333;
+  font-weight : bold;
+}
+h1 {
+  font-size : 2.5em;
+}
+h2 {
+  font-size : 1.5em;
+}
+h3 {
+  font-size : 1.13em;
+}
+h3.form-primary-group {
+  color : #a9bd38;
+}
+
+ul, ol, li {
+  list-style-position : outside;
+  list-style-type : none;
+  margin : 0;
+  padding : 0;
+}
+img {
+  border : 0;
+}
+body, .hd {
+  margin : 0 auto;
+}
+
+a {
+    text-decoration: none;
+    color: #00898b;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+/* 980px CONTAINER */
+.container{width:980px; background:url(../i/about/bg_about_content.png) top left repeat-y #fff; padding:0; margin: 0 auto;}
+
+/* LEFT NAV */
+#nav-left {width:200px; padding: 0px 0px 100px 0px; float:left; background:#83847a; font-size:.75em; line-height:1.40em; color:#fff;}
+* html #nav-left {width: 180px; overflow:hidden;} /*overflow added to prevent ie overflow issues in about page left nav*/
+#nav-left div {margin:0; padding:22px 15px 0 20px;}
+#nav-left a:link, #nav-left a:visited, #nav-left a:active {color:#fff;}
+#nav-left a:hover {text-decoration:underline;}
+#nav-left a.selected {color:#b5cb3b !important; text-decoration:none;}
+#nav-left a:link.nochange, #nav-left a:visited.nochange {text-decoration:none; color:#dfdfdf;}
+#nav-left ul li {margin:6px 0 16px;}
+#nav-left hr {height:1px; width:90%; border:0; border-bottom:1px dotted #c6c6bc; margin:0; padding:0; background:#83847a; color:#83847a; text-align:left;}
+#nav-left p {color:#dfdfdf; margin:0; padding-top:8px;}
+#nav-left strong {font-size:14px; color:#454439; line-height:1.1em;}
+#nav-left .menu {margin-bottom:20px; font-weight:bold; line-height:1em; font-size:14px;}
+#nav-left .menu li {border:0; margin-bottom:12px; padding:0;}
+#nav-left a.mailto {word-spacing:-.2em; font-size: 0.9em;} /*font size edited b/c email addresses were causing ie overflow issues in about page left nav*/
+
+/* Hard Rule - allows for the addition of margins, where html 'hr' does not -- Kees Briggs 4/19/2010 */
+.content hr {
+    margin-top: 20px; 
+}
+
+/* generic indent class */
+.indent {
+  padding-left: 25px; padding-right: 10px;
+}
+
+/* slightly enhanced, universal clearfix hack */
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+     }
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
+
+
+/* Follow us */
+.fol_icon img {
+    background:url(../i/sprite_followIcons_small.jpg) no-repeat;
+    width:24px;
+    height:40px;
+}
+
+#fol_icon_fb img {background-position:0 0;}
+#fol_icon_in img {background-position:0 -40px;}
+#fol_icon_tw img {background-position:0 -80px;}
+#fol_icon_bg img {background-position:0 -120px;}
+#fol_icon_fb:hover img {background-position:0 -160px;}
+#fol_icon_in:hover img {background-position:0 -200px;}
+#fol_icon_tw:hover img {background-position:0 -240px;}
+#fol_icon_bg:hover img {background-position:0 -280px;}
+
+
+.nodisplay{display:none;}
+.offscreen {position: absolute; left: -999em;}
+.nowrap { white-space : nowrap; }
+.bld {font-weight:bold;}
+.fLt {float:left;}
+.fRt {float:right;}
+.clr{clear:both;height:0;line-height:0;font-size:0;padding:0;margin:0;border:0;}
+
+/* language font set */
+.smartling-ja {
+    font-family :"¥Ò¥é¥®¥Î½Ç¥´ Pro W3", "£Í£Ó£Ð¥´¥·¥Ã¥¯","£Í£Ó¥´¥·¥Ã¥¯", "¥á¥¤¥ê¥ª", sans-serif, Arial, Helvetica;
+}
+body.smartling-cn div,
+body.smartling-zh div,
+body.smartling-ko div,
+body.smartling-ja div {font-style:normal}

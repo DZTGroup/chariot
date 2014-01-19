@@ -1,0 +1,143 @@
+@(form: Form[Application.Login])
+<html>
+<head>
+<title>LAWBINGO - 登入</title>
+<link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+</head>
+<body class="signup-in translate smartling-zh">
+<div>
+@helper.form(routes.Application.authenticate) {
+
+            @if(form.hasGlobalErrors) { 
+                <p class="error">
+                    @form.globalError.message
+                </p>
+            }
+            
+            @if(flash.contains("success")) {
+                <p class="success">
+                    @flash.get("success")
+                </p>
+            }
+<div class="hd-container">        
+<div class="base-header anon-header" id="hd"> 
+  <div id="wc_Site_Topbar1_divNav" class="inner-header no-nav new-anon-header">	 
+    <div class="clearfix"> 
+      <ol class="user-area"> 
+        <li><a id="wc_Site_Topbar1_hlLogin" title="登入" class="sign-in" href="/MyAccount_Login.aspx">登入</a></li> 
+        <li class="last"><a class="help" href="/help/" title="打开帮助中心" target="_blank">说明</a></li> 
+      </ol> 
+      <a class="logo" href="/" title="提供最佳的律师咨询服务！">LAWBINGO™</a>
+    </div>    
+  </div> 
+</div>
+
+<!-- end hdr -->
+</div>
+    <div class="heading">
+        <div class="hdr-int">
+            <h1>
+                <span class="fLt">登入您的账户</span><span id="SignInText" class="hdr-nxt">还没有<br />账户？<a id="hlJoin" href="https://zh.surveymonkey.com/MyAccount_Join.aspx?ut_source=account_login">註冊</a></span>
+            </h1>
+            <br class="clr" />
+            
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="account">
+            <div class="content">
+
+                <div id="RegularLoginForm" class="col_wrap drop-shadow">
+                    <div class="col_lft">
+                        <div class="col_pad" style="padding-bottom:150px;">
+
+<div id="signInFld">
+    <div class="fld_rw">
+        <div class="fld_lbl">
+            <label id="wc_Login1_usernameLabel" for="wc_Login1_txtUsername">输入您的使用者名称：</label>
+        </div>
+        <div class="fld_inp">
+            <input name="email" required="" type="text" maxlength="50" size="20" id="wc_Login1_txtUsername" tabindex="1" title="Please enter a username." class="RQR textfield notranslate" value="@form("email").value"/>
+        </div>
+    </div>
+
+    <div class="fld_rw">
+        <div class="fld_lbl">
+            <label id="wc_Login1_passwordLabel" for="wc_Login1_txtPassword">输入您的密码：</label>
+        </div>
+        <div class="fld_inp">
+            <input name="password" type="password" size="20" id="wc_Login1_txtPassword" tabindex="2" title="Please enter a password." class="RQR textfield notranslate" />
+        </div>
+    </div>
+</div>
+
+<div id="signInOpt">
+    <input name="wc_Login1$cbRememberMe" type="checkbox" id="wc_Login1_cbRememberMe" style="vertical-align:middle;margin:0;" tabindex="3" /><label id="wc_Login1_rememberLabel" style="margin-left: 5px;" for="wc_Login1_cbRememberMe">自动记住密码！</label>
+    <div class="passwdReq">
+        <a id="wc_Login1_hlPassRequest" title="要求使用者名稱和密碼" href="/MyAccount_PasswordRequest.aspx?sm=DKC9OUMnKAlfixQDweSgFQ%3d%3d">忘记密码或账户名称？</a>
+    </div>
+
+    <div class="btn-container">
+        
+        <a id="wc_Login1_btnLogin" tabindex="30" class="btn yellow wide btn-yellow-wide" type="submit"><span class="wide">登入</span></a>
+        <button class="btn yellow wide btn-yellow-wide" type="submit">Login</button>
+    </div>
+    <input type="hidden" name="wc_Login1$hdDirectToPro" id="wc_Login1_hdDirectToPro" value="0" />
+</div>
+
+                        </div>
+                    </div>
+                   	<div class="col_rgt">
+                        <div class="col_pad">
+                            <h3 style="padding-left:0;">或者使用您的 Google 或 Facebook 账号注册</h3>
+                            <p>现在您可以连接您的账户並使用您的 Facebook 或 Google 账户登入 LAWBINGO。这相当快速、简单且安全 - 您的 LAWBINGO 资料完全保密。</p>
+                            
+                            <a id="hlGoogle" class="TextBtn" onclick="var gw=window.open('','_google','width=680,height=580,scrollbars=yes');gw.focus();"  target="_google"><img src="https://secure.surveymonkey.com/i/google.png" width="16" height="16" alt="" class="thirdPartyIMG" />使用 Google 登入</a><br /><a id="hlFacebook" class="TextBtn" onclick="var gw=window.open('','_facebook','width=680,height=580,scrollbars=yes');gw.focus();" target="_facebook"><img src="https://secure.surveymonkey.com/i/facebook.gif" width="16" height="16" alt="" class="thirdPartyIMG" />以 Facebook 登入</a>
+                       </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<div id="ft" class="base-footer  anon-footer ">
+    <div class="inner-ft ">
+        
+        <div class="grid ft-bottom new-anon-footer">
+            <div class="col grid-u-2-5">
+                
+                    <ul>
+                        <li>
+                            <a href="/mp/aboutus/">
+                                关于 LAWBINGO
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Monkey_Privacy.aspx">
+                                隐私权政策
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/mp/aboutus/contactus/">
+                                与我们联络
+                            </a>
+                        </li>
+                    </ul>
+                    
+                <span class="copy">
+                
+                    著作权所有 © LAWBINGO
+                </span>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 18  -->
+</body>
+</html>
