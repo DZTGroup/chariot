@@ -6,6 +6,8 @@ import models.template.Module;
 import models.template.Question;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import play.Logger;
 /**
  * Created by maquanhua on 1/11/14.
@@ -46,7 +48,7 @@ public class PageContent {
         return content;
     }
 
-    public static void updatePaging(ArrayList<Long> documentList){
+    public static void updatePaging(List<Long> documentList){
         //更新分页信息，如果模块有改动
         for(Long id: documentList){
             try{

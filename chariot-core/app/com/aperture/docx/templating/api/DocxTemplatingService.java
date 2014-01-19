@@ -3,6 +3,8 @@ package com.aperture.docx.templating.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.PageContent;
+
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 import com.aperture.docx.templating.Module;
@@ -53,6 +55,11 @@ public class DocxTemplatingService {
 			throws Docx4JException {
 		name = name.replaceAll("\\.docx$", "");
 		long id = ModuleIO.newDocument(name, path);
+		
+		List<Long> updatingList = new ArrayList<Long>();
+		updatingList.add(Long.valueOf(id));
+		
+		PageContent.updatePaging(updatingList);
 
 		if (type == DocType.DOC) {
 			List<models.File> files = models.File.find.where().eq("name", name)
