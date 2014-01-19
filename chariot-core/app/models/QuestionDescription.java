@@ -8,10 +8,12 @@ import com.google.gson.Gson;
 public class QuestionDescription {
     public String content;
     public String[] options;
+    public String restrict;
 
-    public QuestionDescription(String content,String[] options){
+    public QuestionDescription(String content,String[] options,String restrict){
         this.content = content;
         this.options = options;
+        this.restrict = restrict;
 
     }
 

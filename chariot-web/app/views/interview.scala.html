@@ -1,0 +1,49 @@
+@(pi:PageItem,size:Integer)
+@for(module <- pi.moduleList){
+      <ul>
+      @defining(module.`type`){ t =>
+            @t match{
+                case "question" =>{
+                    @defining(Question.getById(module.id)){ question=>
+                        @if(question!=null){
+                            @defining(QuestionDescription.parse(question.description)){ d =>
+                                <li>
+                                    <h5>@d.content</h5>
+                                    @defining(question.`type`){questionType =>
+                                        @questionType match{
+                                            case "choice" =>{
+                                                <ul>
+                                                @for(option <- d.options){
+                                                    <li>
+                                                    <label><input type="radio" name="@question.id">@option</label>
+                                                    </li>
+                                                }
+                                                </ul>
+                                            }
+                                            case "blank" =>{
+                                                <textarea></textarea>
+                                            }
+                                            case "multichoice" =>{
+                                                <ul>
+                                                    @for(option <- d.options){
+                                                    <li>
+                                                        <label><input type="checkbox" name="@question.id">@option</label>
+                                                    </li>
+                                                    }
+                                                </ul>
+                                            }
+                                            case _ =>{}
+                                        }
+                                    }
+                                </li>
+                            }
+                        }
+
+                    }
+                }
+                case _ =>{
+                }
+            }
+      }
+      </ul>
+}

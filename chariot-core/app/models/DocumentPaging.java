@@ -38,4 +38,6 @@ public class DocumentPaging extends Model{
         Gson gson = new Gson();
         return gson.fromJson(this.content,PageContent.class);
     }
+
+
 }
