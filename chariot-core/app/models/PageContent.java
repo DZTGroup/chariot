@@ -14,9 +14,9 @@ import play.Logger;
  * Created by maquanhua on 1/11/14.
  */
 public class PageContent {
-    public ArrayList<PageItem> pageList;
+    public List<PageItem> pageList;
 
-    public PageContent(ArrayList<PageItem> pageList){
+    public PageContent(List<PageItem> pageList){
         this.pageList = pageList;
     }
 
@@ -44,7 +44,7 @@ public class PageContent {
             }
 
         } catch (Exception e) {
-            Logger.info(e.getMessage());
+            Logger.error(e.getMessage());
 
         }
 
@@ -165,7 +165,6 @@ public class PageContent {
             }else{
                 return (LittleModule)(module);
             }
-
         }
     }
 
@@ -175,9 +174,9 @@ public class PageContent {
     public static class PageItem{
         public String name;
         public String desc;
-        public ArrayList<LittleModule> moduleList;
+        public List<LittleModule> moduleList;
 
-        PageItem(String name,String desc,ArrayList<LittleModule> moduleList){
+        PageItem(String name,String desc,List<LittleModule> moduleList){
             this.name = name;
             this.desc = desc;
             this.moduleList = moduleList;

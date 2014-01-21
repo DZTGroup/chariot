@@ -1,51 +1,81 @@
 @(currentPageId:Integer,documentId:Long, documentName:String, pi:models.PageContent.PageItem,size:Integer)
 
-@import helper._
+@import com.aperture.docx.templating.api.DocxTemplatingService
+
+@displayQuestion(questionId:String) = {
+	@defining(Question.getById(questionId)){ question=>
+		@if(question!=null){
+			@defining(QuestionDescription.parse(question.description)){ d =>
+				<dl>
+					<dt>@d.content</dt>
+					<dd>
+						@defining(question.`type`){questionType =>
+							@questionType match{
+								case "choice" =>{
+										@for(option <- d.options){
+											<span>
+												<label><input type="radio" name="@question.id">@option</label>
+											</span>
+										}
+								}
+								case "blank" =>{
+									<input placeholder='Your Answer Here.' />
+								}
+								case "multichoice" =>{
+										@for(option <- d.options){
+											<span>
+												<label><input type="checkbox" name="@question.id">@option</label>
+											</span>
+										}
+								}
+								case _ =>{}
+							}
+						}
+					</dd>
+				</dl>
+			}
+		}
+	}
+}
+
+@displayModule(list:java.util.List[Object]) = {
+	@for(obj <- list){
+		@obj match{
+			case question:models.template.Question =>{
+				@displayQuestion(question.questionId)
+			}
+			case module:models.template.Module =>{
+				@displayModule(module.list)
+			}
+		}
+	}
+}
 
 @main(documentName){
 	<section>
 		<h1>@pi.name</h1>
 		<div>@pi.desc</div>
-		@for(module <- pi.moduleList){
-			@defining(module.`type`){ t =>
-				@t match{
-					case "question" =>{
-						@defining(Question.getById(module.id)){ question=>
-							@if(question!=null){
-								@defining(QuestionDescription.parse(question.description)){ d =>
-									<dl>
-										<dt>@d.content</dt>
-										<dd>
-											@defining(question.`type`){questionType =>
-												@questionType match{
-													case "choice" =>{
-															@for(option <- d.options){
-																<span>
-																	<label><input type="radio" name="@question.id">@option</label>
-																</span>
-															}
-													}
-													case "blank" =>{
-														<input placeholder='Your Answer Here.' />
-													}
-													case "multichoice" =>{
-															@for(option <- d.options){
-																<span>
-																	<label><input type="checkbox" name="@question.id">@option</label>
-																</span>
-															}
-													}
-													case _ =>{}
-												}
-											}
-										</dd>
-									</dl>
-								}
-							}
-
+		@defining(DocxTemplatingService.analyzeModule(documentId).list){rootList =>
+			@for(module <- pi.moduleList){
+				@defining(module.`type`){ t =>
+					@t match{
+						case "question" =>{
+							@displayQuestion(module.id)
 						}
-					}
-					case _ =>{
+						case "module" =>{
+							@for(sub <- rootList){
+								@sub match{
+									case thisSub:models.template.Module =>{
+										@if(thisSub.id == Long.parseLong(module.id)){
+											@displayModule(thisSub.list)
+										}
+									}
+								}							
+							}
+							@displayModule(DocxTemplatingService.analyzeModule(Long.parseLong(module.id)).list)
+						}
+						case _ =>{
+						}
 					}
 				}
 			}
