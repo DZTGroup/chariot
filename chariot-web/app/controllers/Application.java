@@ -2,16 +2,21 @@ package controllers;
 
 import static play.data.Form.form;
 import models.EndUser;
+import models.File;
 import play.*;
 import play.data.Form;
 import play.mvc.*;
+
+import java.util.List;
 
 import views.html.*;
 
 public class Application extends Controller {
 
     public static Result index() {
-        return ok(index.render("Your new application is ready."));
+        List<File> docs = File.find.where().isNotNull("document_id").findList();
+
+        return ok(index.render(docs));
     }
     
  // -- Authentication

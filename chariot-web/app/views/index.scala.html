@@ -1,7 +1,17 @@
-@(message: String)
+@(docs:java.util.List[models.File])
 
-@main("Welcome to Play") {
-
-    @play20.welcome(message, style = "Java")
-
+@main("Welcome to Lawbingo") {
+	<section>
+    <h1>请选择文档</h1>
+	@for(doc <- docs){
+		<dl>
+			<dt>@doc.name</dt>
+			<dd>
+				<p class="button">
+					<a href="/interview/@doc.documentId/0"><input type="button" value="创建" /></a>
+				</p>
+			</dd>
+		</dl>
+	}
+	</section>
 }
