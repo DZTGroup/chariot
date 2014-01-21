@@ -47,6 +47,8 @@
 			case module:models.template.Module =>{
 				@displayModule(module.list)
 			}
+			case _ =>{
+			}
 		}
 	}
 }
@@ -70,9 +72,10 @@
 											@displayModule(thisSub.list)
 										}
 									}
+									case _ =>{
+									}
 								}							
 							}
-							@displayModule(DocxTemplatingService.analyzeModule(Long.parseLong(module.id)).list)
 						}
 						case _ =>{
 						}
