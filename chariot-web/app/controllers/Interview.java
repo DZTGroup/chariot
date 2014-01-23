@@ -1,13 +1,8 @@
 package controllers;
 
-import com.aperture.docx.templating.api.DocxTemplatingService;
-import models.DocumentPaging;
 import models.PageContent;
-import models.template.Module;
 import play.mvc.*;
 import views.html.*;
-
-import play.Logger;
 
 /**
  * Created by maquanhua on 1/18/14.
