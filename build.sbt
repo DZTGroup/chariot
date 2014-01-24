@@ -10,3 +10,4 @@ lazy val core =project.in(file("chariot-core"))
 lazy val admin=project.in(file("chariot-admin")).dependsOn(core)
 lazy val web  =project.in(file("chariot-web")).dependsOn(core)
 
+lazy val root =project.in(file(".")).aggregate(core, admin, web)
