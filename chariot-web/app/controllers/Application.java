@@ -11,12 +11,19 @@ import java.util.List;
 
 import views.html.*;
 
+import com.aperture.docx.scala.*;
+
 public class Application extends Controller {
 
     public static Result index() {
         List<File> docs = File.find.where().isNotNull("document_id").findList();
 
         return ok(index.render(docs));
+    }
+    
+    // aohajin test stub
+    public static Result test(){
+    	return ok((new Sample()).tryScala());
     }
     
  // -- Authentication
