@@ -23,7 +23,7 @@ public class Application extends Controller {
     
     // aohajin test stub
     public static Result test(){
-    	return ok((new Sample()).tryScala());
+    	return ok("test");
     }
     
  // -- Authentication
