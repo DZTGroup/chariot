@@ -11,7 +11,8 @@ import java.util.List;
 
 import views.html.*;
 
-import com.aperture.docx.scala.*;
+// scala test
+import com.aperture.docx.Sample;
 
 public class Application extends Controller {
 
@@ -23,7 +24,9 @@ public class Application extends Controller {
     
     // aohajin test stub
     public static Result test(){
-    	return ok("test");
+		Sample sample = new Sample();
+		sample.connect();
+    	return ok(sample.test());
     }
     
  // -- Authentication
