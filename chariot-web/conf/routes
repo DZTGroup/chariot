@@ -16,6 +16,3 @@ GET     /logout								controllers.Application.logout()
 GET     /									controllers.Application.index()
 
 GET     /register							controllers.Application.register()
-
-# aohajin test stub
-GET		/test								controllers.Application.test()

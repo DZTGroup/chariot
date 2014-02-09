@@ -291,9 +291,9 @@ public class Docx {
 	public Object getNextObject(Object o) {
 		ContentAccessor parent = (ContentAccessor) ((Child) o).getParent();
 
-		int index = parent.getContent().indexOf(o);
+		int index = parent.getContent().indexOf(o) + 1;
 		if (index < parent.getContent().size()) {
-			return parent.getContent().get(index + 1);
+			return parent.getContent().get(index);
 		}
 
 		return null;

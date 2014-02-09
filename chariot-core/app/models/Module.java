@@ -21,8 +21,7 @@ public class Module extends Model {
     public String name;
     
     @Constraints.Required
-    @Lob
-    public byte[] content;
+    public String gfsId;
 
     public static Model.Finder<Long, Module> find = new Model.Finder<Long, Module>(Long.class, Module.class);
 }

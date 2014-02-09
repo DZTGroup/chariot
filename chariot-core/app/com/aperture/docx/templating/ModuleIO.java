@@ -1,8 +1,14 @@
 package com.aperture.docx.templating;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 import com.aperture.docx.core.*;
+
+// scala code for mongo gridfs io
+import com.aperture.docx.scala.Gfs;
 
 public class ModuleIO implements BinaryLoader, BinarySaver {
 	models.Module module;
@@ -14,7 +20,7 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 		Module m = null;
 
 		ModuleIO io = new ModuleIO();
-		io.module = models.Module.find.select("id, name, content").where()
+		io.module = models.Module.find.select("id, name, gfsId").where()
 				.eq("name", name).findUnique();
 		if (io.module != null) {
 			m = new Module();
@@ -29,7 +35,7 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 		Module m = null;
 
 		ModuleIO io = new ModuleIO();
-		io.module = models.Module.find.select("id, name, content").where()
+		io.module = models.Module.find.select("id, name, gfsId").where()
 				.idEq(Long.valueOf(id)).findUnique();
 		if (io.module != null) {
 			m = new Module();
@@ -64,14 +70,17 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 	@Override
 	public void saveAsBinaryData(byte[] data) {
 		if (module.name != null) {
+			ByteArrayInputStream in = new ByteArrayInputStream(data);
+			String gfsId = Gfs.save(module.name, in);
+			
 			models.Module m = models.Module.find.where()
 					.eq("name", module.name).findUnique();
 			if (m != null) {
-				module.content = data;
 				module.id = m.id;
+				module.gfsId = gfsId;
 				module.update();
 			} else {
-				module.content = data;
+				module.gfsId = gfsId;
 				module.save();
 			}
 		}
@@ -80,7 +89,14 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 	@Override
 	public byte[] loadAsBinaryData() {
 		//
-		return module.content;
+		if ( module.gfsId != null ){
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			
+			Gfs.load(module.gfsId, out);
+		
+			return out.toByteArray();
+		}
+		return null;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
@@ -99,19 +100,22 @@ public class Application extends Controller {
 		// ByteArrayOutputStream
 		models.Module m = models.Module.find.byId((long) 6);
 
-		return ok(Integer.toString(m.content.length));
+		return ok(m.gfsId);
 	}
 
 	public static Result all(String name) throws Docx4JException,
 			UnsupportedEncodingException {
 		name = URLDecoder.decode(name, "utf-8");
-		models.Module module = models.Module.find.select("id, name, content")
+		models.Module module = models.Module.find.select("id, name, gfsId")
 				.where().eq("name", name).findUnique();
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		com.aperture.docx.scala.Gfs.load(module.gfsId, out);
 
 		final StringBuilder sb = new StringBuilder();
 
 		final WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
-				.load(new ByteArrayInputStream(module.content));
+				.load(new ByteArrayInputStream(out.toByteArray()));
 		MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
 		org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) documentPart
 				.getJaxbElement();
