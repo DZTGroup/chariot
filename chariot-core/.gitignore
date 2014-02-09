@@ -5,7 +5,6 @@ target
 tmp
 .history
 dist
-conf
 public
 .idea
 *.iml
