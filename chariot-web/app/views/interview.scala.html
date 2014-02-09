@@ -14,17 +14,17 @@
 								case "choice" =>{
 										@for(option <- d.options){
 											<span>
-												<label><input type="radio" name="@question.id">@option</label>
+												<label><input class="J_question" type="radio" name="@question.id" value="@option">@option</label>
 											</span>
 										}
 								}
 								case "blank" =>{
-									<input placeholder='Your Answer Here.' />
+									<input class="J_question" name="@question.id" placeholder='Your Answer Here.' />
 								}
 								case "multichoice" =>{
 										@for(option <- d.options){
 											<span>
-												<label><input type="checkbox" name="@question.id">@option</label>
+												<label><input class="J_question" type="checkbox" name="@question.id" value="@option">@option</label>
 											</span>
 										}
 								}
@@ -54,6 +54,7 @@
 }
 
 @main(documentName){
+    <form action="/interview/submit" method="post">
 	<section>
 		<h1>@pi.name</h1>
 		<div>@pi.desc</div>
@@ -86,12 +87,19 @@
 		
 		@if(currentPageId < size-1){
 			<p class="buttons">
-				<a href="/interview/@documentId/@(currentPageId+1)">继续</a>
+				<a class="J_goon" href="/interview/@documentId/@(currentPageId+1)">继续</a>
 			</p>
 		}else{
 	        <p class="buttons">
-				<a>提交</a>
+				<input type="submit" class="J_submit" value="提交">
 	        </p>
 		}
 	</section>
+        <input name="answer" id="J_answer" type="hidden">
+    </form>
 }
+<script src="@routes.Assets.at("javascripts/jquery.cookie.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascripts/interview.js")" type="text/javascript"></script>
+<script>
+    Interview("@documentId");
+</script>

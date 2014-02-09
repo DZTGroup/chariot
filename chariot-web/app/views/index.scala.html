@@ -8,10 +8,13 @@
 			<dt>@doc.name</dt>
 			<dd>
 				<p class="button">
-					<a href="/interview/@doc.documentId/0"><input type="button" value="创建" /></a>
+					<a href="/interview/@doc.documentId/0"><input type="button" value="创建" class="J_create" data-value="@doc.documentId" /></a>
 				</p>
 			</dd>
 		</dl>
 	}
 	</section>
+
+<script src="@routes.Assets.at("javascripts/jquery.cookie.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascripts/interview.js")" type="text/javascript"></script>
 }
