@@ -35,7 +35,7 @@ object Gfs {
 		//write returns Future[ReadFile[BSONValue]]
 		val futureResult = gridFS.writeFromInputStream(fileToSave, in)
 		
-		Await.ready(futureResult, 10 seconds).value.get match {
+		Await.ready(futureResult, Duration.Inf).value.get match {
 			case Success(rf) =>
 				rf.id match {
 					case id:BSONObjectID => {
@@ -51,6 +51,8 @@ object Gfs {
 	
 	
 	def load(id:String, out:java.io.OutputStream):Unit = {
+		val now = System.nanoTime
+		
 		val maybeFile = gridFS.find(BSONDocument("_id" -> new BSONObjectID(id))).headOption
 		
 		Await.ready(maybeFile, Duration.Inf).value.get match {
@@ -58,13 +60,15 @@ object Gfs {
 				// loadTask is Future[Unit]
 				val loadTask = gridFS.readToOutputStream(fileToLoad, out)
 				
-				Await.ready(loadTask, 10 seconds).value.get match {
-					// we successfully wrote the file contents on disk
-					case Success(_) =>{
-						Logger.info("loading done! id:" + id)
+				blocking{
+					Await.ready(loadTask, Duration.Inf).value.get match {
+						// we successfully wrote the file contents on disk
+						case Success(_) =>{
+							Logger.info("loading done! id:" + id + ". cast time:" + (System.nanoTime - now) / math.pow(10, 9))
+						}
+						case Failure(e) =>
+							throw e
 					}
-					case Failure(e) =>
-						throw e
 				}
 			}
 			case Success(None) =>
