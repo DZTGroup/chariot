@@ -9,6 +9,7 @@ import reactivemongo.api.gridfs.Implicits._
 
 import play.modules.reactivemongo.ReactiveMongoPlugin
 import play.api.Play.current
+import play.api.cache.Cache
 
 import scala.util.{Success, Failure}
 import scala.concurrent.blocking
@@ -53,28 +54,35 @@ object Gfs {
 	def load(id:String, out:java.io.OutputStream):Unit = {
 		val now = System.nanoTime
 		
-		val maybeFile = gridFS.find(BSONDocument("_id" -> new BSONObjectID(id))).headOption
+		// TODO: add cache setting to some config
+		// caching
+		val data: Array[Byte] = Cache.getOrElse[Array[Byte]](key = "module_" + id, expiration = 12 * 3600) {
+			val maybeFile = gridFS.find(BSONDocument("_id" -> new BSONObjectID(id))).headOption
 		
-		Await.ready(maybeFile, Duration.Inf).value.get match {
-			case Success(Some(fileToLoad)) => blocking {
-				// loadTask is Future[Unit]
-				val loadTask = gridFS.readToOutputStream(fileToLoad, out)
-				
-				blocking{
+			Await.ready(maybeFile, Duration.Inf).value.get match {
+				case Success(Some(fileToLoad)) => blocking {
+					
+					val readBuffer = new java.io.ByteArrayOutputStream()
+					// loadTask is Future[Unit]
+					val loadTask = gridFS.readToOutputStream(fileToLoad, readBuffer)
+
 					Await.ready(loadTask, Duration.Inf).value.get match {
 						// we successfully wrote the file contents on disk
 						case Success(_) =>{
 							Logger.info("loading done! id:" + id + ". cast time:" + (System.nanoTime - now) / math.pow(10, 9))
+							readBuffer.toByteArray()
 						}
 						case Failure(e) =>
 							throw e
 					}
 				}
+				case Success(None) =>
+					throw new Exception("not found! id:" + id)
+				case Failure(e) =>
+					throw e
 			}
-			case Success(None) =>
-				throw new Exception("not found! id:" + id)
-			case Failure(e) =>
-				throw e
 		}
+		
+		data.map(_.toInt).foreach(out.write)
 	}
 }
