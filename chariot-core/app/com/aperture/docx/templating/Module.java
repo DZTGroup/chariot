@@ -88,8 +88,7 @@ public class Module {
 				if (index + 1 < parent.getContent().size()
 						&& parent.getContent().get(index + 1) instanceof CommentRangeEnd) {
 
-					Module newModule = new Module();
-					newModule.init(Docx.extractText(c));
+					Module newModule = ModuleIO.loadModule(Docx.extractText(c));
 
 					if (newModule.isInitialized() == true) {
 						result.put(newModule, cstart);

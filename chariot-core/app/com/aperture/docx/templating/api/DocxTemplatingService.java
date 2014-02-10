@@ -2,6 +2,7 @@ package com.aperture.docx.templating.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import models.PageContent;
 
@@ -84,6 +85,23 @@ public class DocxTemplatingService {
 		}
 
 		return false;
+	}
+	
+	public static String getFinalDoc(long id, Map<String, String> answers) throws Docx4JException {
+		ModuleCompiler mc = new ModuleCompiler();
+		Module m = ModuleIO.loadModule(id);
+
+		if (m != null) {
+			mc.pendModule(m);
+			mc.detemplate(answers);
+			
+			String name = String.valueOf(System.currentTimeMillis());
+			mc.save(settings.Constant.USER_DIR + "/" + name + ".docx");
+
+			return name;
+		}
+
+		return null;
 	}
 
 	public static models.template.Module analyzeModule(long id)

@@ -3,6 +3,7 @@ package com.aperture.docx.templating;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
@@ -123,5 +124,10 @@ public class ModuleCompiler {
 						return null;
 					}
 				});
+	}
+	
+	public void detemplate(Map<String, String> answers){
+		QuestionUtil.fillQuestionBlank(this.doc, answers);
+		this.doc.removeAllComments();
 	}
 }

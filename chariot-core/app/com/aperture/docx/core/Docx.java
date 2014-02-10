@@ -22,6 +22,8 @@ import org.docx4j.openpackaging.parts.WordprocessingML.CommentsPart;
 import org.docx4j.openpackaging.io3.Save;
 
 import org.docx4j.wml.CommentRangeStart;
+import org.docx4j.wml.CommentRangeEnd;
+import org.docx4j.wml.R.CommentReference;
 import org.docx4j.wml.Comments;
 import org.docx4j.wml.Comments.Comment;
 import org.docx4j.wml.ContentAccessor;
@@ -314,6 +316,84 @@ public class Docx {
 			}
 		});
 		return parts;
+	}
+	
+	// util
+	private static boolean remove(List<Object> theList, Object bm)  {
+	    // Can't just remove the object from the parent,
+	    // since in the parent, it may be wrapped in a JAXBElement
+	    for (Object ox : theList) {
+	        if (XmlUtils.unwrap(ox).equals(bm)) {
+	            return theList.remove(ox);
+	        }
+	    }
+	    return false;
+	}
+	
+	private static class CommentFinder extends TraversalUtil.CallbackImpl {
+
+		List<Child> commentElements = new ArrayList<Child>();
+
+		@Override
+		public List<Object> apply(Object o) {
+			if (o instanceof javax.xml.bind.JAXBElement
+				&& (((JAXBElement)o).getName().getLocalPart().equals("commentReference")
+					|| ((JAXBElement)o).getName().getLocalPart().equals("commentRangeStart")
+						|| ((JAXBElement)o).getName().getLocalPart().equals("commentRangeEnd")                                      
+			)) {
+				commentElements.add( (Child)XmlUtils.unwrap(o) );
+			} else 
+				if (o instanceof CommentReference || 
+					o instanceof CommentRangeStart || 
+			o instanceof CommentRangeEnd) {
+				commentElements.add((Child)o);
+			}
+			return null;
+		}
+
+		@Override // to setParent
+		public void walkJAXBElements(Object parent) {
+
+			List children = getChildren(parent);
+			if (children != null) {
+
+				for (Object o : children) {
+
+					if (o instanceof javax.xml.bind.JAXBElement
+						&& (((JAXBElement)o).getName().getLocalPart().equals("commentReference")
+							|| ((JAXBElement)o).getName().getLocalPart().equals("commentRangeStart")
+								|| ((JAXBElement)o).getName().getLocalPart().equals("commentRangeEnd")                                      
+					)) {
+
+						((Child)((JAXBElement)o).getValue()).setParent(XmlUtils.unwrap(parent));
+					} else {                        
+						o = XmlUtils.unwrap(o);
+						if (o instanceof Child) {
+							((Child)o).setParent(XmlUtils.unwrap(parent));
+						}
+					}
+
+
+					this.apply(o);
+
+					if (this.shouldTraverse(o)) {
+						walkJAXBElements(o);
+					}
+
+				}
+			}
+		}           
+	}
+	
+	
+	public void removeAllComments(){
+		CommentFinder cf = new CommentFinder();
+		new TraversalUtil(this.getBody(), cf);
+
+		for (Child commentElement : cf.commentElements) {
+			Object parent = commentElement.getParent();
+			remove(((ContentAccessor)parent).getContent(), commentElement );
+		}
 	}
 
 	public static void removeUncontained(Object part,

@@ -5,17 +5,17 @@
     window.Interview = function(did){
         documentId = did;
 
-        var answers = $.cookie(BASE_COOKIE_KEY+documentId);
-        if(answers){
+        var answersStr = $.cookie(BASE_COOKIE_KEY+documentId);
+        if(answersStr){
             try{
-                answers = JSON.parse(answers);
+                answers = JSON.parse(answersStr);
             }catch(e){
                 answers = {};
             }
         }
     };
 
-    var getPageAnser = function(){
+    var getPageAnswer = function(){
         $('.J_question').each(function(i,question){
             var q = $(question);
             var name = q.attr('name');
@@ -48,10 +48,10 @@
 
     //go on button
 
-    $(".J_goon").click(getPageAnser);
+    $(".J_goon").click(getPageAnswer);
     $(".J_submit").click(function(){
-        getPageAnser();
-        $('.J_answer').val(JSON.stringify(answers));
+        getPageAnswer();
+        $('#J_answer').val(JSON.stringify(answers));
     });
     $('.J_create').click(function(){
         $.removeCookie(BASE_COOKIE_KEY+$(this).attr('data-value'));

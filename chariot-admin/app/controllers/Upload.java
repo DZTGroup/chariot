@@ -109,8 +109,6 @@ public class Upload extends Controller {
 
 		response().setHeader("Content-Disposition",
 				"attachment;filename=\"" + fileName + "\"");
-		//TODO: fake id
-		// pass id here
 		if (com.aperture.docx.templating.api.DocxTemplatingService.getCompiledModule(id)) {
 			return ok(new File(Constant.USER_DIR + "/" + fileName + ".docx"));
 		} else {
