@@ -3,10 +3,14 @@ package com.aperture.docx.templating.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import models.PageContent;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
+
+// use play cache
+import play.cache.Cache;
 
 import com.aperture.docx.templating.Module;
 import com.aperture.docx.templating.ModuleCompiler;
@@ -105,10 +109,17 @@ public class DocxTemplatingService {
 	}
 
 	public static models.template.Module analyzeModule(long id)
-			throws Docx4JException {
+			throws Docx4JException, java.lang.Exception {
 		Module m = ModuleIO.loadModule(id);
 		if (m != null) {
-			return cast(m.analyse());
+			String tag = m.getUpdateTag();
+			final Module thisModule = m;
+			
+			return Cache.getOrElse("analyse_"+tag, new Callable<models.template.Module>(){
+				public models.template.Module call(){
+					return cast(thisModule.analyse());
+				}
+			}, 12 * 3600);
 		}
 
 		return null;

@@ -110,6 +110,12 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 		//
 		module.name = name;
 	}
+	
+	@Override
+	public String getUpdateTag() {
+		//
+		return module.gfsId;
+	}
 
 	@Override
 	public long getId() {

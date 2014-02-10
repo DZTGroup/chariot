@@ -24,6 +24,9 @@ import com.google.common.collect.HashBiMap;
 public class Module {
 	long id = -1;
 	String moduleName;
+	
+	// use it as a tag for cache
+	String updateTag;
 
 	Docx doc;
 	BinarySaver saver;
@@ -34,7 +37,8 @@ public class Module {
 		return initialized;
 	}
 
-	public void init(Object head) throws Docx4JException {
+	// use this init only in ModuleParser
+	void init(Object head) throws Docx4JException {
 		doc = new Docx();
 
 		if (head != null) {
@@ -49,7 +53,6 @@ public class Module {
 	public void setSaver(BinarySaver s) {
 		this.saver = s;
 	}
-
 	public void setName(String name) {
 		moduleName = name;
 		if (this.saver != null) {
@@ -61,17 +64,22 @@ public class Module {
 		this.doc.save(saver);
 	}
 
-	// saver not needed
+	// saver not needed if init this way
 	public void init(BinaryLoader loader) throws Docx4JException {
 		doc = new Docx(loader);
 		this.id = loader.getId();
 		this.moduleName = loader.getName();
+		this.updateTag  = loader.getUpdateTag();
 
 		initialized = true;
 	}
 
 	public String getName() {
 		return this.moduleName;
+	}
+	
+	public String getUpdateTag() {
+		return this.updateTag;
 	}
 
 	public BiMap<Module, Object> getSubModuleEntry() throws Docx4JException {

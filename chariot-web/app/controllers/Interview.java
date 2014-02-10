@@ -48,7 +48,7 @@ public class Interview extends Controller {
         //Map map = gson.fromJson(answer, Map.class);
 
 		String name = DocxTemplatingService.getFinalDoc(documentId, 
-			(Map)gson.fromJson(answer, new TypeToken<Map<String, String>>(){}.getType()));
+			gson.<Map<String, String>>fromJson(answer, new TypeToken<Map<String, String>>(){}.getType()));
 		if ( name != null ){
 			response().setHeader("Content-Disposition",
 					"attachment;filename=\"" + name + "\"");

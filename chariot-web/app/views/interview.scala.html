@@ -13,9 +13,10 @@
 							@questionType match{
 								case "choice" =>{
 										@for(option <- d.options){
-											<span>
-												<label><input class="J_question" type="radio" name="@question.id" value="@option">@option</label>
-											</span>
+											<span><label>
+												<input class="J_question" type="radio" name="@question.id" value="@option">
+												@option
+											</label></span>
 										}
 								}
 								case "blank" =>{
@@ -23,9 +24,10 @@
 								}
 								case "multichoice" =>{
 										@for(option <- d.options){
-											<span>
-												<label><input class="J_question" type="checkbox" name="@question.id" value="@option">@option</label>
-											</span>
+											<span><label>
+												<input class="J_question" type="checkbox" name="@question.id" value="@option">
+												@option
+											</label></span>
 										}
 								}
 								case _ =>{}
