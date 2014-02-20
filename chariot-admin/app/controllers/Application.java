@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.FileInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -44,15 +45,15 @@ public class Application extends Controller {
 	}
 
 	/**
-	 * Login page.
-	 */
+		* Login page.
+		*/
 	public static Result login() {
 		return ok(login.render(form(Login.class)));
 	}
 
 	/**
-	 * Handle login form submission.
-	 */
+		* Handle login form submission.
+		*/
 	public static Result authenticate() {
 		Form<Login> loginForm = form(Login.class).bindFromRequest();
 		if (loginForm.hasErrors()) {
@@ -64,8 +65,8 @@ public class Application extends Controller {
 	}
 
 	/**
-	 * Logout and clean the session.
-	 */
+		* Logout and clean the session.
+		*/
 	public static Result logout() {
 		session().clear();
 		flash("success", "You've been logged out");
@@ -77,48 +78,23 @@ public class Application extends Controller {
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(Routes.javascriptRouter("jsRoutes",
-		// Routes for Documents
-				controllers.routes.javascript.Documents.index()));
+			// Routes for Documents
+		controllers.routes.javascript.Documents.index()));
 	}
 
 	/***********************************************
 	 * test stub by Aohajin *
-	 ***********************************************/
-	public static Result parse() throws Docx4JException {
-		/*
-		 * String path = settings.Constant.DEBUG_PATH + "/" + "sample.docx";
-		 * 
-		 * Docx doc = new Docx(path); new ModuleParser(doc).parseAs("sample");
-		 * 
-		 * // test doc gen ModuleCompiler mc = new ModuleCompiler();
-		 * com.aperture.docx.templating.Module m = new
-		 * com.aperture.docx.templating.Module(); m.init("sample");
-		 * mc.pendModule(m); mc.save(settings.Constant.DEBUG_PATH + "/" +
-		 * "compiled.docx");
-		 */
-
-		// ByteArrayOutputStream
-		models.Module m = models.Module.find.byId((long) 6);
-
-		return ok(m.gfsId);
-	}
-
-	public static Result all(String name) throws Docx4JException,
-			UnsupportedEncodingException {
-		name = URLDecoder.decode(name, "utf-8");
-		models.Module module = models.Module.find.select("id, name, gfsId")
-				.where().eq("name", name).findUnique();
-		
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		com.aperture.docx.scala.Gfs.load(module.gfsId, out);
-
-		final StringBuilder sb = new StringBuilder();
-
+	 ***********************************************
+	 */	
+	private static Result showDocStructure(java.io.InputStream in) throws  Docx4JException, 
+	UnsupportedEncodingException {
+		// 
+		final StringBuilder sb = new StringBuilder();	
 		final WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
-				.load(new ByteArrayInputStream(out.toByteArray()));
+			.load(in);
 		MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
 		org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) documentPart
-				.getJaxbElement();
+			.getJaxbElement();
 		Body body = wmlDocumentEl.getBody();
 
 		new TraversalUtil(body, new Callback() {
@@ -135,7 +111,7 @@ public class Application extends Controller {
 				else if (o instanceof org.docx4j.wml.R.CommentReference) {
 					org.docx4j.wml.R.CommentReference cr = (org.docx4j.wml.R.CommentReference) o;
 					for (Comment c : wordMLPackage.getMainDocumentPart()
-							.getCommentsPart().getContents().getComment()) {
+					.getCommentsPart().getContents().getComment()) {
 						if (c.getId().equals(cr.getId())){
 							text = Docx.extractText(c);
 							break;
@@ -144,7 +120,7 @@ public class Application extends Controller {
 				}
 
 				sb.append(indent + o.getClass().getName() + "  \"" + text
-						+ "\"\n");
+					+ "\"\n");
 				// sb.append(text+"\n");
 				// System.out.println();
 				return null;
@@ -179,6 +155,42 @@ public class Application extends Controller {
 				return TraversalUtil.getChildrenImpl(o);
 			}
 		});
-		return ok(sb.toString());
+		return ok(sb.toString());				
+	}
+			
+	public static Result parse(String name) throws Docx4JException,
+	java.io.FileNotFoundException,UnsupportedEncodingException {
+		/*
+			* String path = settings.Constant.DEBUG_PATH + "/" + "sample.docx";
+			* 
+			* Docx doc = new Docx(path); new ModuleParser(doc).parseAs("sample");
+			* 
+			* // test doc gen ModuleCompiler mc = new ModuleCompiler();
+			* com.aperture.docx.templating.Module m = new
+			* com.aperture.docx.templating.Module(); m.init("sample");
+			* mc.pendModule(m); mc.save(settings.Constant.DEBUG_PATH + "/" +
+			* "compiled.docx");
+			*/
+
+			// ByteArrayOutputStream
+		String path = settings.Constant.DEBUG_PATH + "/" + name + ".docx";
+		
+		return showDocStructure(new FileInputStream(path));
+	}
+
+	public static Result all(String name) throws Docx4JException,
+	UnsupportedEncodingException {
+		name = URLDecoder.decode(name, "utf-8");
+		models.Module module = models.Module.find.select("id, name, gfsId")
+			.where().eq("name", name).findUnique();
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		com.aperture.docx.scala.Gfs.load(module.gfsId, out);
+
+		return showDocStructure(new ByteArrayInputStream(out.toByteArray()));
+	}
+	
+	public static Result test() {
+		return ok(settings.Constant.LIBRE_OFFICE);
 	}
 }

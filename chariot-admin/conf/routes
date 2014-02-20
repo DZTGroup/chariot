@@ -44,5 +44,6 @@ GET     /question/:id               controllers.Questions.question(id:String)
 POST    /questionsave               controllers.Questions.saveQuestion
 
 #Test stub
-GET		/parse						controllers.Application.parse()
+GET		/parse/*name				controllers.Application.parse(name:String)
 GET		/all/*name					controllers.Application.all(name:String)
+GET		/test						controllers.Application.test()

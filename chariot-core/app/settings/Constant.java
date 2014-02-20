@@ -10,5 +10,22 @@ public class Constant {
 	
 	final public static String SYSTEM_AUTHOR = "system";
 	
-	final public static String USER_DIR=System.getProperty("user.dir")+"/userdir";
+	//System.getProperty("user.dir")+"/userdir";
+	final public static String USER_DIR = "/tmp";
+	
+	// depending on os
+	final private static String LIBRE_OFFICE_MAC = "/Applications/LibreOffice.app/Contents/MacOS/soffice";
+	final private static String LIBRE_OFFICE_UNIX = "libreoffice";
+	
+	final public static String LIBRE_OFFICE;
+	static{
+		String OS = System.getProperty("os.name").toLowerCase();
+		if ( OS.indexOf("mac") >= 0 ){
+			LIBRE_OFFICE = LIBRE_OFFICE_MAC;
+		} else if ( OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") >= 0){
+			LIBRE_OFFICE = LIBRE_OFFICE_UNIX;
+		} else {
+			LIBRE_OFFICE = null;
+		}
+	}
 }

@@ -77,18 +77,20 @@ public class DocxTemplatingService {
 		}
 	}
 
-	public static boolean getCompiledModule(long id) throws Docx4JException {
+	public static String getCompiledModule(long id) throws Docx4JException {
 		ModuleCompiler mc = new ModuleCompiler();
 		Module m = ModuleIO.loadModule(id);
 
 		if (m != null) {
 			mc.pendModule(m);
-			mc.save(settings.Constant.USER_DIR + "/" + m.getName() + ".docx");
+			
+			String path = settings.Constant.USER_DIR + "/" + m.getName() + ".docx";
+			mc.save(path);
 
-			return true;
+			return path;
 		}
 
-		return false;
+		return null;
 	}
 	
 	public static String getFinalDoc(long id, Map<String, String> answers) throws Docx4JException {
@@ -98,11 +100,8 @@ public class DocxTemplatingService {
 		if (m != null) {
 			mc.pendModule(m);
 			mc.detemplate(answers);
-			
-			String name = String.valueOf(System.currentTimeMillis());
-			mc.save(settings.Constant.USER_DIR + "/" + name + ".docx");
 
-			return name;
+			return mc.convertToPdf();
 		}
 
 		return null;

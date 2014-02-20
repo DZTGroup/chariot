@@ -30,6 +30,10 @@ public class ModuleCompiler {
 	public void save(String path) throws Docx4JException {
 		doc.save(path);
 	}
+	
+	public String convertToPdf() throws Docx4JException {
+		return doc.convertToPdf();
+	}
 
 	private void pend(Object o) {
 		// normal;

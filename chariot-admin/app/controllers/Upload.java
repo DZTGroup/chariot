@@ -109,12 +109,12 @@ public class Upload extends Controller {
 
 		response().setHeader("Content-Disposition",
 				"attachment;filename=\"" + fileName + "\"");
-		if (com.aperture.docx.templating.api.DocxTemplatingService.getCompiledModule(id)) {
-			return ok(new File(Constant.USER_DIR + "/" + fileName + ".docx"));
-		} else {
-			return badRequest();
+		String path = com.aperture.docx.templating.api.DocxTemplatingService.getCompiledModule(id);
+		if ( path != null) {
+			return ok(new File(path));
 		}
-
+		
+		return notFound();
 	}
 
 	protected static String getRequestParam(String key) {

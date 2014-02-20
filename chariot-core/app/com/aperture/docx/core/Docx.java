@@ -1,5 +1,8 @@
 package com.aperture.docx.core;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -10,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
 
@@ -451,6 +455,42 @@ public class Docx {
 			if (parent != null) {
 				parent.getContent().remove(o);
 			}
+		}
+	}
+	
+	public String convertToPdf() throws Docx4JException {
+		// check system supporting
+		if (settings.Constant.LIBRE_OFFICE == null){
+			Logger.error("Application running on OS that is not supported.");
+			
+			return null;
+		}
+		
+		// slow but acceptable
+		String name = UUID.randomUUID().toString();
+		
+		String docPath = settings.Constant.USER_DIR + "/" + name + ".docx";
+		this.save(docPath);
+		
+		try{
+			ProcessBuilder pb = new ProcessBuilder(settings.Constant.LIBRE_OFFICE, 
+				"--headless", 
+				"--convert-to", "pdf",
+				"--outdir", settings.Constant.USER_DIR,
+				docPath);
+			pb.environment().put("HOME", settings.Constant.USER_DIR);
+			Process p = pb.start();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String line;
+			while((line = reader.readLine()) != null){
+				Logger.info(line);
+			}
+		
+			return settings.Constant.USER_DIR + "/" + name + ".pdf";
+		} catch (java.io.IOException e){
+			Logger.error(e.getMessage());
+			
+			return null;
 		}
 	}
 }

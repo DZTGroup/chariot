@@ -16,6 +16,7 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 /**
  * Created by maquanhua on 1/18/14.
+ * Moded by laomao
  */
 
 public class Interview extends Controller {
@@ -47,16 +48,16 @@ public class Interview extends Controller {
         String answer = post.get("answer")[0];
         //Map map = gson.fromJson(answer, Map.class);
 
-		String name = DocxTemplatingService.getFinalDoc(documentId, 
+		String path = DocxTemplatingService.getFinalDoc(documentId, 
 			gson.<Map<String, String>>fromJson(answer, new TypeToken<Map<String, String>>(){}.getType()));
-		if ( name != null ){
+		if ( path != null ){
 			response().setHeader("Content-Disposition",
-					"attachment;filename=\"" + name + "\"");
+					"attachment;filename=\"generated\"");
 			
-			return ok(new File(settings.Constant.USER_DIR + "/" + name + ".docx"));
+			return ok(new File(path));
 		}
 
-        return badRequest();
+        return notFound();
     }
 }
 
