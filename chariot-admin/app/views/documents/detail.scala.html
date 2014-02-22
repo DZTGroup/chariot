@@ -5,7 +5,7 @@
         @document.name
         <a href="#/page/@document.id">编辑模块分页>></a>
         <a class="downloadLink btn btn-primary btn-sm"  href="/service/download/@helper.urlEncode(document.name)/@document.id">下载文档</a>
-        <a class="downloadLink btn btn-primary btn-sm" style="right:165px;" target="_blank" href="" >预览文档</a>
+        <a class="downloadLink btn btn-primary btn-sm J_preview" data-id="@document.id" style="right:165px;" target="_blank" href="javascript:;" >预览文档</a>
     </li>
 </ol>
 
@@ -46,7 +46,7 @@
                         <h4 class="panel-title">
                         <a href="javascript:;">模块 <span style="color:black;">@module.name</span></a>
                         <div class="download">
-                            <a class="downloadLink btn btn-primary btn-sm" target="_blank" href="" >预览模块</a>
+                            <a class="downloadLink btn btn-primary btn-sm J_preview" data-id="@module.id"  target="_blank" href="javascript:;" >预览模块</a>
                             <a class="downloadLink btn btn-primary btn-sm"  href="/service/download/@helper.urlEncode(module.name)/@module.id">下载模块</a>
                         	<a class="downloadLink btn btn-primary btn-sm" id="file-uploader-@module.id">更新模块</a>
                         </div>
@@ -82,3 +82,8 @@
         @displayList(document.list)
     }
 </article>
+<script src="@routes.Assets.at("javascripts/pdf/build/pdf.js")"></script>
+<script>
+    PDFJS.workerSrc = '@routes.Assets.at("javascripts/pdf/build/pdf.worker.js")';
+    window.Preview();
+</script>
