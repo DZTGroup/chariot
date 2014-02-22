@@ -592,7 +592,7 @@
 //        preview("/assets/javascripts/l-vim-script-1-pdf.pdf")
 //        return;
            var id = currentId = $(this).data('id');
-           new Modal('<div id="pdf_container" style="height:400px;overflow:auto;margin-bottom:5px;"></div><div id="pdf_loading">正在加载文档..</div><canvas id="the-canvas" style="border:1px solid black;display:none;"></canvas>','Preview');
+           new Modal('<div id="pdf_container"><div id="pdf_loading"></div></div><canvas id="pdf-canvas"></canvas>','Preview');
            $.ajax({
                 url:"/document/preview",
                 data:{
@@ -612,7 +612,7 @@
     };
 
     function preview(url){
-        var oc = document.getElementById('the-canvas');
+        var oc = document.getElementById('pdf-canvas');
         var container = document.getElementById('pdf_container');
         var loading = document.getElementById('pdf_loading');
         loading.style.display = "none";
