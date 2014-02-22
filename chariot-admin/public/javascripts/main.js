@@ -588,13 +588,15 @@
 (function(){
     window.Preview = function(){
         $(".J_preview").click(function(){
-        preview("/assets/javascripts/l-vim-script-1-pdf.pdf")
-        return;
+//        preview("/assets/javascripts/l-vim-script-1-pdf.pdf")
+//        return;
            $.ajax({
-                url:"",
+                url:"/document/preview",
                 data:{
                     id:$(this).data('id')
                 },
+                type:"POST",
+                dataType:"json",
                 success:function(res){
                     //pdf
                     preview(res.data);

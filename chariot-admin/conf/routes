@@ -13,6 +13,7 @@ GET     /document/:id                      controllers.Documents.folder(id:Long)
 POST    /document/changedir                controllers.Documents.changeDir()
 POST    /document/delete                   controllers.Documents.delete()
 POST    /document/create                   controllers.Documents.createFolder()
+POST    /document/preview                  controllers.Documents.getPreviewUrl()
 
 #Page
 GET     /page/:id                          controllers.Page.index(id:Long)
@@ -29,7 +30,7 @@ GET     /assets/javascripts/routes          controllers.Application.javascriptRo
 
 # Map static resources from the /public folder to the /public path
 GET     /assets/*file                       controllers.Assets.at(path="/public", file)
-GET		/preview/*file						controllers.Assets.at(path="/preview", file)
+#GET		/preview/*file						controllers.Assets.at(path="/preview", file)
 
 # form upload page
 GET     /formUpload                 controllers.Upload.renderUpload()
