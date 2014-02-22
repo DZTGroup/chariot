@@ -586,18 +586,22 @@
 })();
 
 (function(){
+    var currentId = null;
     window.Preview = function(){
         $(".J_preview").click(function(){
 //        preview("/assets/javascripts/l-vim-script-1-pdf.pdf")
 //        return;
+           var id = currentId = $(this).data('id');
+           new Modal('<div id="pdf_container" style="height:400px;overflow:auto;margin-bottom:5px;"></div><div id="pdf_loading">正在加载文档..</div><canvas id="the-canvas" style="border:1px solid black;display:none;"></canvas>','Preview');
            $.ajax({
                 url:"/document/preview",
                 data:{
-                    id:$(this).data('id')
+                    id:id
                 },
                 type:"POST",
                 dataType:"json",
                 success:function(res){
+                    if(id!=currentId){return}
                     //pdf
                     preview(res.data);
                 },
@@ -608,10 +612,10 @@
     };
 
     function preview(url){
-        new Modal('<div id="pdf_container" style="height:400px;overflow:auto;"></div><canvas id="the-canvas" style="border:1px solid black;display:none;"></canvas>','Preview');
-
         var oc = document.getElementById('the-canvas');
         var container = document.getElementById('pdf_container');
+        var loading = document.getElementById('pdf_loading');
+        loading.style.display = "none";
         var scale = 1.2;
         PDFJS.getDocument(url).then(function(pdfDoc){
             function renderPage(num) {
