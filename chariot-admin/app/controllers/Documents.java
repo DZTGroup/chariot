@@ -1,5 +1,6 @@
 package controllers;
 
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import util.Ajax;
 import models.*;
 import play.Logger;
@@ -120,4 +121,26 @@ public class Documents extends Controller {
 		return ok(ajax.toJson());
 	}
 
+    public static Result getPreviewUrl() {
+
+        Http.RequestBody body = request().body();
+        Map<String, String[]> map = body.asFormUrlEncoded();
+        Ajax ajax = new Ajax();
+
+        String id = map.get("id")[0];
+
+        //TODO call template service
+        try{
+            String url = DocxTemplatingService.getPdfPreview(Long.parseLong(id));
+            ajax.setCode(200);
+            ajax.setData(url);
+            return ok(ajax.toJson());
+        }catch (Docx4JException e){
+
+            Logger.error(e.getMessage());
+            return internalServerError();
+        }
+
+
+    }
 }
