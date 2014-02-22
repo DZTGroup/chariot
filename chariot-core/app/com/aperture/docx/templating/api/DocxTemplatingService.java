@@ -108,15 +108,22 @@ public class DocxTemplatingService {
 	}
 	
 	public static String getPdfPreview(long id) throws Docx4JException {
+		String tag = ModuleIO.loadModuleUpdateTag(id);
+		java.io.File cached = new java.io.File(settings.Constant.USER_DIR + "/preview_" + tag + ".pdf");
+		if ( cached.isFile() && cached.canRead() ){
+			return "/preview/preview_" + tag;
+		}
+		
+		// not found, generate it
 		ModuleCompiler mc = new ModuleCompiler();
 		Module m = ModuleIO.loadModule(id);
 
 		if (m != null) {
 			mc.pendModule(m);
 			
-			mc.convertToPdf("preview_" + m.getUpdateTag(), settings.Constant.PREVIEW_PATH);
+			mc.convertToPdf("preview_" + m.getUpdateTag(), settings.Constant.USER_DIR);
 
-			return "/preview/preview_"+m.getUpdateTag()+".pdf";
+			return "/preview/preview_"+m.getUpdateTag();
 		}
 		
 		return null;

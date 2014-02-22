@@ -45,6 +45,11 @@ public class ModuleIO implements BinaryLoader, BinarySaver {
 
 		return m;
 	}
+	
+	public static String loadModuleUpdateTag(long id){
+		return models.Module.find.select("id, name, gfsId")
+			.where().idEq(Long.valueOf(id)).findUnique().gfsId;
+	}
 
 	public static Module newModuleWithSaver() {
 		ModuleIO io = new ModuleIO();
