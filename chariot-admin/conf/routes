@@ -30,7 +30,7 @@ GET     /assets/javascripts/routes          controllers.Application.javascriptRo
 
 # Map static resources from the /public folder to the /public path
 GET     /assets/*file                       controllers.Assets.at(path="/public", file)
-#GET		/preview/*file						controllers.Assets.at(path="/preview", file)
+GET		/preview/*file						controllers.Assets.at(path="/preview", file)
 
 # form upload page
 GET     /formUpload                 controllers.Upload.renderUpload()
