@@ -120,6 +120,11 @@ public class Documents extends Controller {
 		ajax.setData(new String("创建成功"));
 		return ok(ajax.toJson());
 	}
+	
+	public static Result pdf(String name) {
+		response().setHeader("Content-Type","application/pdf");
+		return ok(new java.io.File(settings.Constant.USER_DIR + "/" + name + ".pdf"));
+	}
 
     public static Result getPreviewUrl() {
 
