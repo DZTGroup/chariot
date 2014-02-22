@@ -592,7 +592,7 @@
 //        preview("/assets/javascripts/l-vim-script-1-pdf.pdf")
 //        return;
            var id = currentId = $(this).data('id');
-           new Modal('<div id="pdf_container"><div id="pdf_loading"></div></div><canvas id="pdf-canvas"></canvas>','Preview');
+           new Modal('<div id="pdf_container"></div><canvas id="pdf-canvas"></canvas>','Preview');
            $.ajax({
                 url:"/document/preview",
                 data:{
@@ -614,8 +614,6 @@
     function preview(url){
         var oc = document.getElementById('pdf-canvas');
         var container = document.getElementById('pdf_container');
-        var loading = document.getElementById('pdf_loading');
-        loading.style.display = "none";
         var scale = 1.2;
         PDFJS.getDocument(url).then(function(pdfDoc){
             function renderPage(num) {
