@@ -129,7 +129,7 @@ public class Documents extends Controller {
 
         String id = map.get("id")[0];
 
-        //TODO call template service
+        //
         try{
             String url = DocxTemplatingService.getPdfPreview(Long.parseLong(id));
             ajax.setCode(200);
