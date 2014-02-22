@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
 
@@ -458,16 +457,13 @@ public class Docx {
 		}
 	}
 	
-	public String convertToPdf() throws Docx4JException {
+	public String convertToPdf(String name) throws Docx4JException {
 		// check system supporting
 		if (settings.Constant.LIBRE_OFFICE == null){
 			Logger.error("Application running on OS that is not supported.");
 			
 			return null;
 		}
-		
-		// slow but acceptable
-		String name = UUID.randomUUID().toString();
 		
 		String docPath = settings.Constant.USER_DIR + "/" + name + ".docx";
 		this.save(docPath);

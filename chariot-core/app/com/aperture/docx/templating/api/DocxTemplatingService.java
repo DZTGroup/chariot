@@ -101,9 +101,22 @@ public class DocxTemplatingService {
 			mc.pendModule(m);
 			mc.detemplate(answers);
 
-			return mc.convertToPdf();
+			return mc.convertToPdf("generated_" + m.gfsId);
 		}
 
+		return null;
+	}
+	
+	public static String getPdfPreview(long id) throws Docx4JException {
+		ModuleCompiler mc = new ModuleCompiler();
+		Module m = ModuleIO.loadModule(id);
+
+		if (m != null) {
+			mc.pendModule(m);
+
+			return mc.convertToPdf("preview_" + m.gfsId);
+		}
+		
 		return null;
 	}
 
