@@ -134,4 +134,8 @@ public class ModuleCompiler {
 	public String convertToPdf(String name) throws Docx4JException {
 		return doc.convertToPdf(name);
 	}
+	
+	public String convertToPdf(String name, String path) throws Docx4JException {
+		return doc.convertToPdf(name, path);
+	}
 }

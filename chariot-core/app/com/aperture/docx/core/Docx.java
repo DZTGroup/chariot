@@ -457,7 +457,7 @@ public class Docx {
 		}
 	}
 	
-	public String convertToPdf(String name) throws Docx4JException {
+	public String convertToPdf(String name, String path) throws Docx4JException {
 		// check system supporting
 		if (settings.Constant.LIBRE_OFFICE == null){
 			Logger.error("Application running on OS that is not supported.");
@@ -472,7 +472,7 @@ public class Docx {
 			ProcessBuilder pb = new ProcessBuilder(settings.Constant.LIBRE_OFFICE, 
 				"--headless", 
 				"--convert-to", "pdf",
-				"--outdir", settings.Constant.USER_DIR,
+				"--outdir", path,
 				docPath);
 			pb.environment().put("HOME", settings.Constant.USER_DIR);
 			Process p = pb.start();
@@ -482,11 +482,16 @@ public class Docx {
 				Logger.info(line);
 			}
 		
-			return settings.Constant.USER_DIR + "/" + name + ".pdf";
+			return path + "/" + name + ".pdf";
 		} catch (java.io.IOException e){
 			Logger.error(e.getMessage());
 			
 			return null;
 		}
+	}
+	
+	public String convertToPdf(String name) throws Docx4JException {
+		// call
+		return convertToPdf(name, settings.Constant.USER_DIR);
 	}
 }

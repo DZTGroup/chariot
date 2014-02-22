@@ -101,7 +101,7 @@ public class DocxTemplatingService {
 			mc.pendModule(m);
 			mc.detemplate(answers);
 
-			return mc.convertToPdf("generated_" + m.gfsId);
+			return mc.convertToPdf("generated_" + m.getUpdateTag());
 		}
 
 		return null;
@@ -113,8 +113,10 @@ public class DocxTemplatingService {
 
 		if (m != null) {
 			mc.pendModule(m);
+			
+			mc.convertToPdf("preview_" + m.getUpdateTag(), settings.Constant.PREVIEW_PATH);
 
-			return mc.convertToPdf("preview_" + m.gfsId);
+			return "/preview/preview_"+m.getUpdateTag()+".pdf";
 		}
 		
 		return null;
