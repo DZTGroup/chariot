@@ -3,6 +3,7 @@ package controllers;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import models.EndUser;
 import models.PageContent;
 import play.mvc.*;
 import views.html.*;
@@ -30,7 +31,7 @@ public class Interview extends Controller {
 
         if (content != null) {
             if (pageId < content.pageList.size()) {
-                return ok(interview.render(pageId, documentId, doc.name, content.pageList.get(pageId), content.pageList.size()));
+                return ok(interview.render(pageId, documentId, doc.name, content.pageList.get(pageId), content.pageList.size(),EndUser.findByEmail(session("email"))));
             } else {
                 return badRequest();
             }

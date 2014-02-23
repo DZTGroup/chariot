@@ -1,6 +1,6 @@
-@(docs:java.util.List[models.File])
+@(docs:java.util.List[models.File], user: EndUser)
 
-@main("Welcome to Lawbingo") {
+@main("Welcome to Lawbingo", user) {
 	<section>
     <h1>请选择文档</h1>
 	@for(doc <- docs){

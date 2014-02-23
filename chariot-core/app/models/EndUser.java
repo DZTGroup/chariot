@@ -58,7 +58,7 @@ public class EndUser extends Model {
      * Authenticate a User.
      */
     public static EndUser authenticate(String email, String password) {
-        return find.where()
+    	return find.where()
             .eq("email", email)
             .eq("password", password)
             .findUnique();

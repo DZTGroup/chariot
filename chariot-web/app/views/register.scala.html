@@ -1,4 +1,4 @@
-
+@(form: Form[Application.Register])
 <html>
 <head>
 <title>注册免费的 LAWBINGO 账户</title>
@@ -7,7 +7,7 @@
 </head>
 
 <body class="translate smartling-zh">
-<form name="frmSignUp" method="post" action="MyAccount_Join.aspx?ut_source=account_login" id="frmSignUp" class="signup-in" onsubmit="return validateForm();">
+<div name="frmSignUp" method="post" action="MyAccount_Join.aspx?ut_source=account_login" id="frmSignUp" class="signup-in">
     <div class="hd-container"> 
      <div class="base-header anon-header" id="hd"> 
   <div id="Wc_Site_Topbar_Anon_divNav" class="inner-header no-nav new-anon-header">
@@ -16,8 +16,7 @@
       <ol class="user-area"> 
         <li><a id="Wc_Site_Topbar_Anon_hlLogin" title="登入" class="sign-in" href="/login">登入</a></li> 
         <li class="last"><a class="help" href="/help/" title="打开帮助中心" target="_blank">说明</a></li> 
-      </ol> 
-      <a class="logo" href="/" title="提供最佳的律师咨询服务!">LAWBINGO™</a>
+      </ol>
     </div> 
     
 </div> 
@@ -33,25 +32,19 @@
             <br class="clr" />
         </div>
     </div>
+    @helper.form(routes.Application.registerAccount) {
     <div class="container">
         <div class="account">
             <div class="content">
                 <div class="col_wrap drop-shadow">
                     <div class="col_lft">
                         <div class="col_pad">
-<input type="hidden" name="Wc_Form_Join$hidDirectToPro" id="Wc_Form_Join_hidDirectToPro" value="0" />
-<input type="hidden" name="Wc_Form_Join$hidPackage" id="Wc_Form_Join_hidPackage" value="0" />
-<input type="hidden" name="Wc_Form_Join$hidCreateBeta" id="Wc_Form_Join_hidCreateBeta" value="0" />
-<input type="hidden" name="Wc_Form_Join$uspt" id="Wc_Form_Join_uspt" value="0" />
-<input type="hidden" name="Wc_Form_Join$afterJoinRedirectUrl" id="Wc_Form_Join_afterJoinRedirectUrl" />
-
-
 <div class="fld_rw">
     <div class="fld_lbl">
         <label for="Wc_Form_Join_txtUserName">账户名称：</label>
     </div>
     <div class="fld_inp">
-        <input name="Wc_Form_Join$txtUserName" type="text" maxlength="50" size="20" id="Wc_Form_Join_txtUserName" tabindex="1" class="RQR textfield " name="txtUserName" title="請輸入使用者名稱。" />
+        <input name="name" type="text" maxlength="50" size="20" id="Wc_Form_Join_txtUserName" tabindex="1" class="RQR textfield " name="txtUserName" title="請輸入使用者名稱。" />
         <div class="bodyTextSmall">
             <span class="tip">最多 50 个字符，不允许空格。</span><span class="missing"></span>
         </div>
@@ -63,7 +56,7 @@
         <label for="Wc_Form_Join_txtPass">账户密码：</label>
     </div>
     <div class="fld_inp">
-        <input name="Wc_Form_Join$txtPass" type="password" size="15" id="Wc_Form_Join_txtPass" tabindex="2" class="RQR passwd textfield" name="txtPass" title="請輸入密碼。" />
+        <input name="password" type="password" size="15" id="Wc_Form_Join_txtPass" tabindex="2" class="RQR passwd textfield" name="txtPass" title="請輸入密碼。" />
         <div class="bodyTextSmall">
             <span class="tip">至少 7 个字符，不允许有空格。</span> <span class="missing"></span>
         </div>
@@ -75,7 +68,7 @@
         <label for="Wc_Form_Join_txtPassConfirm">再输入一遍密码：</label>
     </div>
     <div class="fld_inp">
-        <input name="Wc_Form_Join$txtPassConfirm" type="password" size="15" id="Wc_Form_Join_txtPassConfirm" tabindex="3" class="RQR passwd textfield" name="txtPassConfirm" title="請再次輸入密碼。" />
+        <input name="passwordConfirm" type="password" size="15" id="Wc_Form_Join_txtPassConfirm" tabindex="3" class="RQR passwd textfield" name="txtPassConfirm" title="請再次輸入密碼。" />
         <div class="bodyTextSmall">
             <span class="missing"></span>
         </div>
@@ -87,18 +80,29 @@
         <label for="Wc_Form_Join_txtContEmail">输入您的电子邮件地址：</label>
     </div>
     <div class="fld_inp">
-        <input name="Wc_Form_Join$txtContEmail" type="text" maxlength="50" size="30" id="Wc_Form_Join_txtContEmail" tabindex="4" class="RQR textfield" title="請輸入電子郵件位址。" />
+        <input name="email" type="text" maxlength="50" size="30" id="Wc_Form_Join_txtContEmail" tabindex="4" class="RQR textfield" title="請輸入電子郵件位址。" />
         <div class="bodyTextSmall">
             <span class="tip">最多 50 个字符。</span><span class="missing"></span>
         </div>
     </div>
 </div>
+@if(form.hasGlobalErrors) { 
+                <p class="error">
+                    @form.globalError.message
+                </p>
+            }
+            
+            @if(flash.contains("success")) {
+                <p class="success">
+                    @flash.get("success")
+                </p>
+            }
 
 <div id="signUpOpt">
    
     <div class="btn-container">
         
-        <a id="Wc_Form_Join_btnSignup" tabindex="7" class="btn yellow wide btn-yellow-wide" href="javascript:__doPostBack('Wc_Form_Join$btnSignup','')"><span class="wide">注册</span></a>
+        <a id="Wc_Form_Join_btnSignup" tabindex="7" class="btn yellow wide btn-yellow-wide" onclick="$('form').submit()"><span class="wide">注册</span></a>
     </div>
     
     
@@ -131,7 +135,7 @@
             </div>
         </div>
     </div>
-    
+}    
 
 <div id="ft" class="base-footer  anon-footer ">
     <div class="inner-ft ">
@@ -166,7 +170,7 @@
         </div>
     </div>
 </div>
-</form>
+</div>
 <!-- 14  -->
 </body>
 </html>

@@ -1,4 +1,4 @@
-@(currentPageId:Integer,documentId:Long, documentName:String, pi:models.PageContent.PageItem,size:Integer)
+@(currentPageId:Integer,documentId:Long, documentName:String, pi:models.PageContent.PageItem,size:Integer,user:EndUser)
 
 @import com.aperture.docx.templating.api.DocxTemplatingService
 
@@ -55,7 +55,7 @@
 	}
 }
 
-@main(documentName){
+@main(documentName,user){
     <form action="/interview/@documentId/submit" method="post">
 	<section>
 		<h1>@pi.name</h1>
@@ -89,11 +89,11 @@
 		
 		@if(currentPageId < size-1){
 			<p class="buttons">
-				<a class="J_goon" href="/interview/@documentId/@(currentPageId+1)">继续</a>
+				<a class="J_goon" href="/interview/@documentId/@(currentPageId+1)">缁х画</a>
 			</p>
 		}else{
 	        <p class="buttons">
-				<input type="submit" class="J_submit" value="提交">
+				<input type="submit" class="J_submit" value="���浜�">
 	        </p>
 		}
 	</section>

@@ -2,25 +2,12 @@ package controllers;
 
 import static play.data.Form.form;
 import models.EndUser;
-import models.File;
-import play.*;
 import play.data.Form;
 import play.mvc.*;
 
-import java.util.List;
-
 import views.html.*;
 
-// scala test
-import com.aperture.docx.scala.Gfs;
-
 public class Application extends Controller {
-
-    public static Result index() {
-        List<File> docs = File.find.where().isNotNull("document_id").findList();
-
-        return ok(index.render(docs));
-    }
     
  // -- Authentication
 
@@ -36,6 +23,20 @@ public class Application extends Controller {
  			return null;
  		}
 
+ 	}
+ 	
+ 	public static class Register {
+ 		
+ 		public String name;
+ 		public String email;
+ 		public String password;
+ 		
+ 		public String validate() {
+ 			if (EndUser.findByEmail(email) != null) {
+ 				return "email is already used for another account";
+ 			}
+ 			return null;
+ 		}
  	}
 
  	/**
@@ -54,7 +55,17 @@ public class Application extends Controller {
  			return badRequest(login.render(loginForm));
  		} else {
  			session("email", loginForm.get().email);
- 			return redirect(routes.Application.index());
+ 			return redirect(routes.MainApp.index());
+ 		}
+ 	}
+ 	
+ 	public static Result registerAccount() {
+ 		Form<Register> registerForm = form(Register.class).bindFromRequest();
+ 		if (registerForm.hasErrors()) {
+ 			return badRequest(register.render(registerForm));
+ 		} else {
+ 			EndUser.create(registerForm.get().email,registerForm.get().name,registerForm.get().password);
+ 			return redirect(routes.Application.login());
  		}
  	}
 
@@ -68,7 +79,8 @@ public class Application extends Controller {
  	}
  	
 	public static Result register() {
- 		return ok(register.render());
+		
+ 		return ok(register.render(form(Register.class)));
  	}
 
 }

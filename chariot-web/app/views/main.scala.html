@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, user: EndUser)(content: Html)
 
 <!DOCTYPE html>
 
@@ -7,12 +7,56 @@
         <title>@title</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/origin.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+		<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
     </head>
     <body>
-        <header>
-            <a href="@routes.Application.index">@title</a>
-        </header>
+
+        <div class="base-header anon-header" id="hd"> 
+  <div id="wc_Site_Topbar1_divNav" class="no-nav new-anon-header" style="padding-top:20px;padding-bottom:20px">	  
+    <div> 
+      <span style="margin-left:30px">@title</span>
+      <span style="float:right; margin-right:30px">
+      <span class="username">@user.name</span> <span class="email">(@user.email)</span>
+      <a href="@routes.Application.logout()" class="btn-default navbar-btn">退出</a>
+      </span>
+    </div>    
+  </div> 
+</div>
         @content
     </body>
+    <div id="ft" class="base-footer  anon-footer ">
+    <div class="inner-ft " style="margin-left:30px !important">
+        
+        <div class="grid ft-bottom new-anon-footer">
+            <div class="col grid-u-2-5">
+                
+                    <ul>
+                        <li>
+                            <a href="/mp/aboutus/">
+                                关于 LAWBINGO
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Monkey_Privacy.aspx">
+                                隐私权政策
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/mp/aboutus/contactus/">
+                                与我们联络
+                            </a>
+                        </li>
+                    </ul>
+                    
+                <span class="copy">
+                
+                    著作权所有 © LAWBINGO
+                </span>
+                
+            </div>
+        </div>
+    </div>
+</div>
 </html>
