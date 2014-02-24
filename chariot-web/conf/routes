@@ -18,3 +18,5 @@ GET     /								    controllers.MainApp.index()
 
 GET     /register							controllers.Application.register()
 POST    /register							controllers.Application.registerAccount()
+
+GET    /verify/:uuid						controllers.Application.verify(uuid:String)

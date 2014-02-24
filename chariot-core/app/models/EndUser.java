@@ -27,6 +27,7 @@ public class EndUser extends Model {
     @Constraints.Required
     public String password;
     
+    public String status;
     
     public EndUser(String email, String name, String password) {
         //description is json
@@ -34,6 +35,7 @@ public class EndUser extends Model {
         this.email = email;
         this.name = name;
         this.password = password;
+        this.status="0";
     }
     
     // -- Queries
@@ -68,6 +70,14 @@ public class EndUser extends Model {
     	EndUser u = new EndUser(email,name,password);
         u.save();
         return u;
+    }
+    
+    public static EndUser updateStatus(String email,String status){
+    	EndUser u=findByEmail(email);
+    	u.status=status;
+    	u.save();
+    	
+    	return u;
     }
     
     // --
