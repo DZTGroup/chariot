@@ -15,6 +15,8 @@ import org.docx4j.wml.Text;
 import com.aperture.docx.core.Docx;
 
 public class QuestionUtil {
+	// question resolver stuff
+	
 	interface Resolver {
 		void resolve(org.docx4j.wml.Text qt);
 	}

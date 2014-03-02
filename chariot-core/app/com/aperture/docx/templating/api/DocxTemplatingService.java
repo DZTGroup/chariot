@@ -145,4 +145,8 @@ public class DocxTemplatingService {
 
 		return null;
 	}
+	
+	public static String generateQuestionUUID() {
+		return UUID.randomUUID().toString();
+	}
 }
