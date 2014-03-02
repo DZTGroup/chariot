@@ -1,6 +1,6 @@
 @(currentPageId:Integer,documentId:Long, documentName:String, pi:models.PageContent.PageItem,size:Integer,user:EndUser)
 
-@import com.aperture.docx.templating.api.DocxTemplatingService
+@import com.aperture.docx.api.DocxTemplatingService
 
 @displayQuestion(questionId:String) = {
 	@defining(Question.getById(questionId)){ question=>
