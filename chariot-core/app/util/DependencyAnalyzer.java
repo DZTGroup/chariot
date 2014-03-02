@@ -33,28 +33,29 @@ public class DependencyAnalyzer {
             }else{
                 rule = temp.get(md.ruleId);
             }
-            rule.addCondition(md.question,md.optionId);
+            rule.addCondition(md);
         }
         return rules;
     }
 
 
     class Rule{
-        public Long id;
+        public Long ruleId;
         public List<Map<String,Object>> conditions;
 
-        public Rule(Long id){
-            this.id = id;
+        public Rule(Long ruleId){
+            this.ruleId = ruleId;
             conditions = new ArrayList<Map<String,Object>>();
         }
 
-        public void addCondition(Question question,Long optionIndex){
-            QuestionDescription qd = QuestionDescription.parse(question.description);
+        public void addCondition(ModuleDependency moduleDependency){
+            QuestionDescription qd = QuestionDescription.parse(moduleDependency.question.description);
             Map<String,Object> map = new HashMap<String,Object>();
-            map.put("questionId",question.id);
+            map.put("questionId",moduleDependency.question.id);
             map.put("questionContent",qd.content);
             map.put("questionOptions",qd.options);
-            map.put("questionSelect",optionIndex);
+            map.put("questionSelect",moduleDependency.optionId);
+            map.put("id",moduleDependency.id);
 
             conditions.add(map);
         }

@@ -15,6 +15,8 @@ POST    /document/delete                   controllers.Documents.delete()
 POST    /document/create                   controllers.Documents.createFolder()
 POST    /document/preview                  controllers.Documents.getPreviewUrl()
 POST    /document/dependency               controllers.Documents.getDependency()
+POST    /document/dependency/condition/add           controllers.Documents.addCondition()
+POST    /document/dependency/condition/delete        controllers.Documents.deleteCondition()
 
 #Page
 GET     /page/:id                          controllers.Page.index(id:Long)
