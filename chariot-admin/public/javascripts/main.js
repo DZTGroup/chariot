@@ -229,8 +229,10 @@
           this.btn = btn;
 
           this.model.on('change',function(){
-              btn.parent().next().remove()
-              btn.parent().after(self.displayView.render());
+              if(btn){
+                  btn.parent().next().remove();
+                  btn.parent().after(self.displayView.render());
+              }
           });
       };
       Controller.prototype.edit = function(){
@@ -262,9 +264,13 @@
               data:data,
               type:"POST",
               dataType:"json",
-              success:function(){
+              success:function(res){
+                  if(res.code===200){
+                      data.id = res.data.id;
+                  }
                   self.view.modal.hide();
                   self.model.set(data);
+                  self.trigger('save',self.model);
               }
           });
       };
@@ -307,6 +313,8 @@
               description:description
           };
       };
+      _.extend(Controller.prototype,Backbone.Events);
+
       return Controller;
   })();
 
@@ -326,6 +334,7 @@
   });
 
   window.Modal=Modal;
+  window.Question = Question;
 
 }).call(this);
 
@@ -643,4 +652,174 @@
         });
     }
 
+})();
+
+(function(){
+    //模块依赖规则
+    var getRules = function(documentId,id,onSuc){
+        $.ajax({
+            url:'/document/dependency',
+            data:{
+                documentId:documentId,
+                moduleId:id
+            },
+            dataType:'json',
+            type:"POST",
+            success:function(res){
+                console.log(res);
+                res.data.questionList = res.data.questionList.filter(function(q){
+                    q.description = JSON.parse(q.description);
+                    return q.type === "choice" || q.type==="mutichoice";
+                });
+                onSuc(res);
+            },
+            error:function(){
+            }
+        });
+    };
+
+    var template = '<div><ul class="d_rule_list">\
+                    <%rules.forEach(function(rule,i){%>\
+                        <li data-index="<%=i%>">如果</li>\
+                    <%});%>\
+                    </ul>\
+                    <div>当以上任意条件满足时，显示该模块</div>\
+    </div>';
+    var conditionTemplate = '<div class="J_list"><%conditions.forEach(function(c,i){%>\
+                                <%if(i>0){%> <p>并且</p><%}%>\
+                                <div>当问题：<strong><%=c.questionContent%></strong>选择了答案<strong><%=c.questionOptions[c.questionSelect]%></strong></div>\
+                            <%});%></div><div><a class="J_add" href="javascript:;">添加</a></div>';
+    var questionListTpl = '<div><%=prefix%>当问题：<select><%questionList.forEach(function(q){%>\
+                            <option value="<%=q.id%>"><%=q.description.content%></option>\
+    <%});%></select>选择了答案<div class="J_options"></div></div>';
+    var optionTpl = '<%description.options.forEach(function(option,i){%>\
+            <p><label><input type="radio" name="<%=id%>" <%if(i==0){%>checked<%}%> /><%=option%></label></p>\
+    <%});%>';
+    var render = function(template,data){
+        return _.template(template,data);
+    };
+
+    window.Rules = {
+        edit:function(documentId,id){
+            getRules(documentId,id,function(data){
+                var model = new Modal(render(template,data.data),'编辑依赖规则');
+                Rules.data = data.data;
+                Rules.events(model.el);
+            });
+        },
+        events:function(el){
+            el.find('.d_rule_list li').click(Rules.editRule);
+        },
+        editRule:function(){
+            var index = $(this).data('index');
+            var ruleData = Rules.data.rules[index];
+            var modal = new Modal(render(conditionTemplate, ruleData),'编辑条件');
+            modal.el.find('.J_add').on('click',function(){
+                modal.el.find('.J_list').append(Rules.createCondition(!!ruleData.conditions.length));
+            });
+            modal.on('save',function(){
+
+            });
+        },
+        createCondition:function(hasAnd){
+            Rules.data.prefix = hasAnd?'<p>并且</p>':"";
+            var html = _.template(questionListTpl,Rules.data);
+            var el = $(html);
+            el.find('select').change(function(){
+                var index = this.selectedIndex;
+                el.find('.J_options').html(_.template(optionTpl,Rules.data.questionList[index]));
+            });
+            el.find('.J_options').html(_.template(optionTpl,Rules.data.questionList[0]));
+            return el;
+        },
+        save:function(){
+        }
+    };
+})();
+
+(function(){
+    //编辑文档级问题
+
+    var listTpl = '<p><a href="javascript:;" class="J_add">添加问题</a></p><ul><%data.forEach(function(item){%>\
+                <li data-id="<%=item.questionId%>"><%=item.question.description.content%></li>\
+    <%});%></ul>';
+    var ModuleQuestion = function(moduleId){
+        this.moduleId = moduleId;
+    };
+
+    ModuleQuestion.prototype.edit = function(){
+        var self = this;
+        $.ajax({
+            url:"/documentquestions/"+this.moduleId,
+            type:"GET",
+            dataType:"json",
+            success:function(res){
+                self.showList(res);
+            }
+        });
+    };
+    ModuleQuestion.prototype.render = function(data){
+        return _.template(listTpl,data);
+    };
+    ModuleQuestion.prototype.showList = function(data){
+        var self = this;
+        data.data.forEach(function(item){
+            try{
+                item.question.description = JSON.parse(item.question.description);
+            }catch(e){}
+        });
+        var modal = this.modal = new Modal(self.render(data),'所有问题');
+        modal.el.find('.J_add').click(function(){
+            self.add();
+        });
+        modal.el.on('click','li',function(e){
+            self.editQuestion($(this));
+        });
+        modal.on('save',function(){
+            modal.hide();
+
+        });
+    };
+    ModuleQuestion.prototype.add = function(){
+        var self = this;
+        var q = new Question({
+            id:"new"
+        });
+        q.edit();
+        q.on('save',function(model){
+            var description = JSON.parse(model.get('description'));
+            //保存成功,显示这个问题
+            self.modal.el.find('ul').append('<li data-id="'+model.get('id')+'">'+description.content+'</li>');
+            self.save(model.get('id'));
+        });
+    };
+
+    ModuleQuestion.prototype.editQuestion = function(el){
+        //编辑问题
+        var q = new Question({
+            id:el.data('id')
+        });
+        q.edit();
+        q.on('save',function(model){
+            var description = JSON.parse(model.get('description'));
+            el.html(description.content);
+        });
+    };
+
+    ModuleQuestion.prototype.save = function(questionId){
+        //保存问题关系
+        $.ajax({
+            url:"modulequestionsave",
+            data:{
+                moduleId:this.moduleId,
+                questionId:questionId
+            },
+            type:"POST",
+            success:function(){
+            }
+        });
+    };
+
+
+    window.ModuleQuestion = ModuleQuestion;
 })();

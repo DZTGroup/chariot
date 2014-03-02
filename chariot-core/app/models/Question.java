@@ -2,8 +2,7 @@ package models;
 
 import play.db.ebean.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -20,6 +19,8 @@ public class Question extends Model {
     public String description;
 
     public String type;
+
+
 
     public Question(String id, String description, String type) {
         //description is json

@@ -5,6 +5,8 @@ package models.template;
  */
 
 
+import scala.reflect.internal.SymbolTable;
+
 import java.util.*;
 
 public class Module {
@@ -23,29 +25,74 @@ public class Module {
     }
 
     public List<Question> getQuestionList(){
-        List<Question> list= new ArrayList<Question>();
+        //顶层的问题列表
+        final List<Question> list= new ArrayList<Question>();
 
-        if(this.list!=null){
-            for(Object o:this.list){
-                if(o instanceof Question){
-                    list.add((models.template.Question)o);
-                }
+        travers(this,new TraversImpl() {
+            @Override
+            public void apply(Question question) {
+                list.add(question);
             }
-        }
+
+            @Override
+            public void apply(Module module) {
+            }
+
+            @Override
+            public boolean shouldEnter(Module module) {
+                return false;
+            }
+        });
 
         return list;
     }
 
     public List<Module> getModuleList(){
-        List<Module> list= new ArrayList<Module>();
+        //顶层的module list
 
-        if(this.list!=null){
-            for(Object o:this.list){
-                if(o instanceof Module){
-                    list.add((Module)o);
+        final List<Module> list= new ArrayList<Module>();
+        travers(this,new TraversImpl() {
+            @Override
+            public void apply(Question question) {
+            }
+
+            @Override
+            public void apply(Module module) {
+                list.add(module);
+            }
+
+            @Override
+            public boolean shouldEnter(Module module) {
+                return false;
+            }
+        });
+
+        return list;
+    }
+
+    public List<models.Question> getQuestionExcept(Long moduleId){
+        //获取除了 moduleId 以外的所有问题
+        final List<models.Question> list = new ArrayList<models.Question>();
+        final Long id = moduleId;
+
+        travers(this,new TraversImpl() {
+            @Override
+            public void apply(Question question) {
+                models.Question q = models.Question.getById(question.questionId);
+                if(q!=null){
+                    list.add(q);
                 }
             }
-        }
+
+            @Override
+            public void apply(Module module) {
+            }
+
+            @Override
+            public boolean shouldEnter(Module module) {
+                return !module.id.equals(id);
+            }
+        });
 
         return list;
     }
@@ -72,4 +119,23 @@ public class Module {
         return null;
     }
 
+    public static interface TraversImpl{
+        void apply(Question question);
+        void apply(Module module);
+
+        boolean shouldEnter(Module module);
+    }
+
+    public static void travers(Module module,TraversImpl t){
+        for(Object o : module.list){
+            if(o instanceof Module){
+                t.apply((Module)o);
+                if(t.shouldEnter((Module)o)){
+                    travers((Module)o,t);
+                }
+            }else if(o instanceof Question){
+                t.apply((Question)o);
+            }
+        }
+    }
 }

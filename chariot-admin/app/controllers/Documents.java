@@ -1,15 +1,18 @@
 package controllers;
 
+import models.Question;
+import models.template.*;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
+import sun.util.calendar.LocalGregorianCalendar;
 import util.Ajax;
 import models.*;
 import play.Logger;
 import play.mvc.*;
+import util.DependencyAnalyzer;
 import views.html.dashboard;
 import views.html.documents.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.aperture.docx.templating.api.DocxTemplatingService;
 
@@ -145,7 +148,47 @@ public class Documents extends Controller {
             Logger.error(e.getMessage());
             return internalServerError();
         }
+    }
 
+    public static Result getDependency() {
 
+        Http.RequestBody body = request().body();
+        Map<String, String[]> map = body.asFormUrlEncoded();
+        Ajax ajax = new Ajax();
+
+        String id = map.get("documentId")[0];
+        String moduleId = map.get("moduleId")[0];
+
+        DependencyAnalyzer da = new DependencyAnalyzer(Long.parseLong(moduleId));
+
+        Map<String , Object> result = new HashMap<String,Object>();
+
+        result.put("rules",da.findRules());
+        result.put("questionList",availableQuestionList(Long.parseLong(id), Long.parseLong(moduleId)));
+
+        ajax.setCode(200);
+        ajax.setData(result);
+        return ok(ajax.toJson());
+    }
+
+    private static List<Question> availableQuestionList(Long documentId, Long moduleId){
+        //获取一个模块可依赖的问题list
+        List<Question> list = new ArrayList<Question>();
+
+        try{
+            //文档中的所有问题
+            Date now = new Date();
+            models.template.Module document = DocxTemplatingService.analyzeModule(documentId);
+            list = document.getQuestionExcept(moduleId);
+
+            //文档级别的问题
+            for(ModuleQuestion mq: ModuleQuestion.findByModuleId(documentId)){
+                list.add(mq.question);
+            }
+        }catch (Exception e){
+            Logger.error(e.getMessage());
+        }
+
+        return list;
     }
 }

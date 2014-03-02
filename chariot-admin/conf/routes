@@ -14,6 +14,7 @@ POST    /document/changedir                controllers.Documents.changeDir()
 POST    /document/delete                   controllers.Documents.delete()
 POST    /document/create                   controllers.Documents.createFolder()
 POST    /document/preview                  controllers.Documents.getPreviewUrl()
+POST    /document/dependency               controllers.Documents.getDependency()
 
 #Page
 GET     /page/:id                          controllers.Page.index(id:Long)
@@ -43,6 +44,8 @@ GET /service/download/:filename/:id		controllers.Upload.fetchDocument(filename: 
 #Questions
 GET     /question/:id               controllers.Questions.question(id:String)
 POST    /questionsave               controllers.Questions.saveQuestion
+GET     /documentquestions/:id      controllers.Questions.getDocumentQuestions(id:Long)
+POST     /modulequestionsave        controllers.Questions.saveModuleQuestion
 
 #Test stub
 GET		/parse/*name				controllers.Application.parse(name:String)
