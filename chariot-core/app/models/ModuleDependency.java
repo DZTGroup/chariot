@@ -36,6 +36,7 @@ public class ModuleDependency extends Model {
     public long optionId;
 
     @ManyToOne
+    @JoinColumn(name="question_id",insertable = false,updatable = false)
     public Question question;
 
     public ModuleDependency(){

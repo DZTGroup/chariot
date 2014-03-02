@@ -680,20 +680,21 @@
 
     var template = '<div><ul class="d_rule_list">\
                     <%rules.forEach(function(rule,i){%>\
-                        <li data-index="<%=i%>">如果</li>\
+                        <li data-index="<%=i%>" data-ruleid="<%=rule.id%>">如果</li>\
                     <%});%>\
                     </ul>\
                     <div>当以上任意条件满足时，显示该模块</div>\
+                    <div><a class="J_add">添加</a></div>\
     </div>';
     var conditionTemplate = '<div class="J_list"><%conditions.forEach(function(c,i){%>\
                                 <%if(i>0){%> <p>并且</p><%}%>\
-                                <div>当问题：<strong><%=c.questionContent%></strong>选择了答案<strong><%=c.questionOptions[c.questionSelect]%></strong></div>\
+                                <div>当问题：<strong><%=c.questionContent%></strong>选择了答案<strong><%=c.questionOptions[c.questionSelect]%></strong><a class="J_del" href="javascript:;" data-id="<%=c.id%>">删除</a></div>\
                             <%});%></div><div><a class="J_add" href="javascript:;">添加</a></div>';
-    var questionListTpl = '<div><%=prefix%>当问题：<select><%questionList.forEach(function(q){%>\
+    var questionListTpl = '<div class="J_new"><%=prefix%>当问题：<select><%questionList.forEach(function(q){%>\
                             <option value="<%=q.id%>"><%=q.description.content%></option>\
     <%});%></select>选择了答案<div class="J_options"></div></div>';
     var optionTpl = '<%description.options.forEach(function(option,i){%>\
-            <p><label><input type="radio" name="<%=id%>" <%if(i==0){%>checked<%}%> /><%=option%></label></p>\
+            <p><label><input type="radio" name="<%=id%>" <%if(i==0){%>checked<%}%> data-index="<%=i%>"/><%=option%></label></p>\
     <%});%>';
     var render = function(template,data){
         return _.template(template,data);
@@ -701,24 +702,74 @@
 
     window.Rules = {
         edit:function(documentId,id){
+            Rules.documentId = documentId;
+            Rules.moduleId = id;
             getRules(documentId,id,function(data){
-                var model = new Modal(render(template,data.data),'编辑依赖规则');
+                var modal = new Modal(render(template,data.data),'编辑依赖规则');
                 Rules.data = data.data;
-                Rules.events(model.el);
+                Rules.events(modal.el);
+                modal.on('save',Rules.save);
             });
         },
         events:function(el){
-            el.find('.d_rule_list li').click(Rules.editRule);
+            el.find('.d_rule_list li').click(function(){
+                var index = $(this).data('index');
+                var ruleId = $(this).data('ruleid');
+                var ruleData = Rules.data.rules[index];
+                Rules.editRule(ruleId,ruleData);
+            });
+            el.find('.J_add').click(Rules.addRule);
         },
-        editRule:function(){
-            var index = $(this).data('index');
-            var ruleData = Rules.data.rules[index];
+        addRule:function(){
+            //编辑空的rule
+            Rules.editRule("",{
+                conditions:[],
+                ruleId:""
+            });
+        },
+        editRule:function(ruleId,ruleData){
             var modal = new Modal(render(conditionTemplate, ruleData),'编辑条件');
             modal.el.find('.J_add').on('click',function(){
-                modal.el.find('.J_list').append(Rules.createCondition(!!ruleData.conditions.length));
+                var list = modal.el.find('.J_list')
+                list.append(Rules.createCondition(!!list.children().length));
+            });
+            modal.el.find('.J_del').on('click',function(){
+                var btn = $(this);
+                if(confirm('确定要删除这条规则吗?')){
+                    Rules.ajaxDeleteCondition(btn.data('id'),function(){
+                        btn.parent.remove();
+                    });
+                }
             });
             modal.on('save',function(){
-
+                modal.el.find('.J_new').each(function(i,newCondition){
+                    var id = $(newCondition).find('select').val();
+                    var option = $(newCondition).find('.J_options input:checked').data('index');
+                    Rules.ajaxAddCondition(ruleId,id,option);
+                    modal.hide();
+                });
+            });
+        },
+        ajaxAddCondition:function(ruleId,questionId,optionId){
+            $.ajax({
+                url:"/document/dependency/condition/add",
+                data:{
+                    moduleId:Rules.moduleId,
+                    ruleId:ruleId,
+                    questionId:questionId,
+                    optionId:optionId
+                },
+                type:"POST"
+            });
+        },
+        ajaxDeleteCondition:function(id,cb){
+            $.ajax({
+                url:"/document/dependency/condition/delete",
+                data:{
+                    id:id
+                },
+                type:"POST",
+                success:cb
             });
         },
         createCondition:function(hasAnd){
@@ -731,8 +782,6 @@
             });
             el.find('.J_options').html(_.template(optionTpl,Rules.data.questionList[0]));
             return el;
-        },
-        save:function(){
         }
     };
 })();
