@@ -7,8 +7,6 @@ import java.util.concurrent.Callable;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
-import configs.Constant;
-
 import models.EndUser;
 import play.cache.Cache;
 import play.data.Form;
@@ -82,11 +80,12 @@ public class Application extends Controller {
  			String url=null; 			
  			UUID uuid=UUID.randomUUID();
  			Cache.set(uuid.toString(),registerForm.get().email, 15 * 60);
- 			url=Constant.WEBSITE_ADDRESS+"/verify/"+uuid;
+			// use request (http.request : http.requestHeaader).host() instead of config
+ 			url= request().host() + "/verify/"+uuid;
  			//generate a register verify url
  			return ok(registerSuccess.render(url));
  			
- 			//todo:call the java mail interface to send a email that contains this url to the user's register email address
+ 			// TODO: call the java mail interface to send a email that contains this url to the user's register email address
  		}
  	}
 
