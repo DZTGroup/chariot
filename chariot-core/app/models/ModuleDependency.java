@@ -4,6 +4,8 @@ package models;
 import javax.persistence.*;
 
 import play.db.ebean.*;
+import play.Logger;
+
 import play.data.validation.*;
 import scala.Int;
 import sun.util.logging.resources.logging;
@@ -37,7 +39,6 @@ public class ModuleDependency extends Model {
     public Question question;
 
     public ModuleDependency(){
-
     }
 
     public static Model.Finder<Long, ModuleDependency> find = new Model.Finder<Long, ModuleDependency>(Long.class, ModuleDependency.class);
@@ -46,7 +47,18 @@ public class ModuleDependency extends Model {
     public static List<ModuleDependency> findByModuleId(Long id){
         return find.fetch("question").where().eq("module_id",id).findList();
     }
-
-
+	
+	// resolve dependency
+	public String getRequiredOption(){
+		String[] options = this.question.getQuestionDescription().options;
+		
+		if ( options != null && this.optionId < options.length ){
+			return options[this.optionId];
+		}
+		
+		Logger.error("no valid module dependency, id:" + id);
+		
+		return null;
+	}
 }
 

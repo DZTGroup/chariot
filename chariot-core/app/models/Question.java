@@ -47,5 +47,10 @@ public class Question extends Model {
         q.save();
         return q;
     }
+	
+	// get Question Description
+	public QuestionDescription getQuestionDescription(){
+		return QuestionDescription.parse(this.description);
+	}
 }
 
