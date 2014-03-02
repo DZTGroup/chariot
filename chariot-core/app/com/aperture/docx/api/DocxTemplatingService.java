@@ -1,8 +1,9 @@
-package com.aperture.docx.templating.api;
+package com.aperture.docx.api;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import models.PageContent;
@@ -11,6 +12,9 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 // use play cache
 import play.cache.Cache;
+
+// use play log
+import play.Logger;
 
 import com.aperture.docx.templating.Module;
 import com.aperture.docx.templating.ModuleCompiler;
@@ -76,8 +80,18 @@ public class DocxTemplatingService {
 			}
 		}
 	}
-
-	public static String getCompiledModule(long id) throws Docx4JException {
+	// ************************************************************************************
+	
+	// module compilers
+	private static interface WithModuleCompiler<V> {
+		V apply(ModuleCompiler mc, Module root) throws Docx4JException;
+	}
+	
+	// use this as pattern
+	private static <V> V compileModule(long id, Map<String, String> answers, 
+	WithModuleCompiler<V> todo)throws Docx4JException {
+		
+		/*
 		ModuleCompiler mc = new ModuleCompiler();
 		Module m = ModuleIO.loadModule(id);
 
@@ -90,43 +104,65 @@ public class DocxTemplatingService {
 			return path;
 		}
 
+		return null;*/
+			
+		
+		Module m = ModuleIO.loadModule(id);
+		if ( m != null){
+			ModuleCompiler mc = new ModuleCompiler();
+			mc.pendModule(m);
+			
+			if ( answers != null ){
+				mc.detemplate(answers);
+			}
+			
+			return todo.apply(mc, m);
+		}
+		
 		return null;
+	}
+
+	public static String getCompiledModule(long id) throws Docx4JException {
+		return compileModule(id, null, new WithModuleCompiler<String>(){
+			public String apply(ModuleCompiler mc, Module root) throws Docx4JException {
+				String path = settings.Constant.USER_DIR + "/" + root.getName() + ".docx";
+				mc.save(path);
+
+				return path;	
+			}
+		});
 	}
 	
 	public static String getFinalDoc(long id, Map<String, String> answers) throws Docx4JException {
-		ModuleCompiler mc = new ModuleCompiler();
-		Module m = ModuleIO.loadModule(id);
-
-		if (m != null) {
-			mc.pendModule(m);
-			mc.detemplate(answers);
-
-			return mc.convertToPdf("generated_" + m.getUpdateTag());
-		}
-
-		return null;
+		return compileModule(id, answers, new WithModuleCompiler<String>(){
+			public String apply(ModuleCompiler mc, Module root) throws Docx4JException {
+				return mc.convertToPdf("generated_" + root.getUpdateTag());
+			}
+		});
 	}
 	
 	public static String getPdfPreview(long id) throws Docx4JException {
-		String tag = ModuleIO.loadModuleUpdateTag(id);
+		// cache key
+		final String tag = ModuleIO.loadModuleUpdateTag(id);
+		// check
+		if ( tag == null ) {
+			Logger.warn("document module id:"+id+" not found.");
+			return null;
+		}
+		
 		java.io.File cached = new java.io.File(settings.Constant.USER_DIR + "/preview_" + tag + ".pdf");
 		if ( cached.isFile() && cached.canRead() ){
 			return "/preview/preview_" + tag;
 		}
 		
 		// not found, generate it
-		ModuleCompiler mc = new ModuleCompiler();
-		Module m = ModuleIO.loadModule(id);
+		return compileModule(id, null, new WithModuleCompiler<String>(){
+			public String apply(ModuleCompiler mc, Module root) throws Docx4JException{
+				mc.convertToPdf("preview_" + root.getUpdateTag(), settings.Constant.USER_DIR);
 
-		if (m != null) {
-			mc.pendModule(m);
-			
-			mc.convertToPdf("preview_" + m.getUpdateTag(), settings.Constant.USER_DIR);
-
-			return "/preview/preview_"+m.getUpdateTag();
-		}
-		
-		return null;
+				return "/preview/preview_" + root.getUpdateTag();
+			}
+		});
 	}
 
 	public static models.template.Module analyzeModule(long id)
@@ -144,5 +180,9 @@ public class DocxTemplatingService {
 		}
 
 		return null;
+	}
+	
+	public static String generateQuestionUUID() {
+		return UUID.randomUUID().toString();
 	}
 }

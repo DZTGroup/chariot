@@ -14,7 +14,7 @@ import views.html.documents.*;
 
 import java.util.*;
 
-import com.aperture.docx.templating.api.DocxTemplatingService;
+import com.aperture.docx.api.DocxTemplatingService;
 
 @Security.Authenticated(Secured.class)
 public class Documents extends Controller {

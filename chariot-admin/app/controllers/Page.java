@@ -1,6 +1,6 @@
 package controllers;
 
-import com.aperture.docx.templating.api.DocxTemplatingService;
+import com.aperture.docx.api.DocxTemplatingService;
 import com.google.gson.Gson;
 import models.File;
 import models.*;

@@ -191,6 +191,6 @@ public class Application extends Controller {
 	}
 	
 	public static Result test() {
-		return ok(settings.Constant.LIBRE_OFFICE);
+		return ok(request().host());
 	}
 }

@@ -12,7 +12,7 @@ import java.util.Map;
 import java.io.File;
 import java.io.IOException;
 
-import com.aperture.docx.templating.api.DocxTemplatingService;
+import com.aperture.docx.api.DocxTemplatingService;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
 /**

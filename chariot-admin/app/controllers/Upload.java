@@ -4,7 +4,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
-import com.aperture.docx.templating.api.DocxTemplatingService;
+import com.aperture.docx.api.DocxTemplatingService;
 
 
 import play.Logger;
@@ -50,12 +50,12 @@ public class Upload extends Controller {
 			e.printStackTrace();
 		}
 		if(type.equals("doc")){
-			com.aperture.docx.templating.api.DocxTemplatingService.parseDocument(
+			com.aperture.docx.api.DocxTemplatingService.parseDocument(
 					DocxTemplatingService.DocType.DOC, fileName, myUploadPath + "/"
 							+ fileName);
 		}
 		else if(type.equals("module")){
-			com.aperture.docx.templating.api.DocxTemplatingService.parseDocument(
+			com.aperture.docx.api.DocxTemplatingService.parseDocument(
 					DocxTemplatingService.DocType.MODULE, fileName, myUploadPath + "/"
 							+ fileName);
 		}
@@ -109,7 +109,7 @@ public class Upload extends Controller {
 
 		response().setHeader("Content-Disposition",
 				"attachment;filename=\"" + fileName + "\"");
-		String path = com.aperture.docx.templating.api.DocxTemplatingService.getCompiledModule(id);
+		String path = com.aperture.docx.api.DocxTemplatingService.getCompiledModule(id);
 		if ( path != null) {
 			return ok(new File(path));
 		}
