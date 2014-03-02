@@ -11,7 +11,7 @@ public class And implements Statement {
 		this.slist = l;
 	}
 	
-	boolean apply(Map<String, String> answers){
+	public boolean apply(Map<String, String> answers){
 		// true for empty list
 		if( slist.size() == 0 ) return true;
 		

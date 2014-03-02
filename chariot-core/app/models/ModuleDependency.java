@@ -27,13 +27,13 @@ public class ModuleDependency extends Model {
     public Long moduleId;
 
     @Constraints.Required
-    public long ruleId;
+    public Long ruleId;
 
     @Constraints.Required
     public String questionId;
 
     @Constraints.Required
-    public long optionId;
+    public Long optionId;
 
     @ManyToOne
     @JoinColumn(name="question_id",insertable = false,updatable = false)
@@ -42,19 +42,29 @@ public class ModuleDependency extends Model {
     public ModuleDependency(){
     }
 
-    public static Model.Finder<Long, ModuleDependency> find = new Model.Finder<Long, ModuleDependency>(Long.class, ModuleDependency.class);
-
+	// find object itself is a query.
+    public static Model.Finder<Long, ModuleDependency> find 
+		= new Model.Finder<Long, ModuleDependency>(Long.class, ModuleDependency.class);
 
     public static List<ModuleDependency> findByModuleId(Long id){
         return find.fetch("question").where().eq("module_id",id).findList();
+    }
+	
+	// with cache
+    public static List<ModuleDependency> findByModuleId_c(Long id){
+		// cache setting, use ebean query cache
+        return find.setUseQueryCache(true).setReadOnly(false).fetch("question").where().eq("module_id",id).findList();
     }
 	
 	// resolve dependency
 	public String getRequiredOption(){
 		String[] options = this.question.getQuestionDescription().options;
 		
-		if ( options != null && this.optionId < options.length ){
-			return options[this.optionId];
+		long index = this.optionId.longValue();
+		if ( options != null && index < options.length && index > 0){
+			
+			
+			return options[(int)index];
 		}
 		
 		Logger.error("no valid module dependency, id:" + id);

@@ -20,6 +20,8 @@ import com.aperture.docx.templating.Module;
 import com.aperture.docx.templating.ModuleCompiler;
 import com.aperture.docx.templating.ModuleIO;
 
+import com.aperture.docx.templating.dependency.DependencyFactory;
+
 public class DocxTemplatingService {
 	public enum DocType {
 		DOC("doc"), MODULE("module");
@@ -88,32 +90,24 @@ public class DocxTemplatingService {
 	}
 	
 	// use this as pattern
-	private static <V> V compileModule(long id, Map<String, String> answers, 
-	WithModuleCompiler<V> todo)throws Docx4JException {
-		
-		/*
-		ModuleCompiler mc = new ModuleCompiler();
-		Module m = ModuleIO.loadModule(id);
-
-		if (m != null) {
-			mc.pendModule(m);
-			
-			String path = settings.Constant.USER_DIR + "/" + m.getName() + ".docx";
-			mc.save(path);
-
-			return path;
-		}
-
-		return null;*/
-			
+	private static <V> V compileModule(long id, final Map<String, String> answers, WithModuleCompiler<V> todo)
+	throws Docx4JException {
 		
 		Module m = ModuleIO.loadModule(id);
 		if ( m != null){
 			ModuleCompiler mc = new ModuleCompiler();
-			mc.pendModule(m);
 			
-			if ( answers != null ){
+			if ( answers != null){
+				// pend with dependency condition
+				mc.pendModule(m, new ModuleCompiler.PendRequirement(){
+					public boolean apply(Module m){
+						return DependencyFactory.createDependencyStatementFor(m.getId()).apply(answers);
+					}
+				});
 				mc.detemplate(answers);
+			} else {
+				// simply pend
+				mc.pendModule(m);
 			}
 			
 			return todo.apply(mc, m);
@@ -129,14 +123,6 @@ public class DocxTemplatingService {
 				mc.save(path);
 
 				return path;	
-			}
-		});
-	}
-	
-	public static String getFinalDoc(long id, Map<String, String> answers) throws Docx4JException {
-		return compileModule(id, answers, new WithModuleCompiler<String>(){
-			public String apply(ModuleCompiler mc, Module root) throws Docx4JException {
-				return mc.convertToPdf("generated_" + root.getUpdateTag());
 			}
 		});
 	}
@@ -161,6 +147,16 @@ public class DocxTemplatingService {
 				mc.convertToPdf("preview_" + root.getUpdateTag(), settings.Constant.USER_DIR);
 
 				return "/preview/preview_" + root.getUpdateTag();
+			}
+		});
+	}
+	
+	// with answers
+	// build doc based on answers and dependencies
+	public static String getFinalDoc(long id, Map<String, String> answers) throws Docx4JException {
+		return compileModule(id, answers, new WithModuleCompiler<String>(){
+			public String apply(ModuleCompiler mc, Module root) throws Docx4JException {
+				return mc.convertToPdf("generated_" + root.getUpdateTag());
 			}
 		});
 	}

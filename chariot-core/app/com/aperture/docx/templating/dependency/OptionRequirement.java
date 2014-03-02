@@ -6,7 +6,7 @@ import models.Question;
 import models.QuestionDescription;
 import models.ModuleDependency;
 
-public interface OptionRequirement implements Statement{
+public class OptionRequirement implements Statement{
 	String key;
 	String required;
 	
@@ -15,7 +15,7 @@ public interface OptionRequirement implements Statement{
 		required = dependency.getRequiredOption();
 	}
 	
-	boolean apply(Map<String, String> answers){
+	public boolean apply(Map<String, String> answers){
 		// check
 		if ( required == null ) return true;
 		
