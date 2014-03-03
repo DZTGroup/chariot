@@ -49,6 +49,9 @@ public class DocxTemplatingService {
 				if (casted != null)
 					m.list.add(casted);
 			}
+			
+			// dependency
+			m.statement = DependencyFactory.createDependencyStatementFor(m.id);
 
 			return m;
 		} else if (o instanceof Module.QuestionModel) {
