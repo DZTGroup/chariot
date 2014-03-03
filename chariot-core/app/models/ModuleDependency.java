@@ -53,7 +53,7 @@ public class ModuleDependency extends Model {
 	// with cache
     public static List<ModuleDependency> findByModuleId_c(Long id){
 		// cache setting, use ebean query cache
-        return find.setUseQueryCache(true).setReadOnly(false).fetch("question").where().eq("module_id",id).findList();
+        return find.setUseQueryCache(true).fetch("question").where().eq("module_id",id).findList();
     }
 	
 	// resolve dependency

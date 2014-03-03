@@ -9,14 +9,16 @@ import scala.reflect.internal.SymbolTable;
 
 import java.util.*;
 
+import com.aperture.docx.templating.dependency.Statement;
+
 public class Module {
     public String name;
     public String text;
     public Long id;
 
     public List<Object> list;
-
-
+	
+	public Statement statement;
 
     public Module(String name, String text, List<Object> list){
         this.name = name;
