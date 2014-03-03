@@ -49,10 +49,15 @@
 
 //依赖
 .d_rule_list{
+    padding-left:10px;
     li{
         padding:5px 0;
         line-height:20px;
         cursor:pointer;
+        white-space: nowrap;
+        word-wrap: normal;
+        text-overflow: ellipsis;
+        overflow: hidden;
         &:hover{
             background:#dbdbdb;
         }
