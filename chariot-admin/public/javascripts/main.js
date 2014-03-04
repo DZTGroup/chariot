@@ -666,7 +666,6 @@
             dataType:'json',
             type:"POST",
             success:function(res){
-                console.log(res);
                 res.data.questionList = res.data.questionList.filter(function(q){
                     q.description = JSON.parse(q.description);
                     return q.type === "choice" || q.type==="mutichoice";
@@ -680,10 +679,12 @@
 
     var template = '<div><ul class="d_rule_list">\
                     <%rules.forEach(function(rule,i){%>\
-                        <li data-index="<%=i%>" data-ruleid="<%=rule.id%>">如果</li>\
+                        <li data-index="<%=i%>" data-ruleid="<%=rule.id%>">★ 如果 \
+                        <%=rule.conditions[0].questionContent%> 选择了答案 <%=rule.conditions[0].questionOptions[rule.conditions[0].questionSelect]%>\
+                        </li>\
                     <%});%>\
                     </ul>\
-                    <div>当以上任意条件满足时，显示该模块</div>\
+                    <div>当以上<b>任意条件</b>满足时，显示该模块</div>\
                     <div><a class="J_add">添加</a></div>\
     </div>';
     var conditionTemplate = '<div class="J_list"><%conditions.forEach(function(c,i){%>\
@@ -692,7 +693,7 @@
                             <%});%></div><div><a class="J_add" href="javascript:;">添加</a></div>';
     var questionListTpl = '<div class="J_new"><%=prefix%>当问题：<select><%questionList.forEach(function(q){%>\
                             <option value="<%=q.id%>"><%=q.description.content%></option>\
-    <%});%></select>选择了答案<div class="J_options"></div></div>';
+    <%});%></select>选择了答案<a href="javascript:;" class="J_delnew">删除</a><div class="J_options"></div></div>';
     var optionTpl = '<%description.options.forEach(function(option,i){%>\
             <p><label><input type="radio" name="<%=id%>" <%if(i==0){%>checked<%}%> data-index="<%=i%>"/><%=option%></label></p>\
     <%});%>';
@@ -705,7 +706,7 @@
             Rules.documentId = documentId;
             Rules.moduleId = id;
             getRules(documentId,id,function(data){
-                var modal = new Modal(render(template,data.data),'编辑依赖规则');
+                var modal =Rules.modal= new Modal(render(template,data.data),'编辑依赖规则');
                 Rules.data = data.data;
                 Rules.events(modal.el);
                 modal.on('save',Rules.save);
@@ -737,7 +738,7 @@
                 var btn = $(this);
                 if(confirm('确定要删除这条规则吗?')){
                     Rules.ajaxDeleteCondition(btn.data('id'),function(){
-                        btn.parent.remove();
+                        btn.parent().remove();
                     });
                 }
             });
@@ -746,8 +747,11 @@
                     var id = $(newCondition).find('select').val();
                     var option = $(newCondition).find('.J_options input:checked').data('index');
                     Rules.ajaxAddCondition(ruleId,id,option);
-                    modal.hide();
                 });
+                modal.hide();
+                Rules.modal.hide();
+
+                alert('保存成功');
             });
         },
         ajaxAddCondition:function(ruleId,questionId,optionId){
@@ -779,8 +783,14 @@
             el.find('select').change(function(){
                 var index = this.selectedIndex;
                 el.find('.J_options').html(_.template(optionTpl,Rules.data.questionList[index]));
+                el.find('.J_options input').attr('name',Math.random());
             });
             el.find('.J_options').html(_.template(optionTpl,Rules.data.questionList[0]));
+            el.find('.J_options input').attr('name',Math.random());
+
+            el.find('.J_delnew').click(function(){
+                el.remove();
+            });
             return el;
         }
     };
