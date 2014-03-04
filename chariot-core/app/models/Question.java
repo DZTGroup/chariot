@@ -5,9 +5,12 @@ import play.db.ebean.Model;
 import javax.persistence.*;
 import java.util.List;
 
+import com.avaje.ebean.annotation.CacheStrategy;
+
 /**
  * Project entity managed by Ebean
  */
+@CacheStrategy (readOnly = false)
 @Entity 
 public class Question extends Model {
 

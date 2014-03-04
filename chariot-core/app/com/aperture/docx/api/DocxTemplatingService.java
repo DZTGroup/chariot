@@ -171,7 +171,8 @@ public class DocxTemplatingService {
 			String tag = m.getUpdateTag();
 			final Module thisModule = m;
 			
-			return Cache.getOrElse("analyse_"+tag, new Callable<models.template.Module>(){
+			return Cache.getOrElse( DocxTemplatingService.class.getName() + "_analyse_" + tag, 
+			new Callable<models.template.Module>(){
 				public models.template.Module call(){
 					return cast(thisModule.analyse());
 				}

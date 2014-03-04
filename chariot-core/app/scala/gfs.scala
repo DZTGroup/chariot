@@ -56,7 +56,7 @@ object Gfs {
 		
 		// TODO: add cache setting to some config
 		// caching
-		val data: Array[Byte] = Cache.getOrElse[Array[Byte]](key = "module_" + id, expiration = 12 * 3600) {
+		val data: Array[Byte] = Cache.getOrElse[Array[Byte]](key = this.getClass.getName + "_module_" + id, expiration = 12 * 3600) {
 			val maybeFile = gridFS.find(BSONDocument("_id" -> new BSONObjectID(id))).headOption
 		
 			Await.ready(maybeFile, Duration.Inf).value.get match {
