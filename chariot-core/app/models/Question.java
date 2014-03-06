@@ -12,7 +12,7 @@ import com.avaje.ebean.annotation.CacheStrategy;
 * Project entity managed by Ebean
 */
 @CacheStrategy (readOnly = false)
-	@Entity 
+@Entity 
 public class Question extends Model {
 
 	private static final long serialVersionUID = 1L;
