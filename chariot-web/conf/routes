@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /interview/:documentId/:pageId		controllers.Interview.question(documentId:Long,pageId:Int)
+POST    /interview/:documentId/:pageId		controllers.Interview.question(documentId:Long,pageId:Int)
 POST    /interview/:documentId/submit       controllers.Interview.submit(documentId:Long)
 
 # Map static resources from the /public folder to the /assets URL path

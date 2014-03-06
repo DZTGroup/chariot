@@ -48,7 +48,6 @@
 
     //go on button
 
-    $(".J_goon").click(getPageAnswer);
     $(".J_submit").click(function(){
         getPageAnswer();
         $('#J_answer').val(JSON.stringify(answers));

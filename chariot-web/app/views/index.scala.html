@@ -4,14 +4,16 @@
 	<section>
     <h1>请选择文档</h1>
 	@for(doc <- docs){
+        <form action="/interview/@doc.documentId/0" method="post">
 		<dl>
 			<dt>@doc.name</dt>
 			<dd>
 				<p class="button">
-					<a href="/interview/@doc.documentId/0"><input type="button" value="创建" class="J_create" data-value="@doc.documentId" /></a>
+					<input type="submit" value="创建" class="J_create" data-value="@doc.documentId" />
 				</p>
 			</dd>
 		</dl>
+        </form>
 	}
 	</section>
 

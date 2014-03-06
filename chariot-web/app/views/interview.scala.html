@@ -1,19 +1,14 @@
-@(currentPageId:Integer,documentId:Long, documentName:String, questions:java.util.List[models.Question],size:Integer,user:EndUser)
+@(actionUrl:String,hasNext:Boolean, document:models.Module,pi:models.PageContent.PageItem, questions:java.util.List[models.Question],user:EndUser)
 
-@displayQuestion(questionId:String) = {
-	@defining(Question.getById(questionId)){ question=>
+@main(document.name,user){
 
-	}
-}
-
-
-@main(documentName,user){
-    <form action="/interview/@documentId/submit" method="post">
+    <form action="@actionUrl" method="post">
 	<section>
 		<h1>@pi.name</h1>
 		<div>@pi.desc</div>
-		@for(question <- questions){
+        @for(question <- questions){
             @if(question!=null){
+        @question.id
                 @defining(QuestionDescription.parse(question.description)){ d =>
                     <dl>
                         <dt>@d.content</dt>
@@ -48,9 +43,9 @@
             }
 		}
 
-		@if(currentPageId < size-1){
+		@if(hasNext){
 			<p class="buttons">
-				<a class="J_goon" href="/interview/@documentId/@(currentPageId+1)">继续</a>
+                <input type="submit" class="J_submit" value="继续">
 			</p>
 		}else{
 	        <p class="buttons">
@@ -64,5 +59,5 @@
 <script src="@routes.Assets.at("javascripts/jquery.cookie.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("javascripts/interview.js")" type="text/javascript"></script>
 <script>
-    Interview("@documentId");
+    Interview("@document.id");
 </script>
