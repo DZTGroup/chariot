@@ -11,6 +11,8 @@ import java.util.*;
 
 import com.aperture.docx.templating.dependency.Statement;
 
+import play.Logger;
+
 public class Module {
     public String name;
     public String text;
@@ -48,10 +50,32 @@ public class Module {
 
         return list;
     }
+	
+	public List<String> getAllQuestionIds(){
+        final List<String> list= new ArrayList<String>();
+
+        travers(this,new TraversImpl() {
+            @Override
+            public void apply(Question question) {
+                list.add(question.questionId);
+            }
+
+            @Override
+            public void apply(Module module) {
+            }
+
+            @Override
+            public boolean shouldEnter(Module module) {
+                return true;
+            }
+        });
+
+        return list;
+		
+	}
 
     public List<Module> getModuleList(){
         //顶层的module list
-
         final List<Module> list= new ArrayList<Module>();
         travers(this,new TraversImpl() {
             @Override
