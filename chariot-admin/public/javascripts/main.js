@@ -151,7 +151,7 @@
       var TYPES = {
           blank:"填空",
           choice:"单选",
-          mutichoice:"多选"
+          multichoice:"多选"
       };
       var getIndex = function(i){
           return LETTERS.charAt(i);
@@ -674,7 +674,7 @@
                     try{
                         q.description = JSON.parse(q.description);
                     }catch(e){}
-                    return q.type === "choice" || q.type==="mutichoice";
+                    return q.type === "choice" || q.type==="multichoice";
                 });
                 onSuc(res);
             },

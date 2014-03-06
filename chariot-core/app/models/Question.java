@@ -51,6 +51,14 @@ public class Question extends Model {
         return q;
     }
 	
+	public static void batchImportQuestions(List<String> idList){
+		
+	}
+	
+	public boolean isEmpty() {
+		return this.type.equals("empty");
+	}
+	
 	// get Question Description
 	public QuestionDescription getQuestionDescription(){
 		return QuestionDescription.parse(this.description);
