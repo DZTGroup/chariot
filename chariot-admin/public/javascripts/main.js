@@ -190,7 +190,10 @@
           parse:function(res){
               if(res.code==200){
                   var data = res.data;
-                  var desc = JSON.parse(data.description);
+                  var desc = {};
+                  try{
+                      desc = JSON.parse(data.description);
+                  }catch(e){ }
                   data.desc = desc;
                   return data;
               }else {
@@ -667,7 +670,10 @@
             type:"POST",
             success:function(res){
                 res.data.questionList = res.data.questionList.filter(function(q){
-                    q.description = JSON.parse(q.description);
+                    q.description = {};
+                    try{
+                        q.description = JSON.parse(q.description);
+                    }catch(e){}
                     return q.type === "choice" || q.type==="mutichoice";
                 });
                 onSuc(res);
@@ -825,7 +831,9 @@
         data.data.forEach(function(item){
             try{
                 item.question.description = JSON.parse(item.question.description);
-            }catch(e){}
+            }catch(e){
+                item.question.description = {};
+            }
         });
         var modal = this.modal = new Modal(self.render(data),'所有问题');
         modal.el.find('.J_add').click(function(){
@@ -846,7 +854,10 @@
         });
         q.edit();
         q.on('save',function(model){
-            var description = JSON.parse(model.get('description'));
+            var description = {};
+            try{
+                description = JSON.parse(model.get('description'));
+            }catch(e){}
             //保存成功,显示这个问题
             self.modal.el.find('ul').append('<li data-id="'+model.get('id')+'">'+description.content+'</li>');
             self.save(model.get('id'));

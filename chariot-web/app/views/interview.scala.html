@@ -1,92 +1,53 @@
-@(currentPageId:Integer,documentId:Long, documentName:String, pi:models.PageContent.PageItem,size:Integer,user:EndUser)
-
-@import com.aperture.docx.api.DocxTemplatingService
+@(currentPageId:Integer,documentId:Long, documentName:String, questions:java.util.List[models.Question],size:Integer,user:EndUser)
 
 @displayQuestion(questionId:String) = {
 	@defining(Question.getById(questionId)){ question=>
-		@if(question!=null){
-			@defining(QuestionDescription.parse(question.description)){ d =>
-				<dl>
-					<dt>@d.content</dt>
-					<dd>
-						@defining(question.`type`){questionType =>
-							@questionType match{
-								case "choice" =>{
-										@for(option <- d.options){
-											<span><label>
-												<input class="J_question" type="radio" name="@question.id" value="@option">
-												@option
-											</label></span>
-										}
-								}
-								case "blank" =>{
-									<input class="J_question" name="@question.id" placeholder='Your Answer Here.' />
-								}
-								case "multichoice" =>{
-										@for(option <- d.options){
-											<span><label>
-												<input class="J_question" type="checkbox" name="@question.id" value="@option">
-												@option
-											</label></span>
-										}
-								}
-								case _ =>{}
-							}
-						}
-					</dd>
-				</dl>
-			}
-		}
+
 	}
 }
 
-@displayModule(list:java.util.List[Object]) = {
-	@for(obj <- list){
-		@obj match{
-			case question:models.template.Question =>{
-				@displayQuestion(question.questionId)
-			}
-			case module:models.template.Module =>{
-				@displayModule(module.list)
-			}
-			case _ =>{
-			}
-		}
-	}
-}
 
 @main(documentName,user){
     <form action="/interview/@documentId/submit" method="post">
 	<section>
 		<h1>@pi.name</h1>
 		<div>@pi.desc</div>
-		@defining(DocxTemplatingService.analyzeModule(documentId).list){rootList =>
-			@for(module <- pi.moduleList){
-				@defining(module.`type`){ t =>
-					@t match{
-						case "question" =>{
-							@displayQuestion(module.id)
-						}
-						case "module" =>{
-							@for(sub <- rootList){
-								@sub match{
-									case thisSub:models.template.Module =>{
-										@if(thisSub.id == Long.parseLong(module.id)){
-											@displayModule(thisSub.list)
-										}
-									}
-									case _ =>{
-									}
-								}							
-							}
-						}
-						case _ =>{
-						}
-					}
-				}
-			}
+		@for(question <- questions){
+            @if(question!=null){
+                @defining(QuestionDescription.parse(question.description)){ d =>
+                    <dl>
+                        <dt>@d.content</dt>
+                        <dd>
+                            @defining(question.`type`){questionType =>
+                                @questionType match{
+                                    case "choice" =>{
+                                        @for(option <- d.options){
+											<span><label>
+                                                <input class="J_question" type="radio" name="@question.id" value="@option">
+                                                @option
+                                            </label></span>
+                                        }
+                                    }
+                                    case "blank" =>{
+                                        <input class="J_question" name="@question.id" placeholder='Your Answer Here.' />
+                                    }
+                                    case "multichoice" =>{
+                                        @for(option <- d.options){
+											<span><label>
+                                                <input class="J_question" type="checkbox" name="@question.id" value="@option">
+                                                @option
+                                            </label></span>
+                                        }
+                                    }
+                                    case _ =>{}
+                                    }
+                                }
+                        </dd>
+                    </dl>
+                }
+            }
 		}
-		
+
 		@if(currentPageId < size-1){
 			<p class="buttons">
 				<a class="J_goon" href="/interview/@documentId/@(currentPageId+1)">继续</a>
