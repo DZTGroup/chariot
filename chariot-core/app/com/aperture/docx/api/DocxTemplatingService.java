@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import models.PageContent;
+import models.Question;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
@@ -58,6 +59,7 @@ public class DocxTemplatingService {
 			Module.QuestionModel qm = (Module.QuestionModel) o;
 			return new models.template.Question(qm.questionId, qm.context);
 		}
+		
 		return null;
 	}
 
@@ -66,7 +68,7 @@ public class DocxTemplatingService {
 	}
 
 	public static void parseDocument(DocType type, String name, String path)
-			throws Docx4JException {
+			throws Docx4JException, java.lang.Exception {
 		name = name.replaceAll("\\.docx$", "");
 		long id = ModuleIO.newDocument(name, path);
 		
@@ -84,6 +86,11 @@ public class DocxTemplatingService {
 				file.save();
 			}
 		}
+		
+		// re analyze this document to know all questions
+		// init them
+		models.template.Module root = analyzeModule(id);
+		Question.batchImportQuestions(root.getAllQuestionIds());
 	}
 	// ************************************************************************************
 	

@@ -24,7 +24,7 @@ import settings.Constant;
 
 public class Upload extends Controller {
 
-	public static Result uploadDocument(String fileName,String type) throws Docx4JException {
+	public static Result uploadDocument(String fileName,String type) throws Docx4JException, java.lang.Exception {
 		File file = request().body().asRaw().asFile();
 		String myUploadPath = Constant.USER_DIR;
 		File newFile = new File(myUploadPath, fileName);
