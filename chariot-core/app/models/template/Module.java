@@ -5,7 +5,6 @@ package models.template;
  */
 
 
-import scala.reflect.internal.SymbolTable;
 
 import java.util.*;
 
@@ -81,7 +80,7 @@ public class Module {
             @Override
             public void apply(Question question) {
                 models.Question q = models.Question.getById(question.questionId);
-                if(q!=null){
+                if(q!=null && !q.isEmpty()){
                     list.add(q);
                 }
             }
