@@ -7,8 +7,6 @@ import play.db.ebean.*;
 import play.Logger;
 
 import play.data.validation.*;
-import scala.Int;
-import sun.util.logging.resources.logging;
 
 import java.util.List;
 
