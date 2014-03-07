@@ -8,7 +8,6 @@
 		<div>@pi.desc</div>
         @for(question <- questions){
             @if(question!=null){
-        @question.id
                 @defining(QuestionDescription.parse(question.description)){ d =>
                     <dl>
                         <dt>@d.content</dt>
