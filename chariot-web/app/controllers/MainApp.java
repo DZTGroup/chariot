@@ -8,7 +8,7 @@ import play.mvc.*;
 import java.util.List;
 
 import views.html.*;
-@Security.Authenticated(WebSecured.class)
+@Security.Authenticated(Secured.class)
 public class MainApp extends Controller {
 
     public static Result index() {

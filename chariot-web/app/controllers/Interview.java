@@ -19,7 +19,7 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
  * Created by maquanhua on 1/18/14.
  * Moded by laomao
  */
-@Security.Authenticated(WebSecured.class)
+@Security.Authenticated(Secured.class)
 public class Interview extends Controller {
 
     public static Result question(Long documentId, int pageId) {
