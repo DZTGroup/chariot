@@ -16,7 +16,7 @@
             <p>@question.context <a href="javascript:;" class="J_question_edit" data-id="@question.questionId">编辑问题</a></p>
             <dl class="questions well">
                 @defining(Question.getById(question.questionId)){ q=>
-                    @if(q!=null){
+                    @if(q!=null && !q.isEmpty()){
                         @defining(QuestionDescription.parse(q.description)){qd=>
                             <dt>@qd.content</dt>
                             @for(i <- 0 to (qd.options.length - 1)){

@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import models.PageContent;
+import models.Question;
 
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
@@ -19,6 +20,8 @@ import play.Logger;
 import com.aperture.docx.templating.Module;
 import com.aperture.docx.templating.ModuleCompiler;
 import com.aperture.docx.templating.ModuleIO;
+
+import com.aperture.docx.templating.dependency.DependencyFactory;
 
 public class DocxTemplatingService {
 	public enum DocType {
@@ -47,12 +50,16 @@ public class DocxTemplatingService {
 				if (casted != null)
 					m.list.add(casted);
 			}
+			
+			// dependency
+			m.statement = DependencyFactory.createDependencyStatementFor(m.id);
 
 			return m;
 		} else if (o instanceof Module.QuestionModel) {
 			Module.QuestionModel qm = (Module.QuestionModel) o;
 			return new models.template.Question(qm.questionId, qm.context);
 		}
+		
 		return null;
 	}
 
@@ -61,7 +68,7 @@ public class DocxTemplatingService {
 	}
 
 	public static void parseDocument(DocType type, String name, String path)
-			throws Docx4JException {
+			throws Docx4JException, java.lang.Exception {
 		name = name.replaceAll("\\.docx$", "");
 		long id = ModuleIO.newDocument(name, path);
 		
@@ -79,6 +86,11 @@ public class DocxTemplatingService {
 				file.save();
 			}
 		}
+		
+		// re analyze this document to know all questions
+		// init them
+		models.template.Module root = analyzeModule(id);
+		Question.batchImportQuestions(root.getAllQuestionIds());
 	}
 	// ************************************************************************************
 	
@@ -88,32 +100,24 @@ public class DocxTemplatingService {
 	}
 	
 	// use this as pattern
-	private static <V> V compileModule(long id, Map<String, String> answers, 
-	WithModuleCompiler<V> todo)throws Docx4JException {
-		
-		/*
-		ModuleCompiler mc = new ModuleCompiler();
-		Module m = ModuleIO.loadModule(id);
-
-		if (m != null) {
-			mc.pendModule(m);
-			
-			String path = settings.Constant.USER_DIR + "/" + m.getName() + ".docx";
-			mc.save(path);
-
-			return path;
-		}
-
-		return null;*/
-			
+	private static <V> V compileModule(long id, final Map<String, String> answers, WithModuleCompiler<V> todo)
+	throws Docx4JException {
 		
 		Module m = ModuleIO.loadModule(id);
 		if ( m != null){
 			ModuleCompiler mc = new ModuleCompiler();
-			mc.pendModule(m);
 			
-			if ( answers != null ){
+			if ( answers != null){
+				// pend with dependency condition
+				mc.pendModule(m, new ModuleCompiler.PendRequirement(){
+					public boolean apply(Module m){
+						return DependencyFactory.createDependencyStatementFor(m.getId()).apply(answers);
+					}
+				});
 				mc.detemplate(answers);
+			} else {
+				// simply pend
+				mc.pendModule(m);
 			}
 			
 			return todo.apply(mc, m);
@@ -129,14 +133,6 @@ public class DocxTemplatingService {
 				mc.save(path);
 
 				return path;	
-			}
-		});
-	}
-	
-	public static String getFinalDoc(long id, Map<String, String> answers) throws Docx4JException {
-		return compileModule(id, answers, new WithModuleCompiler<String>(){
-			public String apply(ModuleCompiler mc, Module root) throws Docx4JException {
-				return mc.convertToPdf("generated_" + root.getUpdateTag());
 			}
 		});
 	}
@@ -164,6 +160,16 @@ public class DocxTemplatingService {
 			}
 		});
 	}
+	
+	// with answers
+	// build doc based on answers and dependencies
+	public static String getFinalDoc(long id, Map<String, String> answers) throws Docx4JException {
+		return compileModule(id, answers, new WithModuleCompiler<String>(){
+			public String apply(ModuleCompiler mc, Module root) throws Docx4JException {
+				return mc.convertToPdf("generated_" + root.getUpdateTag());
+			}
+		});
+	}
 
 	public static models.template.Module analyzeModule(long id)
 			throws Docx4JException, java.lang.Exception {
@@ -172,7 +178,8 @@ public class DocxTemplatingService {
 			String tag = m.getUpdateTag();
 			final Module thisModule = m;
 			
-			return Cache.getOrElse("analyse_"+tag, new Callable<models.template.Module>(){
+			return Cache.getOrElse( DocxTemplatingService.class.getName() + "_analyse_" + tag, 
+			new Callable<models.template.Module>(){
 				public models.template.Module call(){
 					return cast(thisModule.analyse());
 				}

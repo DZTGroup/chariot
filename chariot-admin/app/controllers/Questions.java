@@ -1,5 +1,6 @@
 package controllers;
 
+import com.aperture.docx.api.DocxTemplatingService;
 import models.ModuleQuestion;
 import util.Ajax;
 import models.Question;
@@ -27,8 +28,9 @@ public class Questions extends Controller {
         map.put("id",id);
 
         if(question==null){
-            map.put("description","{}");
-            map.put("type","");
+//            map.put("description","{}");
+//            map.put("type","");
+            return notFound();
         }else{
             map.put("description",question.description);
             map.put("type",question.type);
@@ -49,7 +51,7 @@ public class Questions extends Controller {
         String type = map.get("type")[0];
         if(id.equals("new")){
             //新增的问题
-            id = UUID.randomUUID().toString();
+            id = DocxTemplatingService.generateQuestionUUID();
         }
 
         Question q = Question.getById(id);

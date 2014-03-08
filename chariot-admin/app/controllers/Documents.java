@@ -3,7 +3,7 @@ package controllers;
 import models.Question;
 import models.template.*;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
-import sun.util.calendar.LocalGregorianCalendar;
+
 import util.Ajax;
 import models.*;
 import play.Logger;
@@ -235,7 +235,10 @@ public class Documents extends Controller {
 
             //文档级别的问题
             for (ModuleQuestion mq : ModuleQuestion.findByModuleId(documentId)) {
-                list.add(mq.question);
+                if (mq.question != null) {
+                    list.add(mq.question);
+                }
+
             }
         } catch (Exception e) {
             Logger.error(e.getMessage());

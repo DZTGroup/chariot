@@ -8,9 +8,12 @@ import play.data.validation.*;
 
 import java.util.List;
 
+import com.avaje.ebean.annotation.CacheStrategy;
+
 /**
  * Project entity managed by Ebean
  */
+@CacheStrategy (readOnly = false)
 @Entity 
 public class Module extends Model {
 

@@ -42,10 +42,29 @@ public class ModuleCompiler {
 		doc.tail(oc, ((Child) o).getParent() != null ? ((Child) o).getParent()
 				.getClass() : null);
 	}
+	
+	public static interface PendRequirement{
+		boolean apply(Module m);
+	}
+	
+	// default
+	public void pendModule(Module m)throws Docx4JException {
+		this.pendModule(m, new PendRequirement(){
+			// default impl, simple
+			public boolean apply(Module m){
+				return true;
+			}
+		});
+	}
 
-	public void pendModule(Module m) throws Docx4JException {
+	public void pendModule(Module m, final PendRequirement requirement) throws Docx4JException {
 		if (m == null || !m.initialized)
 			return;
+		
+		// check if the module meets the requirement
+		if ( ! requirement.apply(m) )
+			return;
+		
 		// if moduleCount == 0, its the root module
 		final boolean isRootModule = moduleCount == 0;
 		moduleCount++;
@@ -71,7 +90,8 @@ public class ModuleCompiler {
 								pend(o);
 								Module sub = subs.inverse().get(o);
 								try {
-									pendModule(sub);
+									// continue with predict
+									pendModule(sub, requirement);
 								} catch (Docx4JException e) {
 									//
 									e.printStackTrace();

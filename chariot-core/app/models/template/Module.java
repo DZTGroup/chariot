@@ -5,9 +5,12 @@ package models.template;
  */
 
 
-import scala.reflect.internal.SymbolTable;
 
 import java.util.*;
+
+import com.aperture.docx.templating.dependency.Statement;
+
+import play.Logger;
 
 public class Module {
     public String name;
@@ -15,8 +18,8 @@ public class Module {
     public Long id;
 
     public List<Object> list;
-
-
+	
+	public Statement statement;
 
     public Module(String name, String text, List<Object> list){
         this.name = name;
@@ -46,10 +49,32 @@ public class Module {
 
         return list;
     }
+	
+	public List<String> getAllQuestionIds(){
+        final List<String> list= new ArrayList<String>();
+
+        travers(this,new TraversImpl() {
+            @Override
+            public void apply(Question question) {
+                list.add(question.questionId);
+            }
+
+            @Override
+            public void apply(Module module) {
+            }
+
+            @Override
+            public boolean shouldEnter(Module module) {
+                return true;
+            }
+        });
+
+        return list;
+		
+	}
 
     public List<Module> getModuleList(){
         //顶层的module list
-
         final List<Module> list= new ArrayList<Module>();
         travers(this,new TraversImpl() {
             @Override
@@ -79,7 +104,7 @@ public class Module {
             @Override
             public void apply(Question question) {
                 models.Question q = models.Question.getById(question.questionId);
-                if(q!=null){
+                if(q!=null && !q.isEmpty()){
                     list.add(q);
                 }
             }

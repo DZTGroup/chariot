@@ -25,6 +25,11 @@ public class Module {
 	long id = -1;
 	String moduleName;
 	
+	// get id
+	public long getId(){
+		return id;
+	}
+	
 	// use it as a tag for cache
 	String updateTag;
 

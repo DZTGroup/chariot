@@ -150,6 +150,8 @@ public class PageContent {
     public static class LittleModule{
         public String id;
         public String type;
+        public static final String QUESTION = "question";
+        public static final String MODULE = "module";
 
         LittleModule(String id,String type){
             this.id = id;
@@ -159,9 +161,9 @@ public class PageContent {
         public static LittleModule parseModule(Object module){
             //把Module或者Question 转成LittleModule
             if(module instanceof Module){
-                return new LittleModule(((Module)(module)).id.toString(),"module");
+                return new LittleModule(((Module)(module)).id.toString(),MODULE);
             }else if(module instanceof Question) {
-                return new LittleModule(((Question)(module)).questionId,"question");
+                return new LittleModule(((Question)(module)).questionId,QUESTION);
             }else{
                 return (LittleModule)(module);
             }
