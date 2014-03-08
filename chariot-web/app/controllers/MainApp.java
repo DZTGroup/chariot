@@ -13,7 +13,12 @@ public class MainApp extends Controller {
 
     public static Result index() {
         List<File> docs = File.find.where().isNotNull("document_id").findList();
-
-        return ok(index.render(docs,EndUser.findByEmail(session("email"))));
+        if(EndUser.findByEmail(session("email"))!=null){
+        	return ok(index.render(docs,EndUser.findByEmail(session("email"))));
+        }
+        else{
+        	return redirect(routes.Application.login());
+        }
+        
     }
 }
