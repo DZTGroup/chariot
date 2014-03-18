@@ -83,10 +83,10 @@ public class Application extends Controller {
 	}
 
 	/***********************************************
-	 * test stub by Aohajin *
-	 ***********************************************
-	 */	
-	private static Result showDocStructure(java.io.InputStream in) throws  Docx4JException, 
+		* test stub by Aohajin *
+		***********************************************
+		*/	
+		private static Result showDocStructure(java.io.InputStream in) throws  Docx4JException, 
 	UnsupportedEncodingException {
 		// 
 		final StringBuilder sb = new StringBuilder();	
@@ -128,6 +128,11 @@ public class Application extends Controller {
 
 			@Override
 			public boolean shouldTraverse(Object o) {
+				if (o instanceof org.docx4j.wml.Br
+					|| o instanceof org.docx4j.wml.R.Tab
+					|| o instanceof org.docx4j.wml.R.LastRenderedPageBreak) {
+					return false;
+				}
 				return true;
 			}
 

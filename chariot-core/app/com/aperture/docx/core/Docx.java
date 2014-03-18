@@ -182,7 +182,11 @@ public class Docx {
 
 			@Override
 			public boolean shouldTraverse(Object o) {
-				//
+				if (o instanceof org.docx4j.wml.Br
+					|| o instanceof org.docx4j.wml.R.Tab
+					|| o instanceof org.docx4j.wml.R.LastRenderedPageBreak) {
+					return false;
+				}
 				return true;
 			}
 
@@ -422,7 +426,11 @@ public class Docx {
 
 			@Override
 			public boolean shouldTraverse(Object o) {
-				//
+				if (o instanceof org.docx4j.wml.Br
+					|| o instanceof org.docx4j.wml.R.Tab
+					|| o instanceof org.docx4j.wml.R.LastRenderedPageBreak) {
+					return false;
+				}
 				return true;
 			}
 
