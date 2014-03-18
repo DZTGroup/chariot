@@ -26,16 +26,19 @@ public class QuestionUtil {
 		if (next instanceof R) {
 			R r = (R) next;
 			if (r.getContent().size() > 0) {
-				org.docx4j.wml.Text qt = (org.docx4j.wml.Text) (XmlUtils
+				Object o  = (XmlUtils
 						.unwrap(r.getContent().get(0)));
+				if ( o instanceof org.docx4j.wml.Text ){
+					org.docx4j.wml.Text qt = (org.docx4j.wml.Text)o;
 
-				if (qt.getValue().matches("^__+$")) {
-					Object end = doc.getNextObject(next);
+					if (qt.getValue().matches("^__+$")) {
+						Object end = doc.getNextObject(next);
 
-					if (end instanceof CommentRangeEnd) {
-						// final this is surely a question
-						resolver.resolve(qt);
-					}
+						if (end instanceof CommentRangeEnd) {
+							// final this is surely a question
+							resolver.resolve(qt);
+						}
+					}	
 				}
 			}
 		}
